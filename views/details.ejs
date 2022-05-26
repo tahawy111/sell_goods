@@ -1,5 +1,7 @@
 <%- include('./partials/head.ejs') %>
 
+<h1 class="my-3 pb-3 text-center border-2 border-bottom">Details Page</h1>
+
 <div class="container d-flex">
   <img
     width="600"
@@ -12,13 +14,33 @@
       <h1>Name: <%= data.name %></h1>
       <h2>Price: <%= data.price %> L.E</h2>
     </div>
-    <a
-      class="btn btn-warning"
-      style="width: min-content"
-      href="/edit/<%= data._id %> "
-      >Edit</a
-    >
+
+    <div>
+      <a
+        class="btn ms-2 btn-warning"
+        style="width: min-content"
+        href="/edit/<%= data._id %>"
+        >Edit</a
+      >
+      <a
+        class="btn btn-danger delete"
+        style="width: min-content"
+        href="/delete/<%= data._id %>"
+        >Delete</a
+      >
+    </div>
   </div>
 </div>
+
+<script>
+  // here we are making the confirm message to delete button
+  let del = document.querySelector(".delete");
+  del.addEventListener("click", (e) => {
+    if (confirm("Do you want to delete") === true) {
+    } else {
+      e.preventDefault();
+    }
+  });
+</script>
 
 <%- include('./partials/footer.ejs') %>
