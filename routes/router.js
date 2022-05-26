@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 router.use(express.json());
 const multer = require("multer");
-const imageModel = require("../models/imageModel");
+
 const path = require("path");
+const productModel = require("../models/productModel");
 
 // Static Folders
 // router.use(express.static("public"));
@@ -22,7 +23,7 @@ const upload = multer({ storage: storage }).single("image");
 
 // routes
 router.get("/", (req, res) => {
-  imageModel
+  productModel
     .find()
     .then((result) => {
       res.render("index", {
@@ -34,8 +35,9 @@ router.get("/", (req, res) => {
 });
 
 router.post("/add", upload, (req, res) => {
-  const image = new imageModel({
+  const image = new productModel({
     name: req.body.name,
+    price: req.body.price,
     image: req.file.filename,
   });
   image.save();
@@ -49,11 +51,15 @@ router.get("/add", (req, res) => {
 });
 
 router.get("/details/:id", (req, res) => {
-  imageModel.findById(req.body.id).then((result) => {
-    res.render("details", {
-      title: "Add",
-    });
-  });
+  productModel
+    .findById(req.params.id)
+    .then((result) => {
+      res.render("details", {
+        title: "Details",
+        data: result,
+      });
+    })
+    .catch((err) => console.log(err));
 });
 
 module.exports = router;
