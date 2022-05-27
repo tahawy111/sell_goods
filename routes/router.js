@@ -113,7 +113,13 @@ router.get("/delete/:id", (req, res) => {
 router.get("/search", (req, res) => {
   // so now we will get input value from query parameters like "?search=amer"
   productModel
-    .find({ name: req.query.search })
+    .find({
+      $or: [
+        {
+          name: { $regex: req.query.name },
+        },
+      ],
+    })
     .then((result) => {
       res.render("search_result", {
         title: "Search Result",
@@ -121,9 +127,38 @@ router.get("/search", (req, res) => {
       });
     })
     .catch((err) => {
-      window.location.url = "/not_found";
+      console.log(err);
     });
 });
+
+router.get("/full_search", (req, res) => {
+  res.render("full_search", {
+    title: "Search",
+  });
+});
+
+router.get("/full_search_result", (req, res) => {
+  // so now we will get input value from query parameters like "?search=amer"
+
+  productModel
+    .find({
+      $or: [
+        { name: { $regex: req.query.name } },
+        { price: { $regex: req.query.price } },
+      ],
+    })
+    .then((result) => {
+      res.render("full_search_result", {
+        title: "Full Search Result",
+        data: result,
+      });
+      // console.log(result);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
 router.get("/not_found", (req, res) => {
   res.render("404");
 });
