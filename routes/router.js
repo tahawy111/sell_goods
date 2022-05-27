@@ -146,10 +146,10 @@ router.get("/full_search_result", (req, res) => {
     .then((result) => {
       res.render("full_search_result", {
         title: "Full Search Result",
+        data: result,
       });
       console.log(result);
     });
-  console.log(req.query);
 });
 
 router.get("/not_found", (req, res) => {
