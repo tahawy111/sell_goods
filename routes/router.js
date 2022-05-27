@@ -138,25 +138,18 @@ router.get("/full_search", (req, res) => {
 });
 
 router.get("/full_search_result", (req, res) => {
-  // so now we will get input value from query parameters like "?search=amer"
-
   productModel
     .find({
-      $or: [
-        { name: { $regex: req.query.name } },
-        { price: { $regex: req.query.price } },
-      ],
+      // here i am searching with two parameters & if i want to add more i can do it easily
+      $or: [{ name: req.query.name }, { price: req.query.price }],
     })
     .then((result) => {
       res.render("full_search_result", {
         title: "Full Search Result",
-        data: result,
       });
-      // console.log(result);
-    })
-    .catch((err) => {
-      console.log(err);
+      console.log(result);
     });
+  console.log(req.query);
 });
 
 router.get("/not_found", (req, res) => {

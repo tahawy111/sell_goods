@@ -1,14 +1,5 @@
 <%- include('./partials/head.ejs') %>
 
-
-
-
-
-
-
-
-
-
 <div class="container-fluid">
   <div class="row my-4">
     <div class="col-lg-12">
@@ -24,35 +15,10 @@
               <th></th>
             </tr>
           </thead>
-
-          <tbody style="vertical-align: middle">
-            <% data.forEach((ele,index)=>{ %>
-            <tr>
-              <td><%= index %></td>
-              <td><%= ele.name %></td>
-              <td><%= ele.price %></td>
-              <td>
-                <img
-                width="50"
-                class="img-thumbnail"
-                src="/uploads/images/<%= ele.image %>"
-                />
-                <td><a href="/details/<%= ele._id %>" class="btn btn-primary">More</a></td>
-                <td><a href="/sell/<%= ele._id %> " class="btn btn-success">Sell</a></td>
-              </td>
-            </tr>
-            <% }) %>
-          </tbody>
         </table>
       </div>
     </div>
   </div>
 </div>
-
-
-
-
-
-
 
 <%- include('./partials/footer.ejs') %>
