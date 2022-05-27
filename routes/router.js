@@ -3,9 +3,8 @@ const router = express.Router();
 router.use(express.json());
 const multer = require("multer");
 const fs = require("fs");
-const path = require("path");
+// const path = require("path");
 const productModel = require("../models/productModel");
-router.use(express.json());
 
 // image upload
 const storage = multer.diskStorage({
@@ -120,6 +119,7 @@ router.get("/search", (req, res) => {
         title: "Search",
         data: result,
       });
+      console.log(result);
     })
     .catch((err) => console.log(err));
 });
