@@ -113,15 +113,19 @@ router.get("/delete/:id", (req, res) => {
 router.get("/search", (req, res) => {
   // so now we will get input value from query parameters like "?search=amer"
   productModel
-    .findOne({ name: req.query.search })
+    .find({ name: req.query.search })
     .then((result) => {
-      res.render("search", {
-        title: "Search",
+      res.render("search_result", {
+        title: "Search Result",
         data: result,
       });
-      console.log(result);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      window.location.url = "/not_found";
+    });
+});
+router.get("/not_found", (req, res) => {
+  res.render("404");
 });
 
 module.exports = router;
