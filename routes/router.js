@@ -5,9 +5,7 @@ const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
 const productModel = require("../models/productModel");
-
-// Static Folders
-// router.use(express.static("public"));
+router.use(express.json());
 
 // image upload
 const storage = multer.diskStorage({
@@ -109,6 +107,19 @@ router.get("/delete/:id", (req, res) => {
       // remove image from storage place
       fs.unlinkSync(`./public/uploads/images/${result.image}`);
       res.redirect("/");
+    })
+    .catch((err) => console.log(err));
+});
+
+router.get("/search", (req, res) => {
+  // so now we will get input value from query parameters like "?search=amer"
+  productModel
+    .findOne({ name: req.query.search })
+    .then((result) => {
+      res.render("search", {
+        title: "Search",
+        data: result,
+      });
     })
     .catch((err) => console.log(err));
 });

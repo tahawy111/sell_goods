@@ -15,6 +15,7 @@
               <th></th>
             </tr>
           </thead>
+
           <tbody style="vertical-align: middle">
             <% data.forEach((ele,index)=>{ %>
             <tr>
@@ -26,9 +27,8 @@
                 width="50"
                 class="img-thumbnail"
                 src="/uploads/images/<%= ele.image %>"
-                alt=""
                 />
-                <td><a href="/details/<%= ele._id %> " class="btn btn-primary">More</a></td>
+                <td><a href="/details/<%= ele._id %>" class="btn btn-primary">More</a></td>
                 <td><a href="/sell/<%= ele._id %> " class="btn btn-success">Sell</a></td>
               </td>
             </tr>
