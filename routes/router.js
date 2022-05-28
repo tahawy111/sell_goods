@@ -3,8 +3,17 @@ const router = express.Router();
 router.use(express.json());
 const multer = require("multer");
 const fs = require("fs");
-// const path = require("path");
 const productModel = require("../models/productModel");
+
+// Pagination
+const index = (req, res, next) => {
+  productModel
+    .paginate({}, { page: req.query.page, limit: req.query.limit })
+    .then((response) => {
+      res.json({ response });
+    })
+    .catch((err) => console.log(err));
+};
 
 // image upload
 const storage = multer.diskStorage({
@@ -114,11 +123,7 @@ router.get("/search", (req, res) => {
   // so now we will get input value from query parameters like "?search=amer"
   productModel
     .find({
-      $or: [
-        {
-          name: { $regex: req.query.name },
-        },
-      ],
+      $or: [{ name: { $regex: req.query.name, $options: "i" } }],
     })
     .then((result) => {
       res.render("search_result", {
@@ -141,7 +146,10 @@ router.get("/full_search_result", (req, res) => {
   productModel
     .find({
       // here i am searching with two parameters & if i want to add more i can do it easily
-      $or: [{ name: req.query.name }, { price: req.query.price }],
+      $or: [
+        { name: { $regex: req.query.name, $options: "i" } },
+        { price: req.query.price },
+      ],
     })
     .then((result) => {
       res.render("full_search_result", {
