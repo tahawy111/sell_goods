@@ -1,4 +1,17 @@
-<script src="/public/js/bootstrap.bundle.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/datatables.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script>
+$(document).ready(function (){
+
+     $("table").DataTable({
+     order:[0, 'asc'],
+     pageLength: 5,
+     })
+
+})
+</script>
 </body>
 </html>
