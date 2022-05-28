@@ -7,12 +7,16 @@ const productModel = require("../models/productModel");
 
 // Pagination
 const index = (req, res, next) => {
-  productModel
-    .paginate({}, { page: req.query.page, limit: req.query.limit })
-    .then((response) => {
-      res.json({ response });
-    })
-    .catch((err) => console.log(err));
+  if (req.query.page && req.query.limit) {
+    productModel
+      .paginate({}, { page: req.query.page, limit: req.query.limit })
+      .then((response) => {
+        res.json({ response });
+      })
+      .catch((err) => console.log(err));
+  } else {
+    return null;
+  }
 };
 
 // image upload
