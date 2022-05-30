@@ -8,5 +8,4 @@ const productSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-productSchema.plugin(mongoosePaginate);
 module.exports = mongoose.model("product", productSchema);
