@@ -2,10 +2,10 @@ const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;
 const mongoose = require("mongoose");
-// const passport = require("passport");
+const passport = require("passport");
 app.set("view engine", "ejs");
-// const flash = require("connect-flash");
-// const session = require("express-session");
+const flash = require("connect-flash");
+const session = require("express-session");
 
 // // Static Folders
 app.use(express.static("public"));
@@ -14,29 +14,29 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// // Express Session
-// app.use(
-//   session({
-//     secret: "mmbkjmgstel 56756245ff kgjlo[few@75449.clhl.d",
-//     resave: false,
-//     saveUninitialized: true,
-//   })
-// );
+// Express Session
+app.use(
+  session({
+    secret: "mmbkjmgstel 56756245ff kgjlo[few@75449.clhl.d",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
-// // Passport middleware
-// app.use(passport.initialize());
-// app.use(passport.session());
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
-// // Connect flash
-// app.use(flash());
+// Connect flash
+app.use(flash());
 
-// // Global vars
-// app.use((req, res, next) => {
-//   res.locals.success_msg = req.flash("success_msg");
-//   res.locals.error_msg = req.flash("error_msg");
-//   res.locals.error = req.flash("error");
-//   next();
-// });
+// Global vars
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash("success_msg");
+  res.locals.error_msg = req.flash("error_msg");
+  res.locals.error = req.flash("error");
+  next();
+});
 
 app.use(require("./routes/router"));
 

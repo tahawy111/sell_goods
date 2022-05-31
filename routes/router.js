@@ -4,6 +4,7 @@ router.use(express.json());
 const multer = require("multer");
 const fs = require("fs");
 const productModel = require("../models/productModel");
+const Admins = require("../models/admins");
 
 // Pagination
 const index = (req, res, next) => {
@@ -132,7 +133,7 @@ router.get("/search", (req, res) => {
       $or: [{ name: { $regex: req.query.name, $options: "i" } }],
     })
     .then((result) => {
-      res.render("search_result", {
+      res.render("search-result", {
         title: "Search Result",
         data: result,
       });
@@ -142,13 +143,13 @@ router.get("/search", (req, res) => {
     });
 });
 
-router.get("/full_search", (req, res) => {
-  res.render("full_search", {
+router.get("/full-search", (req, res) => {
+  res.render("full-search", {
     title: "Search",
   });
 });
 
-router.get("/full_search_result", (req, res) => {
+router.get("/full-search-result", (req, res) => {
   productModel
     .find({
       // here i am searching with two parameters & if i want to add more i can do it easily
@@ -159,7 +160,7 @@ router.get("/full_search_result", (req, res) => {
       ],
     })
     .then((result) => {
-      res.render("full_search_result", {
+      res.render("full-search-result", {
         title: "Full Search Result",
         data: result,
       });
@@ -169,5 +170,57 @@ router.get("/full_search_result", (req, res) => {
 router.get("/not_found", (req, res) => {
   res.render("404");
 });
+
+// user routes
+
+// login
+router.get("/login", (req, res) => {
+  res.render("login");
+});
+
+router.post("/login", (req, res) => {
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/login",
+    failureFlash: true,
+  })(req, res, next);
+});
+//
+
+// creating admins
+router.get("/create-admin", (req, res) => {
+  res.render("create-admin", {
+    title: "Create Admin",
+  });
+});
+router.post("/create-admin", (req, res) => {
+  const { username, password, password2 } = req.body;
+  let errors = [];
+
+  // Check required fields
+  if (!username || !password || !password2)
+    errors.push({ msg: "Please Fill in all Feilds" });
+
+  // Check password match
+  if (password !== password2) errors.push({ msg: "passwords does not match" });
+
+  // Check pass length
+  if (password.length < 6)
+    errors.push({ msg: "Password should be at least 6 characters" });
+
+  if (errors.length > 0) {
+    res.render("create-admin", {
+      title: "Create Admin",
+      errors,
+      username,
+      password,
+      password2,
+    });
+  } else {
+    // Validation Passed
+    res.send("passed");
+  }
+});
+//
 
 module.exports = router;

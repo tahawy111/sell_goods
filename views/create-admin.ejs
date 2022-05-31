@@ -1,0 +1,49 @@
+<%- include('./partials/head.ejs') %>
+
+<div class="row">
+  <div class="col-lg-6 mx-auto mt-4">
+    <div class="card shadow">
+      <div class="card-header bg-dark">
+        <h3 class="text-light">Create Admin</h3>
+      </div>
+      <div class="card-body p-4">
+        <form action="/create-admin" method="post">
+          <div class="mb-3">
+            <label class="fs-5" for="username">Username</label>
+            <input
+              type="text"
+              name="username"
+              class="form-control form-control-lg"
+              placeholder="Enter Name"
+              value="<%= typeof username != 'undefined' ? username : '' %>"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="password">Password</label>
+            <input
+              type="text"
+              name="password"
+              class="form-control form-control-lg"
+              placeholder="Enter Password"
+              value="<%= typeof password != 'undefined' ? password : '' %>"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="password2">Password</label>
+            <input
+              type="text"
+              name="password2"
+              class="form-control form-control-lg"
+              placeholder="Confirm Password"
+              value="<%= typeof password2 != 'undefined' ? password2 : '' %>"
+            />
+          </div>
+
+          <input type="submit" value="Create" class="btn btn-dark btn-lg" />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('./partials/footer.ejs') %>
