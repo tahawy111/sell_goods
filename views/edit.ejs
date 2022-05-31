@@ -10,7 +10,7 @@
         <form
           action="/update/<%= data._id %>"
           method="post"
-          id="add-form"
+          id="edit-form"
           enctype="multipart/form-data"
         >
           <div class="mb-3">
@@ -24,13 +24,24 @@
             />
           </div>
           <div class="mb-3">
-            <label class="fs-5" for="name">Price</label>
+            <label class="fs-5" for="price">Price</label>
             <input
               type="number"
               name="price"
               value="<%= data.price %>"
               class="form-control form-control-lg"
               placeholder="Enter Price"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label class="fs-5" for="quantity">Quantity</label>
+            <input
+              type="number"
+              name="quantity"
+              value="<%= data.quantity %>"
+              class="form-control form-control-lg"
+              placeholder="Enter Quantity"
             />
           </div>
 

@@ -6,18 +6,18 @@ const fs = require("fs");
 const productModel = require("../models/productModel");
 
 // Pagination
-// const index = (req, res, next) => {
-//   if (req.query.page && req.query.limit) {
-//     productModel
-//       .paginate({}, { page: req.query.page, limit: req.query.limit })
-//       .then((response) => {
-//         res.json({ response });
-//       })
-//       .catch((err) => console.log(err));
-//   } else {
-//     return null;
-//   }
-// };
+const index = (req, res, next) => {
+  if (req.query.page && req.query.limit) {
+    productModel
+      .paginate({}, { page: req.query.page, limit: req.query.limit })
+      .then((response) => {
+        res.json({ response });
+      })
+      .catch((err) => console.log(err));
+  } else {
+    return null;
+  }
+};
 
 // image upload
 const storage = multer.diskStorage({
@@ -48,6 +48,7 @@ router.post("/add", upload, (req, res) => {
   const image = new productModel({
     name: req.body.name,
     price: req.body.price,
+    quantity: req.body.quantity,
     image: req.file.filename,
   });
   image.save();
@@ -104,6 +105,7 @@ router.post("/update/:id", upload, (req, res) => {
     .findByIdAndUpdate(req.params.id, {
       name: req.body.name,
       price: req.body.price,
+      quantity: req.body.quantity,
       image: new_image,
     })
     .then((result) => {
@@ -151,8 +153,9 @@ router.get("/full_search_result", (req, res) => {
     .find({
       // here i am searching with two parameters & if i want to add more i can do it easily
       $or: [
-        { name: { $regex: req.query.name, $options: "i" } },
+        { name: req.query.name },
         { price: req.query.price },
+        { quantity: req.query.quantity },
       ],
     })
     .then((result) => {
@@ -160,7 +163,6 @@ router.get("/full_search_result", (req, res) => {
         title: "Full Search Result",
         data: result,
       });
-      console.log(result);
     });
 });
 
