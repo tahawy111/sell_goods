@@ -7,20 +7,6 @@ const productModel = require("../models/productModel");
 const Admins = require("../models/Admins");
 const bcrypt = require("bcryptjs");
 
-// Pagination
-const index = (req, res, next) => {
-  if (req.query.page && req.query.limit) {
-    productModel
-      .paginate({}, { page: req.query.page, limit: req.query.limit })
-      .then((response) => {
-        res.json({ response });
-      })
-      .catch((err) => console.log(err));
-  } else {
-    return null;
-  }
-};
-
 // image upload
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
