@@ -7,10 +7,13 @@ app.set("view engine", "ejs");
 const flash = require("connect-flash");
 const session = require("express-session");
 
-// // Static Folders
+// Passport Config
+require("./config/passport")(passport);
+
+// Static Folders
 app.use(express.static("public"));
 
-// // BodyParser
+// BodyParser
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
@@ -34,6 +37,7 @@ app.use(flash());
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash("success_msg");
   res.locals.error_msg = req.flash("error_msg");
+  res.locals.error = req.flash("error");
   next();
 });
 

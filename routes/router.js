@@ -6,6 +6,7 @@ const fs = require("fs");
 const productModel = require("../models/productModel");
 const Admins = require("../models/Admins");
 const bcrypt = require("bcryptjs");
+const passport = require("../config/passport");
 
 // image upload
 const storage = multer.diskStorage({
@@ -261,8 +262,12 @@ router.get("/login", (req, res) => {
   res.render("login");
 });
 
-router.post("/login", (req, res) => {
-  pass;
+router.post("/login", (req, res, next) => {
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/login",
+    failureFlash: true,
+  })(req, res, next);
 });
 
 module.exports = router;
