@@ -160,11 +160,6 @@ router.get("/not_found", (req, res) => {
 
 // user routes
 
-// login
-router.get("/login", (req, res) => {
-  res.render("login");
-});
-
 router.post("/login", (req, res) => {
   passport.authenticate("local", {
     successRedirect: "/",
@@ -260,5 +255,14 @@ router.post("/create-admin", (req, res) => {
   }
 });
 //
+
+// Login handle
+router.get("/login", (req, res) => {
+  res.render("login");
+});
+
+router.post("/login", (req, res) => {
+  pass;
+});
 
 module.exports = router;
