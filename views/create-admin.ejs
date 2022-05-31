@@ -3,18 +3,29 @@
 <div class="row">
   <div class="col-lg-6 mx-auto mt-4">
     <div class="card shadow">
-      <div class="card-header bg-dark">
+      <div class="card-header bg-dark mb-4">
         <h3 class="text-light">Create Admin</h3>
       </div>
+      <%- include('./partials/message') %>
       <div class="card-body p-4">
         <form action="/create-admin" method="post">
+          <div class="mb-3">
+            <label class="fs-5" for="name">Enter Your Name</label>
+            <input
+              type="text"
+              name="name"
+              class="form-control form-control-lg"
+              placeholder="Enter Name"
+              value="<%= typeof username != 'undefined' ? username : '' %>"
+            />
+          </div>
           <div class="mb-3">
             <label class="fs-5" for="username">Username</label>
             <input
               type="text"
               name="username"
               class="form-control form-control-lg"
-              placeholder="Enter Name"
+              placeholder="Enter Username"
               value="<%= typeof username != 'undefined' ? username : '' %>"
             />
           </div>
@@ -37,6 +48,18 @@
               placeholder="Confirm Password"
               value="<%= typeof password2 != 'undefined' ? password2 : '' %>"
             />
+          </div>
+          <div class="form-floating mb-3">
+            <textarea
+              class="form-control"
+              placeholder="Leave a comment here"
+              name="comment"
+              id="floatingTextarea2"
+              style="height: 100px"
+            >
+<%= typeof comment != 'undefined' ? comment : '' %></textarea
+            >
+            <label for="floatingTextarea2">Comment</label>
           </div>
 
           <input type="submit" value="Create" class="btn btn-dark btn-lg" />

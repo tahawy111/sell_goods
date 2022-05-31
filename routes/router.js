@@ -4,7 +4,8 @@ router.use(express.json());
 const multer = require("multer");
 const fs = require("fs");
 const productModel = require("../models/productModel");
-const Admins = require("../models/admins");
+const Admins = require("../models/Admins");
+const bcrypt = require("bcryptjs");
 
 // Pagination
 const index = (req, res, next) => {
@@ -194,11 +195,10 @@ router.get("/create-admin", (req, res) => {
   });
 });
 router.post("/create-admin", (req, res) => {
-  const { username, password, password2 } = req.body;
+  const { name, username, password, password2, comment } = req.body;
   let errors = [];
-
   // Check required fields
-  if (!username || !password || !password2)
+  if (!name || !username || !password || !password2)
     errors.push({ msg: "Please Fill in all Feilds" });
 
   // Check password match
@@ -212,13 +212,65 @@ router.post("/create-admin", (req, res) => {
     res.render("create-admin", {
       title: "Create Admin",
       errors,
+      name,
       username,
       password,
       password2,
+      comment,
     });
   } else {
     // Validation Passed
-    res.send("passed");
+    Admins.findOne({ username: username }).then((admin) => {
+      if (admin) {
+        // Admin exists
+        errors.push({ msg: "Username is already registered" });
+        res.render("create-admin", {
+          title: "Create Admin",
+          errors,
+          name,
+          username,
+          password,
+          password2,
+          comment,
+        });
+      } else {
+        const newAdmin = new Admins({
+          name: name,
+          username: username,
+          password: password,
+          comment: comment,
+        });
+
+        // Hash password
+        bcrypt
+          .genSalt(10)
+          .then((salt) => {
+            return bcrypt.hash(newAdmin.password, salt);
+          })
+          .then((hash) => {
+            // set password to hashed
+            newAdmin.password = hash;
+
+            // save admin to database
+            newAdmin
+              .save()
+              .then(() => {
+                req.flash(
+                  "success_msg",
+                  "Manager has been registered successfully"
+                );
+                res.render("success-page", {
+                  title: "Success",
+                  success_title: "Manager has been registered successfully",
+                });
+              })
+              .catch((err) => console.log(err));
+          })
+          .catch((err) => {
+            throw err;
+          });
+      }
+    });
   }
 });
 //
