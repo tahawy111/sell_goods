@@ -6,7 +6,11 @@ const productModel = require("../models/productModel");
 const Admins = require("../models/Admins");
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
-const { ensureAuthenticated, forwardAuthenticated } = require("../config/auth");
+const {
+  ensureAuthenticated,
+  forwardAuthenticated,
+  isAdmin,
+} = require("../config/auth");
 
 // image upload
 const storage = multer.diskStorage({
@@ -21,7 +25,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage }).single("image");
 
 // routes
-router.get("/", ensureAuthenticated, (req, res) => {
+router.get("/", ensureAuthenticated, isAdmin, (req, res) => {
   productModel
     .find()
     .then((result) => {
@@ -30,6 +34,7 @@ router.get("/", ensureAuthenticated, (req, res) => {
         data: result,
         admin: req.user,
       });
+      console.log(req.user);
     })
     .catch((err) => console.log(err));
 });
@@ -169,14 +174,17 @@ router.get("/not_found", ensureAuthenticated, (req, res) => {
 // Admin routes
 
 // creating admins
-router.get("/create-admin", ensureAuthenticated, (req, res) => {
+router.get("/create-admin", ensureAuthenticated, isAdmin, (req, res) => {
   res.render("create-admin", {
     title: "Create Admin",
     admin: req.user,
   });
 });
 router.post("/create-admin", ensureAuthenticated, (req, res) => {
-  const { name, username, password, password2, comment } = req.body;
+  const { name, username, password, password2, comment, manageAdmins } =
+    req.body;
+  console.log(req.body);
+
   let errors = [];
   // Check required fields
   if (!name || !username || !password || !password2)
@@ -222,6 +230,7 @@ router.post("/create-admin", ensureAuthenticated, (req, res) => {
           username: username,
           password: password,
           comment: comment,
+          manageAdmins: manageAdmins,
         });
 
         // Hash password
@@ -316,25 +325,40 @@ router.post("/update-admin/:id", ensureAuthenticated, (req, res) => {
     name: req.body.name,
     username: req.body.username,
     comment: req.body.comment,
+    manageAdmins: req.body.manageAdmins,
   };
-  bcrypt
-    .genSalt(10)
-    .then((salt) => {
-      return bcrypt.hash(req.body.password, salt);
-    })
-    .then((hash) => {
-      // set password to hashed
-      updatedData.password = hash;
+  if (req.body.password.length < 60) {
+    bcrypt
+      .genSalt(10)
+      .then((salt) => {
+        return bcrypt.hash(req.body.password, salt);
+      })
+      .then((hash) => {
+        // set password to hashed
+        updatedData.password = hash;
 
-      Admins.findByIdAndUpdate(req.params.id, updatedData)
-        .then(() => {
-          res.redirect("/admins-list");
-        })
-        .catch((err) => console.log(err));
+        Admins.findByIdAndUpdate(req.params.id, updatedData)
+          .then(() => {
+            res.redirect("/admins-list");
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => {
+        throw err;
+      });
+  } else {
+    Admins.findByIdAndUpdate(req.params.id, {
+      name: req.body.name,
+      username: req.body.username,
+      password: req.body.password,
+      comment: req.body.comment,
+      manageAdmins: req.body.manageAdmins,
     })
-    .catch((err) => {
-      throw err;
-    });
+      .then(() => {
+        res.redirect("/admins-list");
+      })
+      .catch((err) => console.log(err));
+  }
 
   console.log(updatedData);
 });

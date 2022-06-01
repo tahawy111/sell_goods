@@ -40,7 +40,7 @@
             />
           </div>
           <div class="mb-3">
-            <label class="fs-5" for="password2">Password</label>
+            <label class="fs-5" for="password2">Confirm Password</label>
             <input
               type="text"
               name="password2"
@@ -62,11 +62,19 @@
             <label for="floatingTextarea2">Comment</label>
           </div>
 
-          <input type="submit" value="Create" class="btn btn-dark btn-lg" />
-
-          <!-- <div class="border-dark border-top border-bottom mt-5">
+          <div class="border-dark border-top border-bottom my-2 py-2">
             <h4 class="text-center">Permissions</h4>
-          </div> -->
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" name="manageAdmins" type="checkbox" value="<%= this.checked ? false : true %>" id="MA">
+            <label class="form-check-label" for="MA">
+              Manage Admins
+            </label>
+          </div>
+          </div>
+          <br />
+          <br />
+          <input type="submit" value="Create" class="btn btn-dark btn-lg" />
         </form>
       </div>
     </div>

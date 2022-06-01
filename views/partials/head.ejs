@@ -36,16 +36,18 @@
               <a class="nav-link" href="/full-search">Full Search</a>
             </li>
             
-                        <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Admins
-                          </a>
-                          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="/admins-list">Admins list</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/create-admin">Create Admin</a></li>
-                          </ul>
-                        </li>
+            <% if(admin.manageAdmins){ %>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Admins
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="/admins-list">Admins list</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="/create-admin">Create Admin</a></li>
+                </ul>
+              </li>
+              <% } %>  
             <li class="nav-item">
               <span class="text-light nav-link fw-bold">Welcome: <span class='text-danger'><%= admin.name %></span></span>
             </li>

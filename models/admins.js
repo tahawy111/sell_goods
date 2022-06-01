@@ -7,7 +7,7 @@ const adminSchema = new mongoose.Schema(
     password: String,
     comment: String,
     // Permissions
-    createAdmins: Boolean,
+    manageAdmins: Boolean,
   },
   { timestamps: true }
 );

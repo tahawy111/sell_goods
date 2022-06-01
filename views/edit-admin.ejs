@@ -64,6 +64,23 @@
             <label for="floatingTextarea2">Comment</label>
           </div>
 
+
+          <div class="border-dark border-top border-bottom my-2 py-2">
+            <h4 class="text-center">Permissions</h4>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" name="manageAdmins" type="checkbox" checked="<%= admin.manageAdmins ? true : false %> " value="<%= this.checked ? false : true %>" id="MA">
+            <label class="form-check-label" for="MA">
+              Manage Admins
+            </label>
+          </div>
+          </div>
+          <br />
+          <br />
+
+
+
+
           <input type="submit" value="Update" class="btn btn-dark btn-lg" />
         </form>
       </div>

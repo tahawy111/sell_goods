@@ -12,4 +12,10 @@ module.exports = {
     }
     res.redirect("/");
   },
+  isAdmin: (req, res, next) => {
+    if (req.user.name) {
+      return next();
+    }
+    res.redirect("/");
+  },
 };
