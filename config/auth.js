@@ -13,7 +13,7 @@ module.exports = {
     res.redirect("/");
   },
   isAdmin: (req, res, next) => {
-    if (req.user.name) {
+    if (req.user.manageAdmins) {
       return next();
     }
     res.redirect("/");

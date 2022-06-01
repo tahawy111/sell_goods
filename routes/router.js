@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage }).single("image");
 
 // routes
-router.get("/", ensureAuthenticated, isAdmin, (req, res) => {
+router.get("/", ensureAuthenticated, (req, res) => {
   productModel
     .find()
     .then((result) => {
@@ -180,7 +180,7 @@ router.get("/create-admin", ensureAuthenticated, isAdmin, (req, res) => {
     admin: req.user,
   });
 });
-router.post("/create-admin", ensureAuthenticated, (req, res) => {
+router.post("/create-admin", ensureAuthenticated, isAdmin, (req, res) => {
   const { name, username, password, password2, comment, manageAdmins } =
     req.body;
   console.log(req.body);
@@ -293,7 +293,7 @@ router.get("/logout", ensureAuthenticated, (req, res) => {
 });
 
 // Admins List
-router.get("/admins-list", ensureAuthenticated, (req, res) => {
+router.get("/admins-list", ensureAuthenticated, isAdmin, (req, res) => {
   Admins.find()
     .then((result) => {
       res.render("admins-list", {
@@ -306,7 +306,7 @@ router.get("/admins-list", ensureAuthenticated, (req, res) => {
 });
 
 // Edit Admin
-router.get("/edit-admin/:id", ensureAuthenticated, (req, res) => {
+router.get("/edit-admin/:id", ensureAuthenticated, isAdmin, (req, res) => {
   Admins.findById(req.params.id)
     .then((result) => {
       res.render("edit-admin", {
@@ -319,7 +319,7 @@ router.get("/edit-admin/:id", ensureAuthenticated, (req, res) => {
 });
 
 // Update Admin
-router.post("/update-admin/:id", ensureAuthenticated, (req, res) => {
+router.post("/update-admin/:id", ensureAuthenticated, isAdmin, (req, res) => {
   // hash password
   let updatedData = {
     name: req.body.name,
