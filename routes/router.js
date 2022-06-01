@@ -166,7 +166,7 @@ router.get("/not_found", ensureAuthenticated, (req, res) => {
   res.render("404");
 });
 
-// user routes
+// Admin routes
 
 // creating admins
 router.get("/create-admin", ensureAuthenticated, (req, res) => {
@@ -192,6 +192,7 @@ router.post("/create-admin", ensureAuthenticated, (req, res) => {
   if (errors.length > 0) {
     res.render("create-admin", {
       title: "Create Admin",
+      admin: req.user,
       errors,
       name,
       username,
@@ -207,6 +208,7 @@ router.post("/create-admin", ensureAuthenticated, (req, res) => {
         errors.push({ msg: "Username is already registered" });
         res.render("create-admin", {
           title: "Create Admin",
+          admin: req.user,
           errors,
           name,
           username,
@@ -242,6 +244,7 @@ router.post("/create-admin", ensureAuthenticated, (req, res) => {
                 );
                 res.render("success-page", {
                   title: "Success",
+                  admin: req.user,
                   success_title: "Manager has been registered successfully",
                 });
               })
@@ -278,6 +281,62 @@ router.get("/logout", ensureAuthenticated, (req, res) => {
     req.flash("success_msg", "You are logged out");
     res.redirect("/login");
   });
+});
+
+// Admins List
+router.get("/admins-list", ensureAuthenticated, (req, res) => {
+  Admins.find()
+    .then((result) => {
+      res.render("admins-list", {
+        title: "Admins List",
+        data: result,
+        admin: req.user,
+      });
+    })
+    .catch((err) => console.log(err));
+});
+
+// Edit Admin
+router.get("/edit-admin/:id", ensureAuthenticated, (req, res) => {
+  Admins.findById(req.params.id)
+    .then((result) => {
+      res.render("edit-admin", {
+        title: "Edit Admin",
+        data: result,
+        admin: req.user,
+      });
+    })
+    .catch((err) => console.log(err));
+});
+
+// Update Admin
+router.post("/update-admin/:id", ensureAuthenticated, (req, res) => {
+  // hash password
+  let updatedData = {
+    name: req.body.name,
+    username: req.body.username,
+    comment: req.body.comment,
+  };
+  bcrypt
+    .genSalt(10)
+    .then((salt) => {
+      return bcrypt.hash(req.body.password, salt);
+    })
+    .then((hash) => {
+      // set password to hashed
+      updatedData.password = hash;
+
+      Admins.findByIdAndUpdate(req.params.id, updatedData)
+        .then(() => {
+          res.redirect("/admins-list");
+        })
+        .catch((err) => console.log(err));
+    })
+    .catch((err) => {
+      throw err;
+    });
+
+  console.log(updatedData);
 });
 
 module.exports = router;
