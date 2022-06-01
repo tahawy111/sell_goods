@@ -48,6 +48,7 @@ router.post("/add", ensureAuthenticated, upload, (req, res) => {
 router.get("/add", ensureAuthenticated, (req, res) => {
   res.render("add", {
     title: "Add",
+    admin: req.user,
   });
 });
 
@@ -58,6 +59,7 @@ router.get("/details/:id", ensureAuthenticated, (req, res) => {
       res.render("details", {
         title: "Details",
         data: result,
+        admin: req.user,
       });
     })
     .catch((err) => console.log(err));
@@ -70,6 +72,7 @@ router.get("/edit/:id", ensureAuthenticated, (req, res) => {
       res.render("edit", {
         title: "Edit",
         data: result,
+        admin: req.user,
       });
     })
     .catch((err) => console.log(err));
@@ -125,6 +128,7 @@ router.get("/search", ensureAuthenticated, (req, res) => {
       res.render("search-result", {
         title: "Search Result",
         data: result,
+        admin: req.user,
       });
     })
     .catch((err) => {
@@ -135,6 +139,7 @@ router.get("/search", ensureAuthenticated, (req, res) => {
 router.get("/full-search", ensureAuthenticated, (req, res) => {
   res.render("full-search", {
     title: "Search",
+    admin: req.user,
   });
 });
 
@@ -152,6 +157,7 @@ router.get("/full-search-result", ensureAuthenticated, (req, res) => {
       res.render("full-search-result", {
         title: "Full Search Result",
         data: result,
+        admin: req.user,
       });
     });
 });
@@ -166,6 +172,7 @@ router.get("/not_found", ensureAuthenticated, (req, res) => {
 router.get("/create-admin", ensureAuthenticated, (req, res) => {
   res.render("create-admin", {
     title: "Create Admin",
+    admin: req.user,
   });
 });
 router.post("/create-admin", ensureAuthenticated, (req, res) => {
