@@ -1,14 +1,13 @@
 const express = require("express");
+const passport = require("passport");
 const app = express();
+// Passport Config
+require("./config/passport")(passport);
 const PORT = process.env.PORT || 3000;
 const mongoose = require("mongoose");
-const passport = require("passport");
 app.set("view engine", "ejs");
 const flash = require("connect-flash");
 const session = require("express-session");
-
-// Passport Config
-require("./config/passport")(passport);
 
 // Static Folders
 app.use(express.static("public"));
@@ -48,8 +47,11 @@ mongoose
     "mongodb+srv://admin:admin123456@cluster0.04rgz.mongodb.net/images?retryWrites=true&w=majority"
   )
   .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Example app listening at http://localhost:${PORT}`);
-    });
+    console.log("DB Connected");
   })
   .catch((err) => console.log(err));
+
+// Server
+app.listen(PORT, () => {
+  console.log(`Example app listening at http://localhost:${PORT}`);
+});

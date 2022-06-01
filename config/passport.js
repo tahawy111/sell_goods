@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
+const Admins = require("../models/Admins");
 // Load admin model
-const Admin = require("../models/Admins");
 
 module.exports = (passport) => {
   passport.use(
@@ -10,16 +10,16 @@ module.exports = (passport) => {
       { usernameField: "username" },
       (username, password, done) => {
         // Match Admin
-        Admin.findOne({ username: username })
-          .then((admin) => {
-            if (!admin) {
+        Admins.findOne({ username: username })
+          .then((user) => {
+            if (!user) {
               return done(null, false, {
                 message: "That username is not registred! ",
               });
             }
 
             // Match Password
-            bcrypt.compare(password, admin.password, (err, isMatch) => {
+            bcrypt.compare(password, user.password, (err, isMatch) => {
               if (err) throw err;
 
               if (isMatch) {
@@ -28,28 +28,17 @@ module.exports = (passport) => {
                 return done(null, false, { message: "Password incorrect" });
               }
             });
-            // .then((isMatch) => {
-            //   if (isMatch) {
-            //     return done(null, user);
-            //   } else {
-            //     return done(null, false, { message: "Password incorrect" });
-            //   }
-            // })
-            // .catch((err) => {
-            //   throw err;
-            // });
           })
           .catch((err) => console.log(err));
       }
     )
   );
-
-  passport.serializeUser((user, done) => {
-    done(null, user.id);
+  passport.serializeUser((admin, done) => {
+    done(null, admin.id);
   });
 
   passport.deserializeUser((id, done) => {
-    User.findById(id, function (err, user) {
+    Admins.findById(id, (err, user) => {
       done(err, user);
     });
   });

@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
-router.use(express.json());
 const multer = require("multer");
 const fs = require("fs");
 const productModel = require("../models/productModel");
 const Admins = require("../models/Admins");
 const bcrypt = require("bcryptjs");
-const passport = require("../config/passport");
+const passport = require("passport");
+const { ensureAuthenticated, forwardAuthenticated } = require("../config/auth");
 
 // image upload
 const storage = multer.diskStorage({
@@ -21,19 +21,20 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage }).single("image");
 
 // routes
-router.get("/", (req, res) => {
+router.get("/", ensureAuthenticated, (req, res) => {
   productModel
     .find()
     .then((result) => {
       res.render("index", {
         title: "Home",
         data: result,
+        admin: req.user,
       });
     })
     .catch((err) => console.log(err));
 });
 
-router.post("/add", upload, (req, res) => {
+router.post("/add", ensureAuthenticated, upload, (req, res) => {
   const image = new productModel({
     name: req.body.name,
     price: req.body.price,
@@ -44,13 +45,13 @@ router.post("/add", upload, (req, res) => {
   res.redirect("/");
 });
 
-router.get("/add", (req, res) => {
+router.get("/add", ensureAuthenticated, (req, res) => {
   res.render("add", {
     title: "Add",
   });
 });
 
-router.get("/details/:id", (req, res) => {
+router.get("/details/:id", ensureAuthenticated, (req, res) => {
   productModel
     .findById(req.params.id)
     .then((result) => {
@@ -62,7 +63,7 @@ router.get("/details/:id", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-router.get("/edit/:id", (req, res) => {
+router.get("/edit/:id", ensureAuthenticated, (req, res) => {
   productModel
     .findById(req.params.id)
     .then((result) => {
@@ -74,7 +75,7 @@ router.get("/edit/:id", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-router.post("/update/:id", upload, (req, res) => {
+router.post("/update/:id", ensureAuthenticated, upload, (req, res) => {
   let new_image;
 
   // prepere the files: delete the old from storage place & add the new to from storage place
@@ -103,7 +104,7 @@ router.post("/update/:id", upload, (req, res) => {
     .catch((err) => console.log(err));
 });
 
-router.get("/delete/:id", (req, res) => {
+router.get("/delete/:id", ensureAuthenticated, (req, res) => {
   productModel
     .findByIdAndRemove(req.params.id)
     .then((result) => {
@@ -114,7 +115,7 @@ router.get("/delete/:id", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-router.get("/search", (req, res) => {
+router.get("/search", ensureAuthenticated, (req, res) => {
   // so now we will get input value from query parameters like "?search=amer"
   productModel
     .find({
@@ -131,13 +132,13 @@ router.get("/search", (req, res) => {
     });
 });
 
-router.get("/full-search", (req, res) => {
+router.get("/full-search", ensureAuthenticated, (req, res) => {
   res.render("full-search", {
     title: "Search",
   });
 });
 
-router.get("/full-search-result", (req, res) => {
+router.get("/full-search-result", ensureAuthenticated, (req, res) => {
   productModel
     .find({
       // here i am searching with two parameters & if i want to add more i can do it easily
@@ -155,28 +156,19 @@ router.get("/full-search-result", (req, res) => {
     });
 });
 
-router.get("/not_found", (req, res) => {
+router.get("/not_found", ensureAuthenticated, (req, res) => {
   res.render("404");
 });
 
 // user routes
 
-router.post("/login", (req, res) => {
-  passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/login",
-    failureFlash: true,
-  })(req, res, next);
-});
-//
-
 // creating admins
-router.get("/create-admin", (req, res) => {
+router.get("/create-admin", ensureAuthenticated, (req, res) => {
   res.render("create-admin", {
     title: "Create Admin",
   });
 });
-router.post("/create-admin", (req, res) => {
+router.post("/create-admin", ensureAuthenticated, (req, res) => {
   const { name, username, password, password2, comment } = req.body;
   let errors = [];
   // Check required fields
@@ -258,16 +250,27 @@ router.post("/create-admin", (req, res) => {
 //
 
 // Login handle
-router.get("/login", (req, res) => {
+router.get("/login", forwardAuthenticated, (req, res) => {
   res.render("login");
 });
 
-router.post("/login", (req, res, next) => {
+router.post("/login", forwardAuthenticated, (req, res, next) => {
   passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/login",
     failureFlash: true,
   })(req, res, next);
+});
+
+// Logout handle
+router.get("/logout", ensureAuthenticated, (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    req.flash("success_msg", "You are logged out");
+    res.redirect("/login");
+  });
 });
 
 module.exports = router;

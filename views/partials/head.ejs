@@ -39,8 +39,13 @@
               <a class="nav-link" href="/create-admin">Create Admin</a>
             </li>
             <li class="nav-item">
-              <a class="btn ms-5 btn-outline-danger" href="/logout">Logout</a>
+              <span class="text-light nav-link fw-bold">Welcome: <span class='text-danger'><%= admin.name %></span></span>
             </li>
+            <li class="nav-item">
+              <a class="btn ms-5 btn-outline-danger logout" href="/logout">Logout</a>
+            </li>
+            
+
             <!-- <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Dropdown
@@ -68,5 +73,13 @@
         </div>
       </div>
     </nav>
+    <script>
+      let logout = document.querySelector('.logout')
+      logout.addEventListener('click',(e) => {
+      if (confirm("Do You Want To Logout") === true) {} 
+      else {
+      e.preventDefault();
+      }})
+    </script>
   </body>
 </html>
