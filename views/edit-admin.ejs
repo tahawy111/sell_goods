@@ -4,7 +4,7 @@
   <div class="col-lg-6 mx-auto mt-4">
     <div class="card shadow">
       <div class="card-header bg-dark mb-4">
-        <h3 class="text-light">Create Admin</h3>
+        <h3 class="text-light">Edit Admin</h3>
       </div>
       <%- include('./partials/message') %>
       <div class="card-body p-4">
@@ -69,7 +69,7 @@
             <h4 class="text-center">Permissions</h4>
           </div>
           <div class="form-check">
-            <input class="form-check-input" name="manageAdmins" type="checkbox" checked="<%= admin.manageAdmins ? true : false %> " value="<%= this.checked ? false : true %>" id="MA">
+            <input class="form-check-input check" name="manageAdmins" type="checkbox" <%= data.manageAdmins ? "checked" : "" %> id="MA">
             <label class="form-check-label" for="MA">
               Manage Admins
             </label>
@@ -87,5 +87,30 @@
     </div>
   </div>
 </div>
+
+<script>
+  let check = document.querySelector('.check');
+  check.addEventListener('change',(e) => {
+    if(check.checked === true){
+      check.setAttribute("value",true)
+      check.setAttribute('checked',"")
+    }
+    else{
+      check.setAttribute("value",false)
+      check.removeAttribute('checked');
+    }
+  }
+  )
+  window.onload = function () {
+    if (check.checked === true) {
+    check.value = true;
+  } else {
+    check.value = false;      
+  }
+};
+
+  
+  
+</script>
 
 <%- include('./partials/footer.ejs') %>

@@ -34,7 +34,6 @@ router.get("/", ensureAuthenticated, (req, res) => {
         data: result,
         admin: req.user,
       });
-      console.log(req.user);
     })
     .catch((err) => console.log(err));
 });
@@ -183,7 +182,6 @@ router.get("/create-admin", ensureAuthenticated, isAdmin, (req, res) => {
 router.post("/create-admin", ensureAuthenticated, isAdmin, (req, res) => {
   const { name, username, password, password2, comment, manageAdmins } =
     req.body;
-  console.log(req.body);
 
   let errors = [];
   // Check required fields
@@ -320,6 +318,13 @@ router.get("/edit-admin/:id", ensureAuthenticated, isAdmin, (req, res) => {
 
 // Update Admin
 router.post("/update-admin/:id", ensureAuthenticated, isAdmin, (req, res) => {
+  console.log(req.body.manageAdmins === undefined);
+  if (req.body.manageAdmins === undefined) {
+    req.body.manageAdmins = false;
+  } else {
+    req.body.manageAdmins = true;
+  }
+  console.log(req.body.manageAdmins);
   // hash password
   let updatedData = {
     name: req.body.name,
@@ -336,7 +341,6 @@ router.post("/update-admin/:id", ensureAuthenticated, isAdmin, (req, res) => {
       .then((hash) => {
         // set password to hashed
         updatedData.password = hash;
-
         Admins.findByIdAndUpdate(req.params.id, updatedData)
           .then(() => {
             res.redirect("/admins-list");
@@ -359,8 +363,14 @@ router.post("/update-admin/:id", ensureAuthenticated, isAdmin, (req, res) => {
       })
       .catch((err) => console.log(err));
   }
+});
 
-  console.log(updatedData);
+router.get("/delete-admin/:id", (req, res) => {
+  Admins.findByIdAndRemove(req.params.id)
+    .then(() => {
+      res.redirect("/admins-list");
+    })
+    .catch((err) => console.log(err));
 });
 
 module.exports = router;
