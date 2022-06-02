@@ -3,7 +3,6 @@ const router = express.Router();
 const orders = require("../models/orders");
 
 router.get("/sell/:id/:name/:price", (req, res) => {
-  console.log(req.params.id, req.params.price);
   const orderid = req.user.id;
   const newProductPrice = parseInt(req.params.price, 10);
 
@@ -21,7 +20,7 @@ router.get("/sell/:id/:name/:price", (req, res) => {
           _id: orderid,
           totalQty: 1,
           totalPrice: newProductPrice,
-          selectedProduct: [selectedProduct],
+          selectedProduct: [newProduct],
         });
 
         newOrder
@@ -32,7 +31,30 @@ router.get("/sell/:id/:name/:price", (req, res) => {
           .catch((err) => console.log(err));
       }
       if (order) {
-        console.log("Update product");
+        let indexOfProduct = -1;
+        for (let i = 0; i < order.selectedProduct.length; i++) {
+          if (req.params.id === order.selectedProduct[i]._id) {
+            indexOfProduct = i;
+            break;
+          }
+        }
+
+        if (indexOfProduct >= 0) {
+          console.log(`Update product of index ${indexOfProduct}`);
+        } else {
+          order.totalQty = order.totalQty + 1;
+          order.totalPrice = order.totalPrice + newProductPrice;
+          order.selectedProduct.push(newProduct);
+
+          orders
+            .updateOne({ _id: orderid }, { $set: order })
+            .then((result) => {
+              console.log(result);
+
+              console.log(order);
+            })
+            .catch((err) => console.log(err));
+        }
       }
     })
     .catch((err) => console.log(err));
