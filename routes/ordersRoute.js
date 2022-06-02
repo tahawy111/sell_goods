@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const orders = require("../models/orders");
 
-router.get("/sell/:id/:price/:name", (req, res) => {
+router.get("/sell/:id/:name/:price", (req, res) => {
   console.log(req.params.id, req.params.price);
   const orderid = req.user.id;
   const newProductPrice = parseInt(req.params.price, 10);
