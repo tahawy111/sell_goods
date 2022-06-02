@@ -10,6 +10,7 @@ router.get("/sell/:id/:name/:price", (req, res) => {
     _id: req.params.id,
     name: req.params.name,
     price: newProductPrice,
+    qty: 1,
   };
 
   orders
@@ -25,9 +26,7 @@ router.get("/sell/:id/:name/:price", (req, res) => {
 
         newOrder
           .save()
-          .then((doc) => {
-            console.log(doc);
-          })
+          .then((doc) => {})
           .catch((err) => console.log(err));
       }
       if (order) {
@@ -48,11 +47,7 @@ router.get("/sell/:id/:name/:price", (req, res) => {
 
           orders
             .updateOne({ _id: orderid }, { $set: order })
-            .then((result) => {
-              console.log(result);
-
-              console.log(order);
-            })
+            .then((result) => {})
             .catch((err) => console.log(err));
         }
       }
