@@ -15,7 +15,6 @@ app.use(express.static("public"));
 // BodyParser
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-
 // Express Session
 app.use(
   session({
@@ -40,7 +39,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(require("./routes/router"));
+require("./routes")(app);
 
 mongoose
   .connect(
