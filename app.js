@@ -13,7 +13,7 @@ const session = require("express-session");
 app.use(express.static("public"));
 
 // BodyParser
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // Express Session
 app.use(

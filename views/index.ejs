@@ -32,7 +32,7 @@
                 src="/uploads/images/<%= ele.image %>"
                 />
                 <td><a href="/details/<%= ele._id %>" class="btn btn-primary">More</a></td>
-                <td><a href="/sell/<%= ele._id %>/<%= ele.price %>" class="btn btn-success">Sell</a></td>
+                <td><a href="/sell/<%= ele._id %>/<%= ele.name %>/<%= ele.price %>" class="btn btn-success">Sell</a></td>
               </td>
             </tr>
             <% }) %>
