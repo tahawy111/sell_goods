@@ -41,6 +41,15 @@ router.get("/cart/:id/:name/:price", (req, res, next) => {
             break;
           }
         }
+        // if i chosed the same product it's gonna update
+        if (indexOfProduct >= 0) {
+          console.log("update Product of index", indexOfProduct);
+        }
+        // if i chosed the same product it's gonna update
+        else {
+          cart.totalQuantity = totalQuantity + 1;
+          cart.totalPrice = cart.totalPrice + price;
+        }
       }
     })
     .catch((err) => console.log(err));
