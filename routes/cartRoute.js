@@ -15,6 +15,7 @@ router.get("/cart/:id/:name/:price", (req, res, next) => {
     _id: id,
     price,
     name,
+    quantity: 1,
   };
   CartModel.findById(cartId)
     .then((cart) => {
@@ -43,12 +44,41 @@ router.get("/cart/:id/:name/:price", (req, res, next) => {
         }
         // if i chosed the same product it's gonna update
         if (indexOfProduct >= 0) {
-          console.log("update Product of index", indexOfProduct);
-        }
-        // if i chosed the same product it's gonna update
-        else {
-          cart.totalQuantity = totalQuantity + 1;
+          cart.selectedProduct[indexOfProduct].quantity =
+            cart.selectedProduct[indexOfProduct].quantity + 1;
+
+          cart.selectedProduct[indexOfProduct].price =
+            cart.selectedProduct[indexOfProduct].price + price;
+
+          cart.totalQuantity = cart.totalQuantity + 1;
+
           cart.totalPrice = cart.totalPrice + price;
+
+          CartModel.updateOne({ _id: cartId }, { $set: cart })
+            .then((doc) => {
+              console.log(doc);
+              console.log(cart);
+            })
+            .catch((err) => console.log(err));
+        }
+        // if i chosed another unique product
+        else {
+          // update qty
+          cart.totalQuantity = cart.totalQuantity + 1;
+
+          // update total price
+          cart.totalPrice = cart.totalPrice + price;
+
+          // update product list
+          cart.selectedProduct.push(newProduct);
+
+          // update in mongodb
+          CartModel.updateOne({ _id: cartId }, { $set: cart })
+            .then((doc) => {
+              console.log(doc);
+              console.log(cart);
+            })
+            .catch((err) => console.log(err));
         }
       }
     })
