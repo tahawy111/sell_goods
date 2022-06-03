@@ -38,12 +38,11 @@
                 >
               </td>
               <td>
-                <form action="/cart" method="post">
-                  <input type="hidden" name="id" value="<%= ele._id %>" />
-                  <input type="hidden" name="name" value="<%= ele.name %>" />
-                  <input type="hidden" name="price" value="<%= ele.price %>" />
-                  <button class="btn btn-success" type="submit">Sell</button>
-                </form>
+                <a
+                  class="btn btn-success"
+                  href="/cart/<%= ele._id %>/<%= ele.name %>/<%= ele.price %>"
+                  >Sell</a
+                >
               </td>
             </tr>
             <% }) %>

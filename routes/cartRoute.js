@@ -7,34 +7,55 @@ const {
   isAdmin,
 } = require("../config/auth");
 
-router.post("/cart", ensureAuthenticated, (req, res) => {
-  const { id, name, price } = req.body;
-
-  const newCart = CartModel({
-    name,
+router.get("/cart/:id/:name/:price", (req, res, next) => {
+  const { id, name } = req.params;
+  const price = +req.params.price;
+  const cartId = req.user.id;
+  const newProduct = {
+    _id: id,
     price,
-    amount: 1,
-    userId: req.user.id,
-    productId: id,
-    timestamp: Date.now(),
-  });
-
-  newCart
-    .save()
-    .then(() => res.redirect("/"))
-    .catch((err) => console.log(err));
-});
-
-router.get("/cart", (req, res, next) => {
-  CartModel.find({ userId: req.user.id })
-    .then((items) => {
-      res.render("cart", {
-        title: "Cart",
-        items,
-        admin: req.user,
-      });
+    name,
+  };
+  CartModel.findById(cartId)
+    .then((cart) => {
+      if (!cart) {
+        const newCart = CartModel({
+          _id: cartId,
+          totalQuantity: 1,
+          totalPrice: price,
+          selectedProduct: [newProduct],
+        });
+        newCart
+          .save()
+          .then((doc) => {
+            res.redirect("/");
+            console.log(doc);
+          })
+          .catch((err) => console.log(err));
+      }
+      if (cart) {
+        let indexOfProduct = -1;
+        for (let i = 0; i < cart.selectedProduct.length; i++) {
+          if (id === cart.selectedProduct[i]._id) {
+            indexOfProduct = i;
+            break;
+          }
+        }
+      }
     })
     .catch((err) => console.log(err));
 });
+
+// router.get("/cart", (req, res, next) => {
+//   CartModel.find({ userId: req.user.id })
+//     .then((items) => {
+//       res.render("cart", {
+//         title: "Cart",
+//         items,
+//         admin: req.user,
+//       });
+//     })
+//     .catch((err) => console.log(err));
+// });
 
 module.exports = router;
