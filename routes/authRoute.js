@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Admins = require("../models/Admins");
+const AdminModel = require("../models/AdminModel");
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
 const {
@@ -47,7 +47,7 @@ router.post("/create-admin", ensureAuthenticated, isAdmin, (req, res) => {
     });
   } else {
     // Validation Passed
-    Admins.findOne({ username: username }).then((admin) => {
+    AdminModel.findOne({ username: username }).then((admin) => {
       if (admin) {
         // Admin exists
         errors.push({ msg: "Username is already registered" });
@@ -62,7 +62,7 @@ router.post("/create-admin", ensureAuthenticated, isAdmin, (req, res) => {
           comment,
         });
       } else {
-        const newAdmin = new Admins({
+        const newAdmin = new AdminModel({
           name: name,
           username: username,
           password: password,
@@ -131,7 +131,7 @@ router.get("/logout", ensureAuthenticated, (req, res) => {
 
 // Admins List
 router.get("/admins-list", ensureAuthenticated, isAdmin, (req, res) => {
-  Admins.find()
+  AdminModel.find()
     .then((result) => {
       res.render("admins-list", {
         title: "Admins List",
@@ -144,7 +144,7 @@ router.get("/admins-list", ensureAuthenticated, isAdmin, (req, res) => {
 
 // Edit Admin
 router.get("/edit-admin/:id", ensureAuthenticated, isAdmin, (req, res) => {
-  Admins.findById(req.params.id)
+  AdminModel.findById(req.params.id)
     .then((result) => {
       res.render("edit-admin", {
         title: "Edit Admin",
@@ -180,7 +180,7 @@ router.post("/update-admin/:id", ensureAuthenticated, isAdmin, (req, res) => {
       .then((hash) => {
         // set password to hashed
         updatedData.password = hash;
-        Admins.findByIdAndUpdate(req.params.id, updatedData)
+        AdminModel.findByIdAndUpdate(req.params.id, updatedData)
           .then(() => {
             res.redirect("/admins-list");
           })
@@ -190,7 +190,7 @@ router.post("/update-admin/:id", ensureAuthenticated, isAdmin, (req, res) => {
         throw err;
       });
   } else {
-    Admins.findByIdAndUpdate(req.params.id, {
+    AdminModel.findByIdAndUpdate(req.params.id, {
       name: req.body.name,
       username: req.body.username,
       password: req.body.password,
@@ -205,7 +205,7 @@ router.post("/update-admin/:id", ensureAuthenticated, isAdmin, (req, res) => {
 });
 
 router.get("/delete-admin/:id", (req, res) => {
-  Admins.findByIdAndRemove(req.params.id)
+  AdminModel.findByIdAndRemove(req.params.id)
     .then(() => {
       res.redirect("/admins-list");
     })

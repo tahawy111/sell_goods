@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const fs = require("fs");
-const productModel = require("../models/productModel");
+const ProductModel = require("../models/ProductModel");
 const {
   ensureAuthenticated,
   forwardAuthenticated,
@@ -23,8 +23,7 @@ const upload = multer({ storage: storage }).single("image");
 
 // routes
 router.get("/", ensureAuthenticated, (req, res) => {
-  productModel
-    .find()
+  ProductModel.find()
     .then((result) => {
       res.render("index", {
         title: "Home",
@@ -36,13 +35,13 @@ router.get("/", ensureAuthenticated, (req, res) => {
 });
 
 router.post("/add", ensureAuthenticated, upload, (req, res) => {
-  const image = new productModel({
+  const product = new ProductModel({
     name: req.body.name,
     price: req.body.price,
     quantity: req.body.quantity,
     image: req.file.filename,
   });
-  image.save();
+  product.save();
   res.redirect("/");
 });
 
@@ -54,8 +53,7 @@ router.get("/add", ensureAuthenticated, (req, res) => {
 });
 
 router.get("/details/:id", ensureAuthenticated, (req, res) => {
-  productModel
-    .findById(req.params.id)
+  ProductModel.findById(req.params.id)
     .then((result) => {
       res.render("details", {
         title: "Details",
@@ -67,8 +65,7 @@ router.get("/details/:id", ensureAuthenticated, (req, res) => {
 });
 
 router.get("/edit/:id", ensureAuthenticated, (req, res) => {
-  productModel
-    .findById(req.params.id)
+  ProductModel.findById(req.params.id)
     .then((result) => {
       res.render("edit", {
         title: "Edit",
@@ -95,13 +92,12 @@ router.post("/update/:id", ensureAuthenticated, upload, (req, res) => {
   }
 
   // here we added the new data
-  productModel
-    .findByIdAndUpdate(req.params.id, {
-      name: req.body.name,
-      price: req.body.price,
-      quantity: req.body.quantity,
-      image: new_image,
-    })
+  ProductModel.findByIdAndUpdate(req.params.id, {
+    name: req.body.name,
+    price: req.body.price,
+    quantity: req.body.quantity,
+    image: new_image,
+  })
     .then((result) => {
       res.redirect("/");
     })
@@ -109,8 +105,7 @@ router.post("/update/:id", ensureAuthenticated, upload, (req, res) => {
 });
 
 router.get("/delete/:id", ensureAuthenticated, (req, res) => {
-  productModel
-    .findByIdAndRemove(req.params.id)
+  ProductModel.findByIdAndRemove(req.params.id)
     .then((result) => {
       // remove image from storage place
       fs.unlinkSync(`./public/uploads/images/${result.image}`);
@@ -121,10 +116,9 @@ router.get("/delete/:id", ensureAuthenticated, (req, res) => {
 
 router.get("/search", ensureAuthenticated, (req, res) => {
   // so now we will get input value from query parameters like "?search=amer"
-  productModel
-    .find({
-      $or: [{ name: { $regex: req.query.name, $options: "i" } }],
-    })
+  ProductModel.find({
+    $or: [{ name: { $regex: req.query.name, $options: "i" } }],
+  })
     .then((result) => {
       res.render("search-result", {
         title: "Search Result",
@@ -145,22 +139,20 @@ router.get("/full-search", ensureAuthenticated, (req, res) => {
 });
 
 router.get("/full-search-result", ensureAuthenticated, (req, res) => {
-  productModel
-    .find({
-      // here i am searching with two parameters & if i want to add more i can do it easily
-      $or: [
-        { name: req.query.name },
-        { price: req.query.price },
-        { quantity: req.query.quantity },
-      ],
-    })
-    .then((result) => {
-      res.render("full-search-result", {
-        title: "Full Search Result",
-        data: result,
-        admin: req.user,
-      });
+  ProductModel.find({
+    // here i am searching with two parameters & if i want to add more i can do it easily
+    $or: [
+      { name: req.query.name },
+      { price: req.query.price },
+      { quantity: req.query.quantity },
+    ],
+  }).then((result) => {
+    res.render("full-search-result", {
+      title: "Full Search Result",
+      data: result,
+      admin: req.user,
     });
+  });
 });
 
 router.get("/not_found", ensureAuthenticated, (req, res) => {

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
-const Admins = require("../models/Admins");
+const AdminModel = require("../models/AdminModel");
 // Load admin model
 
 module.exports = (passport) => {
@@ -10,7 +10,7 @@ module.exports = (passport) => {
       { usernameField: "username" },
       (username, password, done) => {
         // Match Admin
-        Admins.findOne({ username: username })
+        AdminModel.findOne({ username: username })
           .then((user) => {
             if (!user) {
               return done(null, false, {
@@ -38,7 +38,7 @@ module.exports = (passport) => {
   });
 
   passport.deserializeUser((id, done) => {
-    Admins.findById(id, (err, user) => {
+    AdminModel.findById(id, (err, user) => {
       done(err, user);
     });
   });
