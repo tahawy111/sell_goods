@@ -10,6 +10,7 @@ router.get("/sell/:id/:name/:price", (req, res) => {
     _id: req.params.id,
     name: req.params.name,
     price: newProductPrice,
+    singlePrice: newProductPrice,
     qty: 1,
   };
 
@@ -22,6 +23,7 @@ router.get("/sell/:id/:name/:price", (req, res) => {
           totalQty: 1,
           totalPrice: newProductPrice,
           selectedProduct: [newProduct],
+          singlePrice: newProductPrice,
         });
 
         newOrder
@@ -39,7 +41,20 @@ router.get("/sell/:id/:name/:price", (req, res) => {
         }
 
         if (indexOfProduct >= 0) {
-          console.log(`Update product of index ${indexOfProduct}`);
+          order.selectedProduct[indexOfProduct].qty =
+            order.selectedProduct[indexOfProduct].qty + 1;
+
+          order.selectedProduct[indexOfProduct].price =
+            order.selectedProduct[indexOfProduct].price + newProductPrice;
+
+          order.totalQty = order.totalQty + 1;
+
+          order.totalPrice = order.totalPrice + newProductPrice;
+
+          orders
+            .updateOne({ _id: orderid }, { $set: order })
+            .then((result) => {})
+            .catch((err) => console.log(err));
         } else {
           order.totalQty = order.totalQty + 1;
           order.totalPrice = order.totalPrice + newProductPrice;
