@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
 const AdminModel = require("../models/AdminModel");
+const CartModel = require("../models/CartModel");
 // Load admin model
 
 module.exports = (passport) => {
@@ -39,7 +40,15 @@ module.exports = (passport) => {
 
   passport.deserializeUser((id, done) => {
     AdminModel.findById(id, (err, user) => {
-      done(err, user);
+      CartModel.findById(id)
+        .then((cart) => {
+          if (!cart) {
+            return done(err, user);
+          }
+          user.cart = cart;
+          return done(err, user);
+        })
+        .catch((err) => console.log(err));
     });
   });
 };

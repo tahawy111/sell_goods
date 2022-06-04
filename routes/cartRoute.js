@@ -7,7 +7,7 @@ const {
   isAdmin,
 } = require("../config/auth");
 
-router.get("/cart/:id/:name/:price", (req, res, next) => {
+router.get("/cart/:id/:name/:price", ensureAuthenticated, (req, res, next) => {
   const { id, name } = req.params;
   const price = +req.params.price;
   const cartId = req.user.id;
@@ -17,6 +17,8 @@ router.get("/cart/:id/:name/:price", (req, res, next) => {
     name,
     quantity: 1,
   };
+  // console.log(req.user);
+  // console.log(req.user.cart);
   CartModel.findById(cartId)
     .then((cart) => {
       if (!cart) {
@@ -56,8 +58,9 @@ router.get("/cart/:id/:name/:price", (req, res, next) => {
 
           CartModel.updateOne({ _id: cartId }, { $set: cart })
             .then((doc) => {
-              console.log(doc);
-              console.log(cart);
+              // console.log(doc);
+              // console.log(cart);
+              res.redirect("/");
             })
             .catch((err) => console.log(err));
         }
@@ -75,8 +78,9 @@ router.get("/cart/:id/:name/:price", (req, res, next) => {
           // update in mongodb
           CartModel.updateOne({ _id: cartId }, { $set: cart })
             .then((doc) => {
-              console.log(doc);
-              console.log(cart);
+              // console.log(doc);
+              // console.log(cart);
+              res.redirect("/");
             })
             .catch((err) => console.log(err));
         }

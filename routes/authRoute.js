@@ -13,9 +13,17 @@ const {
 
 // creating admins
 router.get("/create-admin", ensureAuthenticated, isAdmin, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
   res.render("create-admin", {
     title: "Create Admin",
     admin: req.user,
+    totalProducts,
   });
 });
 router.post("/create-admin", ensureAuthenticated, isAdmin, (req, res) => {
@@ -131,12 +139,20 @@ router.get("/logout", ensureAuthenticated, (req, res) => {
 
 // Admins List
 router.get("/admins-list", ensureAuthenticated, isAdmin, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
   AdminModel.find()
     .then((result) => {
       res.render("admins-list", {
         title: "Admins List",
         data: result,
         admin: req.user,
+        totalProducts,
       });
     })
     .catch((err) => console.log(err));
@@ -144,12 +160,20 @@ router.get("/admins-list", ensureAuthenticated, isAdmin, (req, res) => {
 
 // Edit Admin
 router.get("/edit-admin/:id", ensureAuthenticated, isAdmin, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
   AdminModel.findById(req.params.id)
     .then((result) => {
       res.render("edit-admin", {
         title: "Edit Admin",
         data: result,
         admin: req.user,
+        totalProducts,
       });
     })
     .catch((err) => console.log(err));

@@ -23,12 +23,21 @@ const upload = multer({ storage: storage }).single("image");
 
 // routes
 router.get("/", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
   ProductModel.find()
     .then((result) => {
       res.render("index", {
         title: "Home",
         data: result,
         admin: req.user,
+        totalProducts,
       });
     })
     .catch((err) => console.log(err));
@@ -46,31 +55,57 @@ router.post("/add", ensureAuthenticated, upload, (req, res) => {
 });
 
 router.get("/add", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
   res.render("add", {
     title: "Add",
     admin: req.user,
+    totalProducts,
   });
 });
 
 router.get("/details/:id", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
   ProductModel.findById(req.params.id)
     .then((result) => {
       res.render("details", {
         title: "Details",
         data: result,
         admin: req.user,
+        totalProducts,
       });
     })
     .catch((err) => console.log(err));
 });
 
 router.get("/edit/:id", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
   ProductModel.findById(req.params.id)
     .then((result) => {
       res.render("edit", {
         title: "Edit",
         data: result,
         admin: req.user,
+        totalProducts,
       });
     })
     .catch((err) => console.log(err));
@@ -115,6 +150,13 @@ router.get("/delete/:id", ensureAuthenticated, (req, res) => {
 });
 
 router.get("/search", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
   // so now we will get input value from query parameters like "?search=amer"
   ProductModel.find({
     $or: [{ name: { $regex: req.query.name, $options: "i" } }],
@@ -124,6 +166,7 @@ router.get("/search", ensureAuthenticated, (req, res) => {
         title: "Search Result",
         data: result,
         admin: req.user,
+        totalProducts,
       });
     })
     .catch((err) => {
@@ -132,13 +175,28 @@ router.get("/search", ensureAuthenticated, (req, res) => {
 });
 
 router.get("/full-search", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
   res.render("full-search", {
     title: "Search",
     admin: req.user,
+    totalProducts,
   });
 });
 
 router.get("/full-search-result", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
   ProductModel.find({
     // here i am searching with two parameters & if i want to add more i can do it easily
     $or: [
@@ -151,6 +209,7 @@ router.get("/full-search-result", ensureAuthenticated, (req, res) => {
       title: "Full Search Result",
       data: result,
       admin: req.user,
+      totalProducts,
     });
   });
 });
