@@ -166,7 +166,7 @@ router.get("/cart/decProduct/:index", ensureAuthenticated, (req, res) => {
   console.log(userCart);
 });
 
-router.get("/deleteProduct/:index", ensureAuthenticated, (req, res) => {
+router.get("/cart/deleteProduct/:index", ensureAuthenticated, (req, res) => {
   const { index } = req.params;
 
   const productsArray = req.user.cart.selectedProduct;
@@ -189,27 +189,10 @@ router.get("/deleteProduct/:index", ensureAuthenticated, (req, res) => {
   console.log(req.user.cart);
 });
 
-router.get("/deleteProduct/:index", ensureAuthenticated, (req, res) => {
-  const { index } = req.params;
-
-  const productsArray = req.user.cart.selectedProduct;
-
-  req.user.cart.totalQuantity =
-    req.user.cart.totalQuantity - req.user.cart.selectedProduct[index].quantity;
-
-  req.user.cart.totalPrice =
-    req.user.cart.totalPrice - req.user.cart.selectedProduct[index].price;
-
-  productsArray.splice(index, 1);
-
-  CartModel.updateOne({ _id: req.user.cart._id }, { $set: req.user.cart })
-    .then((doc) => {
-      console.log(doc);
-      res.redirect("/cart");
-    })
-    .catch((err) => console.log(err));
-
-  console.log(req.user.cart);
+router.get("/cart/deleteAll", ensureAuthenticated, (req, res) => {
+  CartModel.findByIdAndDelete(req.user.cart._id).then((result) => {
+    res.redirect("/");
+  });
 });
 
 module.exports = router;

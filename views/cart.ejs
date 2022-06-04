@@ -22,7 +22,7 @@
               <td>
                 <%= ele.name %>
                 <a
-                  href="/deleteProduct/<%= index %>"
+                  href="/cart/deleteProduct/<%= index %>"
                   class="btn btn-danger float-end"
                   ><i class="fa-solid fa-trash"></i
                 ></a>
@@ -63,9 +63,21 @@
             </tr>
           </tbody>
         </table>
+
+        <a href="/cart/deleteAll" class="btn btn-danger delAll">Delete All</a>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  const delAll = document.querySelector(`.delAll`);
+  delAll.addEventListener("click", (e) => {
+    if (confirm("Do you want to delete all products from your cart") === true) {
+    } else {
+      e.preventDefault();
+    }
+  });
+</script>
 
 <%- include('./partials/footer.ejs') %>
