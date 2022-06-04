@@ -12,8 +12,6 @@
               <th>Quantity</th>
               <th>Price Of One</th>
               <th>Total Price</th>
-              <!-- <th>Total</th>
-              <th></th> -->
             </tr>
           </thead>
 
@@ -22,15 +20,39 @@
             <tr>
               <td><%= index + 1 %></td>
               <td><%= ele.name %></td>
-              <td><%= ele.quantity %></td>
+              <td>
+                <% if (ele.quantity <= 1) { %>
+                <a href="#" class="btn me-2 disabled"
+                  ><i class="fa-solid fa-square-minus fs-4"></i
+                ></a>
+                <% }else { %>
+                <a href="#" class="btn me-2"
+                  ><i class="fa-solid fa-square-minus fs-4"></i
+                ></a>
+                <% } %> <%= ele.quantity %> <% if (ele.quantity >= ele.
+                qtyInStore ) { %>
+
+                <a href="#" class="btn ms-2 disabled"
+                  ><i class="fa-solid fa-square-plus fs-4"></i
+                ></a>
+
+                <% }else{ %>
+                <a href="#" class="btn ms-2"
+                  ><i class="fa-solid fa-square-plus fs-4"></i
+                ></a>
+                <%}%>
+              </td>
               <td><%= ele.priceOfOne %></td>
               <td><%= ele.price %></td>
             </tr>
             <% }) %>
             <tr>
-              <th scope="row">3</th>
-              <td colspan="3">Larry the Bird</td>
-              <td>@twitter</td>
+              <td colspan="2"></td>
+              <td class="fw-bold">
+                Total Quantity: <%= userCart.totalQuantity %>
+              </td>
+              <td></td>
+              <td class="fw-bold">Total Price: <%= userCart.totalPrice %></td>
             </tr>
           </tbody>
         </table>
