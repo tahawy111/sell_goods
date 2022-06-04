@@ -14,6 +14,7 @@ router.get("/cart/:id/:name/:price", ensureAuthenticated, (req, res, next) => {
   const newProduct = {
     _id: id,
     price,
+    priceOfOne: price,
     name,
     quantity: 1,
   };
@@ -89,16 +90,24 @@ router.get("/cart/:id/:name/:price", ensureAuthenticated, (req, res, next) => {
     .catch((err) => console.log(err));
 });
 
-// router.get("/cart", (req, res, next) => {
-//   CartModel.find({ userId: req.user.id })
-//     .then((items) => {
-//       res.render("cart", {
-//         title: "Cart",
-//         items,
-//         admin: req.user,
-//       });
-//     })
-//     .catch((err) => console.log(err));
-// });
+router.get("/cart", (req, res, next) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+    res.redirect("/");
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  const userCart = req.user.cart;
+
+  res.render("cart", {
+    title: "Cart",
+    totalProducts,
+    admin: req.user,
+    userCart,
+  });
+});
 
 module.exports = router;
