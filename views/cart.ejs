@@ -19,25 +19,32 @@
             <% userCart.selectedProduct.forEach((ele,index)=>{ %>
             <tr>
               <td><%= index + 1 %></td>
-              <td><%= ele.name %></td>
+              <td>
+                <%= ele.name %>
+                <a
+                  href="/deleteProduct/<%= index %>"
+                  class="btn btn-danger float-end"
+                  ><i class="fa-solid fa-trash"></i
+                ></a>
+              </td>
               <td>
                 <% if (ele.quantity <= 1) { %>
-                <a href="#" class="btn me-2 disabled"
+                <a href="" class="btn me-2 disabled"
                   ><i class="fa-solid fa-square-minus fs-4"></i
                 ></a>
                 <% }else { %>
-                <a href="#" class="btn me-2"
+                <a href="/cart/decProduct/<%= index %>" class="btn me-2"
                   ><i class="fa-solid fa-square-minus fs-4"></i
                 ></a>
                 <% } %> <%= ele.quantity %> <% if (ele.quantity >= ele.
                 qtyInStore ) { %>
 
-                <a href="#" class="btn ms-2 disabled"
+                <a href="" class="btn ms-2 disabled"
                   ><i class="fa-solid fa-square-plus fs-4"> </i>
                 </a>
 
                 <% }else{ %>
-                <a href="#" class="btn ms-2"
+                <a href="/cart/incProduct/<%= index %>" class="btn ms-2"
                   ><i class="fa-solid fa-square-plus fs-4"></i>
                 </a>
                 <%}%>

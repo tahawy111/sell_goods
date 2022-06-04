@@ -97,7 +97,7 @@ router.get(
   }
 );
 
-router.get("/cart", (req, res, next) => {
+router.get("/cart", ensureAuthenticated, (req, res, next) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
@@ -115,6 +115,101 @@ router.get("/cart", (req, res, next) => {
     admin: req.user,
     userCart,
   });
+});
+
+router.get("/cart/incProduct/:index", ensureAuthenticated, (req, res) => {
+  const { index } = req.params;
+  const userCart = req.user.cart;
+  const productPrice = userCart.selectedProduct[index].priceOfOne;
+  // Edit
+  userCart.selectedProduct[index].quantity =
+    userCart.selectedProduct[index].quantity + 1;
+
+  userCart.totalQuantity = userCart.totalQuantity + 1;
+
+  userCart.selectedProduct[index].price =
+    userCart.selectedProduct[index].price + productPrice;
+
+  userCart.totalPrice = userCart.totalPrice + productPrice;
+
+  CartModel.updateOne({ _id: userCart._id }, { $set: userCart })
+    .then((doc) => {
+      console.log(doc);
+      res.redirect("/cart");
+    })
+    .catch((err) => console.log(err));
+
+  console.log(userCart);
+});
+router.get("/cart/decProduct/:index", ensureAuthenticated, (req, res) => {
+  const { index } = req.params;
+  const userCart = req.user.cart;
+  const productPrice = userCart.selectedProduct[index].priceOfOne;
+  // Edit
+  userCart.selectedProduct[index].quantity =
+    userCart.selectedProduct[index].quantity - 1;
+
+  userCart.totalQuantity = userCart.totalQuantity - 1;
+
+  userCart.selectedProduct[index].price =
+    userCart.selectedProduct[index].price - productPrice;
+
+  userCart.totalPrice = userCart.totalPrice - productPrice;
+
+  CartModel.updateOne({ _id: userCart._id }, { $set: userCart })
+    .then((doc) => {
+      console.log(doc);
+      res.redirect("/cart");
+    })
+    .catch((err) => console.log(err));
+
+  console.log(userCart);
+});
+
+router.get("/deleteProduct/:index", ensureAuthenticated, (req, res) => {
+  const { index } = req.params;
+
+  const productsArray = req.user.cart.selectedProduct;
+
+  req.user.cart.totalQuantity =
+    req.user.cart.totalQuantity - req.user.cart.selectedProduct[index].quantity;
+
+  req.user.cart.totalPrice =
+    req.user.cart.totalPrice - req.user.cart.selectedProduct[index].price;
+
+  productsArray.splice(index, 1);
+
+  CartModel.updateOne({ _id: req.user.cart._id }, { $set: req.user.cart })
+    .then((doc) => {
+      console.log(doc);
+      res.redirect("/cart");
+    })
+    .catch((err) => console.log(err));
+
+  console.log(req.user.cart);
+});
+
+router.get("/deleteProduct/:index", ensureAuthenticated, (req, res) => {
+  const { index } = req.params;
+
+  const productsArray = req.user.cart.selectedProduct;
+
+  req.user.cart.totalQuantity =
+    req.user.cart.totalQuantity - req.user.cart.selectedProduct[index].quantity;
+
+  req.user.cart.totalPrice =
+    req.user.cart.totalPrice - req.user.cart.selectedProduct[index].price;
+
+  productsArray.splice(index, 1);
+
+  CartModel.updateOne({ _id: req.user.cart._id }, { $set: req.user.cart })
+    .then((doc) => {
+      console.log(doc);
+      res.redirect("/cart");
+    })
+    .catch((err) => console.log(err));
+
+  console.log(req.user.cart);
 });
 
 module.exports = router;
