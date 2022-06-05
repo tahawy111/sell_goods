@@ -23,6 +23,10 @@ const billSchema = new mongoose.Schema(
       required: true,
       type: String,
     },
+    billNumber: {
+      type: Date,
+      default: Date.now(),
+    },
   },
   { timestamps: true }
 );

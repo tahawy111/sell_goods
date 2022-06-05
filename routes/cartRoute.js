@@ -116,7 +116,6 @@ router.get("/cart", ensureAuthenticated, (req, res, next) => {
     title: "Cart",
     totalProducts,
     admin: req.user,
-    userCart,
   });
 });
 

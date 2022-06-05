@@ -1,0 +1,20 @@
+* {
+  font-family: "Cairo", sans-serif;
+}
+body {
+  background: #eee;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  width: fit-content;
+  flex-direction: row;
+}
+
+.brand {
+  transform: translateY(-65px);
+}
+.brand img {
+  width: 150px;
+}

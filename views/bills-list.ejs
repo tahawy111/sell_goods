@@ -8,12 +8,10 @@
           <thead>
             <tr class="table-dark">
               <th>#</th>
+              <th>Print</th>
               <th>Date</th>
               <th>price</th>
               <th>Quantity</th>
-              <th>Image</th>
-              <th></th>
-              <th></th>
             </tr>
           </thead>
 
@@ -21,6 +19,14 @@
             <% data.forEach((ele,index)=>{ %>
             <tr>
               <td><%= index + 1 %></td>
+              <td>
+                <a
+                  class="btn btn-primary"
+                  target="_blank"
+                  href="/bills-list/print/<%= ele._id %>"
+                  >Print</a
+                >
+              </td>
               <td><%= ele.createdAt.toISOString() %></td>
               <td><%= ele.totalPrice %></td>
               <td><%= ele.totalQuantity %></td>
