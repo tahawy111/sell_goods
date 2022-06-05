@@ -33,9 +33,9 @@
                 </div>
                 <div class="billed w-100">
                   <span class="font-weight-bold text-uppercase"
-                    >:رقم الفاتورة
+                    >رقم الفاتورة:
                   </span>
-                  <br /><span class="ml-1"><%= data._id %></span>
+                  <span class="ml-1"><%= data.billNumber %></span>
                 </div>
               </div>
               <div class="text-center brand mt-3">
@@ -43,7 +43,7 @@
                 <div class="fs-2 title">الفتح ستور</div>
               </div>
             </div>
-            <div class="mt-3">
+            <div style="transform: translateY(-46px)" class=".ttable">
               <div class="table-responsive">
                 <table class="table">
                   <thead>
@@ -63,6 +63,13 @@
                       <td><%= ele.price %></td>
                     </tr>
                     <% }) %>
+                    <td></td>
+                    <td>العدد الاجمالي: <%= data.totalQuantity %></td>
+                    <td></td>
+                    <td>
+                      <%= data.totalPrice %>
+                      <span class="fw-bold"> :السعر الاجمالي</span>
+                    </td>
                   </tbody>
                 </table>
               </div>

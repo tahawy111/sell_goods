@@ -92,14 +92,13 @@ router.post("/create-admin", ensureAuthenticated, isAdmin, (req, res) => {
             newAdmin
               .save()
               .then(() => {
-                req.flash(
-                  "success_msg",
-                  "Manager has been registered successfully"
-                );
+                req.flash("success_msg", "تمت اضافة المدير بنجاح");
                 res.render("success-page", {
                   title: "Success",
                   admin: req.user,
-                  success_title: "Manager has been registered successfully",
+                  success_title: "تمت اضافة المدير بنجاح",
+                  btn_title: "أذهب الي الصفحة الرئيسية",
+                  btn_url: "/",
                 });
               })
               .catch((err) => console.log(err));

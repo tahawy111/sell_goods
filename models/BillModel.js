@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+let counter = 1;
 const billSchema = new mongoose.Schema(
   {
     totalQuantity: {
@@ -24,8 +24,8 @@ const billSchema = new mongoose.Schema(
       type: String,
     },
     billNumber: {
-      type: Date,
-      default: Date.now(),
+      type: Number,
+      default: () => counter++,
     },
   },
   { timestamps: true }

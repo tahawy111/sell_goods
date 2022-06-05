@@ -8,10 +8,11 @@
           <thead>
             <tr class="table-dark">
               <th>#</th>
-              <th>Print</th>
-              <th>Date</th>
-              <th>price</th>
-              <th>Quantity</th>
+              <th>طباعة</th>
+              <th>التاريخ</th>
+              <th>السعر الاجمالي</th>
+              <th>الكمية</th>
+              <th>رقم الفاتورة</th>
             </tr>
           </thead>
 
@@ -24,12 +25,13 @@
                   class="btn btn-primary"
                   target="_blank"
                   href="/bills-list/print/<%= ele._id %>"
-                  >Print</a
+                  >طباعة</a
                 >
               </td>
               <td><%= ele.createdAt.toISOString() %></td>
               <td><%= ele.totalPrice %></td>
               <td><%= ele.totalQuantity %></td>
+              <td><%= ele.billNumber %></td>
             </tr>
             <% }) %>
           </tbody>

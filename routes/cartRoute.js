@@ -198,12 +198,29 @@ router.get("/cart/deleteProduct/:index", ensureAuthenticated, (req, res) => {
 });
 
 router.get("/cart/deleteAll", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+    res.redirect("/");
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
   CartModel.findByIdAndDelete(req.user.cart._id).then((result) => {
     res.redirect("/");
   });
 });
 
 router.get("/cart/newBill", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+    res.redirect("/");
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
   req.user.cart.selectedProduct.forEach((ele) => {
     ProductModel.findOne({ _id: ele._id })
       .then((doc) => {
@@ -227,12 +244,18 @@ router.get("/cart/newBill", ensureAuthenticated, (req, res) => {
   });
   bill
     .save()
-    .then((result) => {})
-    .catch((err) => console.log(err));
-
-  CartModel.findByIdAndDelete(req.user.cart._id)
     .then((result) => {
-      res.redirect("/");
+      res.render("success-page", {
+        title: "Success",
+        admin: req.user,
+        success_title: "تمت عملية البيع بنجاح",
+        btn_title: "طباعة الفاتورة",
+        btn_url: `/bills-list/print/${result._id}`,
+        totalProducts,
+      });
+      CartModel.findByIdAndDelete(req.user.cart._id)
+        .then((result) => {})
+        .catch((err) => console.log(err));
     })
     .catch((err) => console.log(err));
 });
