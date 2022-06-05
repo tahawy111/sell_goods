@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -27,43 +27,43 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/">Home</a>
+              <a class="nav-link active" aria-current="page" href="/">الرئيسية</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/add">Add Product</a>
+              <a class="nav-link" href="/add">اضافة منتج</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/cart">Cart
+              <a class="nav-link" href="/cart">العربة
                 <span style="color: #fff;background:#dc3539;" class="badge rounded-pill text-bg-danger"><%= totalProducts %></span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/full-search">Full Search</a>
+              <a class="nav-link" href="/full-search">البحث الكامل</a>
             </li>
             
             <li class="nav-item">
-              <a class="nav-link" href="/bills-list">Bills List</a>
+              <a class="nav-link" href="/bills-list">قائمة الفواتير</a>
             </li>
             
             <% if(admin.manageAdmins){ %>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Admins
+                  المديرين
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="/admins-list">Admins list</a></li>
+                  <li><a class="dropdown-item" href="/admins-list">قائمة المديرين</a></li>
                   <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="/create-admin">Create Admin</a></li>
+                  <li><a class="dropdown-item" href="/create-admin">اضافة مدير</a></li>
                 </ul>
               </li>
               <% } %>  
             <li class="nav-item">
-              <span class="text-light nav-link fw-bold">Welcome: <span class='text-danger'><%= admin.name %></span></span>
+              <span class="text-light nav-link fw-bold">مرحبا: <span class='text-danger'><%= admin.name %></span></span>
             </li>
             <li class="nav-item">
-              <a class="btn ms-5 btn-outline-danger logout" href="/logout">Logout</a>
+              <a class="btn ms-5 btn-outline-danger logout" href="/logout">تسجيل الخروج</a>
             </li>
             
           </ul>
