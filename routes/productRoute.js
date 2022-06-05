@@ -48,6 +48,7 @@ router.post("/add", ensureAuthenticated, upload, (req, res) => {
     name: req.body.name,
     price: req.body.price,
     quantity: req.body.quantity,
+    barcode: req.body.barcode,
     image: req.file.filename,
   });
   product.save();
@@ -131,6 +132,7 @@ router.post("/update/:id", ensureAuthenticated, upload, (req, res) => {
     name: req.body.name,
     price: req.body.price,
     quantity: req.body.quantity,
+    barcode: req.body.barcode,
     image: new_image,
   })
     .then((result) => {

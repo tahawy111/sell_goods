@@ -39,5 +39,8 @@ router.get("/bills-list/print/:id", ensureAuthenticated, (req, res) => {
     })
     .catch((err) => console.log(err));
 });
+router.post("/search-bills", ensureAuthenticated, (req, res) => {
+  console.log(req.body.search);
+});
 
 module.exports = router;

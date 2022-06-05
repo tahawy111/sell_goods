@@ -11,6 +11,7 @@
               <th>Name</th>
               <th>price</th>
               <th>Quantity</th>
+              <th>Barcode</th>
               <th>Image</th>
               <th></th>
               <th></th>
@@ -24,6 +25,7 @@
               <td><%= ele.name %></td>
               <td><%= ele.price %></td>
               <td><%= ele.quantity %></td>
+              <td><%= ele.barcode %></td>
               <td>
                 <img
                   width="50"
@@ -34,14 +36,14 @@
 
               <td>
                 <a href="/details/<%= ele._id %>" class="btn btn-primary"
-                  >More</a
+                  >اكثر</a
                 >
               </td>
               <td>
                 <a
                   class="btn btn-success"
                   href="/cart/<%= ele._id %>/<%= ele.name %>/<%= ele.price %>/<%= ele.quantity %>"
-                  >Sell</a
+                  >بيع</a
                 >
               </td>
             </tr>
