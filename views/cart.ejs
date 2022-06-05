@@ -30,12 +30,12 @@
               <td>
                 <% if (ele.quantity <= 1) { %>
                 <a href="" class="btn me-2 disabled"
-                  ><i class="fa-solid fa-square-minus fs-4"></i
-                ></a>
+                  ><i class="fa-solid fa-square-minus fs-4"></i>
+                </a>
                 <% }else { %>
-                <a href="/cart/decProduct/<%= index %>" class="btn me-2"
-                  ><i class="fa-solid fa-square-minus fs-4"></i
-                ></a>
+                <a href="/cart/decProduct/<%= index %>" class="btn me-2">
+                  <i class="fa-solid fa-square-minus fs-4"></i>
+                </a>
                 <% } %> <%= ele.quantity %> <% if (ele.quantity >= ele.
                 qtyInStore ) { %>
 
@@ -44,8 +44,8 @@
                 </a>
 
                 <% }else{ %>
-                <a href="/cart/incProduct/<%= index %>" class="btn ms-2"
-                  ><i class="fa-solid fa-square-plus fs-4"></i>
+                <a href="/cart/incProduct/<%= index %>" class="btn ms-2">
+                  <i class="fa-solid fa-square-plus fs-4"></i>
                 </a>
                 <%}%>
               </td>
@@ -64,7 +64,10 @@
           </tbody>
         </table>
 
-        <a href="/cart/deleteAll" class="btn btn-danger delAll">Delete All</a>
+        <div class="d-flex justify-content-between">
+          <a href="/cart/deleteAll" class="btn btn-danger delAll">Delete All</a>
+          <a href="/cart/newBill" class="btn btn-success">New Bill</a>
+        </div>
       </div>
     </div>
   </div>

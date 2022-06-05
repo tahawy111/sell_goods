@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const CartModel = require("../models/CartModel");
+const BillModel = require("../models/BillModel");
+
 const {
   ensureAuthenticated,
   forwardAuthenticated,
   isAdmin,
 } = require("../config/auth");
+const ProductModel = require("../models/ProductModel");
 
 router.get(
   "/cart/:id/:name/:price/:qtyinstore",
@@ -199,6 +202,40 @@ router.get("/cart/deleteAll", ensureAuthenticated, (req, res) => {
   CartModel.findByIdAndDelete(req.user.cart._id).then((result) => {
     res.redirect("/");
   });
+});
+
+router.get("/cart/newBill", ensureAuthenticated, (req, res) => {
+  req.user.cart.selectedProduct.forEach((ele) => {
+    ProductModel.findOne({ _id: ele._id })
+      .then((doc) => {
+        doc.quantity = +doc.quantity - +ele.quantity;
+        ProductModel.findByIdAndUpdate(ele._id, {
+          quantity: doc.quantity,
+        })
+          .then((result) => {})
+          .catch((err) => console.log(err));
+      })
+      .then((result) => {})
+      .catch((err) => console.log(err));
+  });
+
+  const bill = new BillModel({
+    totalQuantity: req.user.cart.totalQuantity,
+    totalPrice: req.user.cart.totalPrice,
+    selectedProduct: req.user.cart.selectedProduct,
+    adminName: req.user.name,
+    adminUsername: req.user.username,
+  });
+  bill
+    .save()
+    .then((result) => {})
+    .catch((err) => console.log(err));
+
+  CartModel.findByIdAndDelete(req.user.cart._id)
+    .then((result) => {
+      res.redirect("/");
+    })
+    .catch((err) => console.log(err));
 });
 
 module.exports = router;
