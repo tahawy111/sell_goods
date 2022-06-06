@@ -260,4 +260,23 @@ router.get("/details2/:barcode", ensureAuthenticated, (req, res) => {
     .catch((err) => console.log(err));
 });
 
+router.get("/create-barcode", ensureAuthenticated, (req, res) => {
+  const barcode = +req.params.barcode;
+
+  console.log(barcode);
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  res.render("create-barcode", {
+    title: "انشاء باركود",
+    admin: req.user,
+    totalProducts,
+  });
+});
+
 module.exports = router;

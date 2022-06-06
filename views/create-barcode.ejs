@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>إنشاء الباركود</title>
+    <!-- Link Css File -->
+    <link rel="stylesheet" href="./css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="icon" href="/project_files/imgs/barcode-scanner.png" />
+  </head>
+  <body>
+    <style>
+      .barcode-container {
+        width: 1200px;
+        position: relative;
+        left: 18%;
+      }
+
+      @media print {
+        .all-container {
+          display: none !important;
+        }
+        .barcode-container {
+          width: 1200px;
+          position: relative;
+          left: 1%;
+        }
+      }
+    </style>
+    <div class="row all-container">
+      <div class="col-lg-6 mx-auto mt-4">
+        <div class="card shadow">
+          <div class="card-header bg-primary">
+            <h3 class="text-light">انشئ الباركود وبعدها اضغط علي زر الطباعة</h3>
+          </div>
+          <div class="card-body p-4">
+            <div class="mb-3">
+              <label class="fs-5" for="barcode">ادخل الباركود</label>
+              <input
+                type="text"
+                class="form-control form-control-lg input"
+                placeholder="ادخل الباركود"
+                required
+              />
+            </div>
+
+            <button class="btn btn-primary submit btn-lg">انشئ</button>
+            <button class="btn btn-success btn-lg" onclick="window.print()">
+              طباعة
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="barcode-container"></div>
+
+    <script>
+      let submit = document.querySelector(".submit");
+      let data = document.querySelector(".input");
+      let barcode = document.querySelector("#barcode");
+      let barcodeContainer = document.querySelector(".barcode-container");
+      let numOfBarcodes = document.querySelector(".barcode-container");
+
+      submit.addEventListener("click", () => {
+        JsBarcode("#barcode", data.value !== "" ? data.value : Date.now(), {
+          background: "#fff",
+          color: "#000",
+          height: 50,
+          displayValue: true,
+        });
+      });
+
+      barcodeContainer.innerHTML = `<svg id="barcode"></svg>`.repeat(68);
+    </script>
+
+    <script src="/js/barcode.js"></script>
+  </body>
+</html>
