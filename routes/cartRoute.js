@@ -106,8 +106,8 @@ router.get("/cart/:barcode", ensureAuthenticated, (req, res, next) => {
     .then((result) => {
       const id = result._id;
       const name = result.name;
-      const price = result.price;
-      const qtyInStore = result.quantity;
+      const price = +result.price;
+      const qtyInStore = +result.quantity;
       const cartId = req.user.id;
 
       const newProduct = {
@@ -138,26 +138,36 @@ router.get("/cart/:barcode", ensureAuthenticated, (req, res, next) => {
           if (cart) {
             let indexOfProduct = -1;
             for (let i = 0; i < cart.selectedProduct.length; i++) {
-              if (id === cart.selectedProduct[i]._id) {
+              if (
+                JSON.stringify(id) ===
+                JSON.stringify(cart.selectedProduct[i]._id)
+              ) {
+                console.log("true");
                 indexOfProduct = i;
                 break;
               }
             }
             // if i chosed the same product it's gonna update
             if (indexOfProduct >= 0) {
-              cart.selectedProduct[indexOfProduct].quantity =
-                cart.selectedProduct[indexOfProduct].quantity + 1;
-              cart.selectedProduct[indexOfProduct].price =
-                cart.selectedProduct[indexOfProduct].price + price;
-              cart.totalQuantity = cart.totalQuantity + 1;
-              cart.totalPrice = cart.totalPrice + price;
-              CartModel.updateOne({ _id: cartId }, { $set: cart })
-                .then((doc) => {
-                  // console.log(doc);
-                  // console.log(cart);
-                  res.redirect("/");
-                })
-                .catch((err) => console.log(err));
+              if (indexOfProduct >= 0) {
+                cart.selectedProduct[indexOfProduct].quantity =
+                  cart.selectedProduct[indexOfProduct].quantity + 1;
+
+                cart.selectedProduct[indexOfProduct].price =
+                  cart.selectedProduct[indexOfProduct].price + price;
+
+                cart.totalQuantity = cart.totalQuantity + 1;
+
+                cart.totalPrice = cart.totalPrice + price;
+
+                CartModel.updateOne({ _id: cartId }, { $set: cart })
+                  .then((doc) => {
+                    // console.log(doc);
+                    // console.log(cart);
+                    res.redirect("/");
+                  })
+                  .catch((err) => console.log(err));
+              }
             }
             // if i chosed another unique product
             else {
@@ -175,12 +185,11 @@ router.get("/cart/:barcode", ensureAuthenticated, (req, res, next) => {
                   res.redirect("/");
                 })
                 .catch((err) => console.log(err));
+              console.log("add another product");
             }
           }
         })
         .catch((err) => console.log(err));
-
-      console.log(result);
     })
     .catch((err) => console.log(err));
 });
