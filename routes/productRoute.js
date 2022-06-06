@@ -26,27 +26,48 @@ const upload = multer({ storage: storage }).single("image");
 // routes
 router.get("/", ensureAuthenticated, (req, res) => {
   let totalProducts = null;
+  const { category } = req.query;
 
   if (!req.user.cart) {
     totalProducts = "";
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
-  CategoryModel.find()
-    .then((doc) => {
-      ProductModel.find()
-        .then((result) => {
-          res.render("index", {
-            title: "Home",
-            data: result,
-            category: doc,
-            admin: req.user,
-            totalProducts,
-          });
-        })
-        .catch((err) => console.log(err));
-    })
-    .catch((err) => console.log(err));
+  console.log(category);
+
+  if (category && category != "الكل") {
+    CategoryModel.find()
+      .then((doc) => {
+        ProductModel.find({ category })
+          .then((result) => {
+            res.render("index", {
+              title: "Home",
+              data: result,
+              category: doc,
+              admin: req.user,
+              totalProducts,
+            });
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  } else {
+    CategoryModel.find()
+      .then((doc) => {
+        ProductModel.find()
+          .then((result) => {
+            res.render("index", {
+              title: "Home",
+              data: result,
+              category: doc,
+              admin: req.user,
+              totalProducts,
+            });
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  }
 });
 
 router.post("/add", ensureAuthenticated, upload, (req, res) => {
@@ -114,14 +135,19 @@ router.get("/edit/:id", ensureAuthenticated, (req, res) => {
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
-  ProductModel.findById(req.params.id)
-    .then((result) => {
-      res.render("edit", {
-        title: "Edit",
-        data: result,
-        admin: req.user,
-        totalProducts,
-      });
+  CategoryModel.find()
+    .then((doc) => {
+      ProductModel.findById(req.params.id)
+        .then((result) => {
+          res.render("edit", {
+            title: "Edit",
+            data: result,
+            admin: req.user,
+            totalProducts,
+            category: doc,
+          });
+        })
+        .catch((err) => console.log(err));
     })
     .catch((err) => console.log(err));
 });
@@ -148,6 +174,7 @@ router.post("/update/:id", ensureAuthenticated, upload, (req, res) => {
     dellerPrice: req.body.dellerPrice,
     quantity: req.body.quantity,
     barcode: req.body.barcode,
+    category: req.body.category,
     image: new_image,
   })
     .then((result) => {
