@@ -102,90 +102,83 @@ router.get(
 
 router.get("/cart/:barcode", ensureAuthenticated, (req, res, next) => {
   const { barcode } = req.params;
-
+  console.log(barcode);
   ProductModel.findOne({ barcode: barcode })
     .then((result) => {
-      const id = result._id;
-      const name = result.name;
-      const price = +result.price;
-      const qtyInStore = +result.quantity;
-      const cartId = req.user.id;
-      const newProduct = {
-        _id: id,
-        price,
-        priceOfOne: price,
-        name,
-        quantity: 1,
-        qtyInStore,
-      };
-
-      CartModel.findById(cartId)
-        .then((cart) => {
-          if (!cart) {
-            const newCart = CartModel({
-              _id: cartId,
-              totalQuantity: 1,
-              totalPrice: price,
-              selectedProduct: [newProduct],
-            });
-            newCart
-              .save()
-              .then((doc) => {
-                res.redirect("/");
-              })
-              .catch((err) => console.log(err));
-          }
-          if (cart) {
-            let indexOfProduct = -1;
-            for (let i = 0; i < cart.selectedProduct.length; i++) {
-              if (id === cart.selectedProduct[i]._id) {
-                indexOfProduct = i;
-                break;
-              }
-            }
-            // if i chosed the same product it's gonna update
-            if (indexOfProduct >= 0) {
-              cart.selectedProduct[indexOfProduct].quantity =
-                cart.selectedProduct[indexOfProduct].quantity + 1;
-
-              cart.selectedProduct[indexOfProduct].price =
-                cart.selectedProduct[indexOfProduct].price + price;
-
-              cart.totalQuantity = cart.totalQuantity + 1;
-
-              cart.totalPrice = cart.totalPrice + price;
-
-              CartModel.updateOne({ _id: cartId }, { $set: cart })
-                .then((doc) => {
-                  // console.log(doc);
-                  // console.log(cart);
-                  res.redirect("/");
-                })
-                .catch((err) => console.log(err));
-            }
-            // if i chosed another unique product
-            else {
-              // update qty
-              cart.totalQuantity = cart.totalQuantity + 1;
-
-              // update total price
-              cart.totalPrice = cart.totalPrice + price;
-
-              // update product list
-              cart.selectedProduct.push(newProduct);
-
-              // update in mongodb
-              CartModel.updateOne({ _id: cartId }, { $set: cart })
-                .then((doc) => {
-                  // console.log(doc);
-                  // console.log(cart);
-                  res.redirect("/");
-                })
-                .catch((err) => console.log(err));
-            }
-          }
-        })
-        .catch((err) => console.log(err));
+      console.log(result);
+      // const id = result._id;
+      // const name = result.name;
+      // const price = +result.price;
+      // const qtyInStore = +result.quantity;
+      // const cartId = req.user.id;
+      // const newProduct = {
+      //   _id: id,
+      //   price,
+      //   priceOfOne: price,
+      //   name,
+      //   quantity: 1,
+      //   qtyInStore,
+      // };
+      // CartModel.findById(cartId)
+      //   .then((cart) => {
+      //     if (!cart) {
+      //       const newCart = CartModel({
+      //         _id: cartId,
+      //         totalQuantity: 1,
+      //         totalPrice: price,
+      //         selectedProduct: [newProduct],
+      //       });
+      //       newCart
+      //         .save()
+      //         .then((doc) => {
+      //           res.redirect("/");
+      //         })
+      //         .catch((err) => console.log(err));
+      //     }
+      //     if (cart) {
+      //       let indexOfProduct = -1;
+      //       for (let i = 0; i < cart.selectedProduct.length; i++) {
+      //         if (id === cart.selectedProduct[i]._id) {
+      //           indexOfProduct = i;
+      //           break;
+      //         }
+      //       }
+      //       // if i chosed the same product it's gonna update
+      //       if (indexOfProduct >= 0) {
+      //         cart.selectedProduct[indexOfProduct].quantity =
+      //           cart.selectedProduct[indexOfProduct].quantity + 1;
+      //         cart.selectedProduct[indexOfProduct].price =
+      //           cart.selectedProduct[indexOfProduct].price + price;
+      //         cart.totalQuantity = cart.totalQuantity + 1;
+      //         cart.totalPrice = cart.totalPrice + price;
+      //         CartModel.updateOne({ _id: cartId }, { $set: cart })
+      //           .then((doc) => {
+      //             // console.log(doc);
+      //             // console.log(cart);
+      //             res.redirect("/");
+      //           })
+      //           .catch((err) => console.log(err));
+      //       }
+      //       // if i chosed another unique product
+      //       else {
+      //         // update qty
+      //         cart.totalQuantity = cart.totalQuantity + 1;
+      //         // update total price
+      //         cart.totalPrice = cart.totalPrice + price;
+      //         // update product list
+      //         cart.selectedProduct.push(newProduct);
+      //         // update in mongodb
+      //         CartModel.updateOne({ _id: cartId }, { $set: cart })
+      //           .then((doc) => {
+      //             // console.log(doc);
+      //             // console.log(cart);
+      //             res.redirect("/");
+      //           })
+      //           .catch((err) => console.log(err));
+      //       }
+      //     }
+      //   })
+      //   .catch((err) => console.log(err));
     })
     .catch((err) => console.log(err));
 });
@@ -287,18 +280,12 @@ router.get("/cart/deleteProduct/:index", ensureAuthenticated, (req, res) => {
   console.log(req.user.cart);
 });
 
-router.get("/cart/deleteAll", ensureAuthenticated, (req, res) => {
-  let totalProducts = null;
-
-  if (!req.user.cart) {
-    totalProducts = "";
-    res.redirect("/");
-  } else {
-    totalProducts = req.user.cart.totalQuantity;
-  }
-  CartModel.findByIdAndDelete(req.user.cart._id).then((result) => {
-    res.redirect("/");
-  });
+router.get("/cart/sell/deleteAll", ensureAuthenticated, (req, res) => {
+  CartModel.findByIdAndDelete(req.user.cart._id)
+    .then((result) => {
+      res.redirect("/");
+    })
+    .catch((err) => console.log(err));
 });
 
 router.get("/cart/sell/newBill", ensureAuthenticated, (req, res) => {
