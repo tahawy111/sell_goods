@@ -142,7 +142,6 @@ router.get("/cart/:barcode", ensureAuthenticated, (req, res, next) => {
                 JSON.stringify(id) ===
                 JSON.stringify(cart.selectedProduct[i]._id)
               ) {
-                console.log("true");
                 indexOfProduct = i;
                 break;
               }
@@ -185,7 +184,6 @@ router.get("/cart/:barcode", ensureAuthenticated, (req, res, next) => {
                   res.redirect("/");
                 })
                 .catch((err) => console.log(err));
-              console.log("add another product");
             }
           }
         })
@@ -282,7 +280,6 @@ router.get("/cart/deleteProduct/:index", ensureAuthenticated, (req, res) => {
 
     CartModel.updateOne({ _id: req.user.cart._id }, { $set: req.user.cart })
       .then((doc) => {
-        console.log(doc);
         res.redirect("/cart");
       })
       .catch((err) => console.log(err));
