@@ -1,19 +1,5 @@
 <%- include('./partials/head.ejs') %>
 
-<form
-  class="d-flex justify-content-center my-3"
-  method="get"
-  action="/bills-list/bill-search-result"
->
-  <input
-    class="form-control me-2 w-25"
-    type="search"
-    name="search"
-    placeholder="البحث برقم الفاتورة"
-    aria-label="Search"
-  />
-  <button class="btn btn-outline-success" type="submit">Search</button>
-</form>
 <div class="container-fluid">
   <div class="row my-4">
     <div class="col-lg-12">
@@ -31,23 +17,21 @@
           </thead>
 
           <tbody style="vertical-align: middle">
-            <% data.forEach((ele,index)=>{ %>
             <tr>
-              <td><%= index + 1 %></td>
+              <td>1</td>
               <td>
                 <a
                   class="btn btn-primary"
                   target="_blank"
-                  href="/bills-list/print/<%= ele._id %>"
+                  href="/bills-list/print/<%= data._id %>"
                   >طباعة</a
                 >
               </td>
-              <td><%= ele.createdAt.toISOString() %></td>
-              <td><%= ele.totalPrice %></td>
-              <td><%= ele.totalQuantity %></td>
-              <td><%= ele.billNumber %></td>
+              <td><%= data.createdAt.toISOString() %></td>
+              <td><%= data.totalPrice %></td>
+              <td><%= data.totalQuantity %></td>
+              <td><%= data.billNumber %></td>
             </tr>
-            <% }) %>
           </tbody>
         </table>
       </div>

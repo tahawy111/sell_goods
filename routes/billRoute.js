@@ -32,15 +32,37 @@ router.get("/bills-list/print/:id", ensureAuthenticated, (req, res) => {
   BillModel.findById(req.params.id)
     .then((doc) => {
       res.render("bill", {
-        title: "Bill",
+        title: "فاتورة مبيعات",
         admin: req.user,
         data: doc,
       });
     })
     .catch((err) => console.log(err));
 });
-router.post("/search-bills", ensureAuthenticated, (req, res) => {
-  console.log(req.body.search);
-});
+
+router.get(
+  "/bills-list/bill-search-result",
+  ensureAuthenticated,
+  (req, res) => {
+    let totalProducts = null;
+
+    if (!req.user.cart) {
+      totalProducts = "";
+    } else {
+      totalProducts = req.user.cart.totalQuantity;
+    }
+
+    BillModel.findOne({ billNumber: +req.query.search })
+      .then((doc) => {
+        res.render("bill-search-result", {
+          title: "bill-search-result",
+          admin: req.user,
+          data: doc,
+          totalProducts,
+        });
+      })
+      .catch((err) => console.log(err));
+  }
+);
 
 module.exports = router;

@@ -47,6 +47,7 @@ router.post("/add", ensureAuthenticated, upload, (req, res) => {
   const product = new ProductModel({
     name: req.body.name,
     price: req.body.price,
+    dellerPrice: req.body.dellerPrice,
     quantity: req.body.quantity,
     barcode: req.body.barcode,
     image: req.file.filename,
@@ -131,6 +132,7 @@ router.post("/update/:id", ensureAuthenticated, upload, (req, res) => {
   ProductModel.findByIdAndUpdate(req.params.id, {
     name: req.body.name,
     price: req.body.price,
+    dellerPrice: req.body.dellerPrice,
     quantity: req.body.quantity,
     barcode: req.body.barcode,
     image: new_image,
