@@ -40,29 +40,41 @@ router.get("/bills-list/print/:id", ensureAuthenticated, (req, res) => {
     .catch((err) => console.log(err));
 });
 
-router.get(
-  "/bills-list/bill-search-result",
-  ensureAuthenticated,
-  (req, res) => {
-    let totalProducts = null;
+router.get("/search-for-bills", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
 
-    if (!req.user.cart) {
-      totalProducts = "";
-    } else {
-      totalProducts = req.user.cart.totalQuantity;
-    }
-
-    BillModel.findOne({ billNumber: +req.query.search })
-      .then((doc) => {
-        res.render("bill-search-result", {
-          title: "bill-search-result",
-          admin: req.user,
-          data: doc,
-          totalProducts,
-        });
-      })
-      .catch((err) => console.log(err));
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
   }
-);
+
+  res.render("search-for-bills", {
+    title: "البحث عن الفواتير",
+    admin: req.user,
+    totalProducts,
+  });
+});
+router.get("/search-for-bills-result", ensureAuthenticated, (req, res) => {
+  const { sDate, eDate } = req.body;
+});
+
+router.get("/search-for-bills-result", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  console.log(req.body);
+
+  res.render("search-for-bills-result", {
+    title: "البحث عن الفواتير",
+    admin: req.user,
+    totalProducts,
+  });
+});
 
 module.exports = router;

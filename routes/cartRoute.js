@@ -42,7 +42,6 @@ router.get(
             .save()
             .then((doc) => {
               res.redirect("/");
-              console.log(doc);
             })
             .catch((err) => console.log(err));
         }

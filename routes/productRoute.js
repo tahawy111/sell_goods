@@ -280,7 +280,6 @@ router.get("/search-by-barcode", ensureAuthenticated, (req, res) => {
 router.get("/details2/:barcode", ensureAuthenticated, (req, res) => {
   const barcode = +req.params.barcode;
 
-  console.log(barcode);
   let totalProducts = null;
 
   if (!req.user.cart) {
@@ -297,7 +296,6 @@ router.get("/details2/:barcode", ensureAuthenticated, (req, res) => {
         admin: req.user,
         totalProducts,
       });
-      console.log(result);
     })
     .catch((err) => console.log(err));
 });
