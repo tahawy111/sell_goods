@@ -4,7 +4,7 @@
   <div class="col-lg-6 mx-auto mt-4">
     <div class="card shadow">
       <div class="card-header bg-primary">
-        <h3 class="text-light">Add New Product</h3>
+        <h3 class="text-light">اضافة منتج جديد</h3>
       </div>
       <div class="card-body p-4">
         <form
@@ -14,61 +14,70 @@
           enctype="multipart/form-data"
         >
           <div class="mb-3">
-            <label class="fs-5" for="name">Name</label>
+            <label class="fs-5" for="name">الاسم</label>
             <input
               type="text"
               name="name"
               class="form-control form-control-lg"
-              placeholder="Enter Name"
+              placeholder="ادخل الاسم"
               required
             />
           </div>
           <div class="mb-3">
-            <label class="fs-5" for="price">Price</label>
+            <label class="fs-5" for="price">السعر</label>
             <input
               type="number"
               name="price"
               class="form-control form-control-lg"
-              placeholder="Enter Price"
+              placeholder="ادخل السعر"
               required
             />
           </div>
           <div class="mb-3">
-            <label class="fs-5" for="barcode">Barcode</label>
+            <label class="fs-5" for="price">السعر الديلر</label>
+            <input
+              type="number"
+              name="price"
+              class="form-control form-control-lg"
+              placeholder="ادخل السعر الديلر"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="barcode">الباركود</label>
             <input
               type="text"
               name="barcode"
               class="form-control form-control-lg"
-              placeholder="Enter Barcode"
+              placeholder="ادخل الباركود"
             />
           </div>
 
           <div class="mb-3">
-            <label class="fs-5" for="quantity">Quantity</label>
+            <label class="fs-5" for="quantity">العدد</label>
             <input
               type="number"
               name="quantity"
               class="form-control form-control-lg"
-              placeholder="Enter Quantity"
+              placeholder="ادخل العدد"
               required
             />
           </div>
 
           <div class="mb-3">
             <label for="image" class="fs-5" class="form-label"
-              >Select Image</label
+              >اختر الصورة</label
             >
             <input
               type="file"
               name="image"
               class="form-control form-control-lg"
-              required
             />
           </div>
           <input
             type="submit"
             name="submit"
-            value="Add Product"
+            value="اضافة منتج"
             class="btn btn-primary btn-lg"
           />
         </form>
