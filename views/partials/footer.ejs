@@ -32,8 +32,6 @@ $(document).ready(function (){
     } else {
       code += e.key; //while this is not an 'enter' it stores the every key
       barcodeHandleSell.href = `/cart/${code}`;
-      barcodeHandleDetails.href = `/details/${code}`;
-      barcodeHandleDetails.click();
       barcodeHandleSell.click();
     }
 

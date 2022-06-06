@@ -119,8 +119,6 @@ router.get("/cart/:barcode", ensureAuthenticated, (req, res, next) => {
         qtyInStore,
       };
 
-      // console.log(req.user);
-      // console.log(req.user.cart);
       CartModel.findById(cartId)
         .then((cart) => {
           if (!cart) {
@@ -303,7 +301,7 @@ router.get("/cart/deleteAll", ensureAuthenticated, (req, res) => {
   });
 });
 
-router.get("/cart/newBill", ensureAuthenticated, (req, res) => {
+router.get("/cart/sell/newBill", ensureAuthenticated, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
