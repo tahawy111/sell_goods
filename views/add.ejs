@@ -62,7 +62,15 @@
               required
             />
           </div>
+          <div class="mb-3">
+            <label class="fs-5" for="category">الفئة</label>
+            <select name="category" class="form-control form-control-lg">
+              <% category.forEach((ele) => { %>
+              <option value="<%= ele.category %>"><%= ele.category %></option>
 
+              <% }) %>
+            </select>
+          </div>
           <div class="mb-3">
             <label for="image" class="fs-5" class="form-label"
               >اختر الصورة</label

@@ -8,6 +8,7 @@ const productSchema = new mongoose.Schema(
     quantity: Number,
     barcode: String,
     image: String,
+    category: String,
   },
   { timestamps: true }
 );

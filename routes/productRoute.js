@@ -3,6 +3,8 @@ const router = express.Router();
 const multer = require("multer");
 const fs = require("fs");
 const ProductModel = require("../models/ProductModel");
+const CategoryModel = require("../models/CategoryModel");
+
 const {
   ensureAuthenticated,
   forwardAuthenticated,
@@ -30,15 +32,19 @@ router.get("/", ensureAuthenticated, (req, res) => {
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
-
-  ProductModel.find()
-    .then((result) => {
-      res.render("index", {
-        title: "Home",
-        data: result,
-        admin: req.user,
-        totalProducts,
-      });
+  CategoryModel.find()
+    .then((doc) => {
+      ProductModel.find()
+        .then((result) => {
+          res.render("index", {
+            title: "Home",
+            data: result,
+            category: doc,
+            admin: req.user,
+            totalProducts,
+          });
+        })
+        .catch((err) => console.log(err));
     })
     .catch((err) => console.log(err));
 });
@@ -50,6 +56,7 @@ router.post("/add", ensureAuthenticated, upload, (req, res) => {
     dellerPrice: req.body.dellerPrice,
     quantity: req.body.quantity,
     barcode: req.body.barcode,
+    category: req.body.category,
     image: req.file.filename,
   });
   product.save();
@@ -64,12 +71,18 @@ router.get("/add", ensureAuthenticated, (req, res) => {
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
-
-  res.render("add", {
-    title: "Add",
-    admin: req.user,
-    totalProducts,
-  });
+  CategoryModel.find()
+    .then((doc) => {
+      res
+        .render("add", {
+          title: "Add",
+          category: doc,
+          admin: req.user,
+          totalProducts,
+        })
+        .catch((err) => console.log(err));
+    })
+    .catch((err) => console.log(err));
 });
 
 router.get("/details/:id", ensureAuthenticated, (req, res) => {
@@ -263,9 +276,6 @@ router.get("/details2/:barcode", ensureAuthenticated, (req, res) => {
 });
 
 router.get("/create-barcode", ensureAuthenticated, (req, res) => {
-  const barcode = +req.params.barcode;
-
-  console.log(barcode);
   let totalProducts = null;
 
   if (!req.user.cart) {
@@ -279,6 +289,31 @@ router.get("/create-barcode", ensureAuthenticated, (req, res) => {
     admin: req.user,
     totalProducts,
   });
+});
+
+router.get("/create-category", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  res.render("create-category", {
+    title: "انشاء فئة",
+    admin: req.user,
+    totalProducts,
+  });
+});
+router.post("/create-category", ensureAuthenticated, (req, res) => {
+  const newCategory = new CategoryModel(req.body);
+  newCategory
+    .save()
+    .then((result) => {
+      res.redirect("/");
+    })
+    .catch((err) => console.log(err));
 });
 
 module.exports = router;
