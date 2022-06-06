@@ -1,0 +1,43 @@
+<%- include('./partials/head.ejs') %>
+
+<div
+  style="height: 100vh"
+  class="d-flex justify-content-center align-items-center"
+>
+  <h1>فقط اضغط هنا و اعمل scan 📡</h1>
+</div>
+<a class="d-none barcode-handle-details" href=""></a>
+
+<script>
+  let code = "";
+  let reading = false;
+  const barcodeHandleDetails = document.querySelector(
+    ".barcode-handle-details"
+  );
+
+  document.addEventListener("keypress", (e) => {
+    //usually scanners throw an 'Enter' key at the end of read
+    if (e.keyCode === 13) {
+      if (code.length > 10) {
+        console.log(code);
+        /// code ready to use
+        code = "";
+      }
+    } else {
+      code += e.key; //while this is not an 'enter' it stores the every key
+      barcodeHandleDetails.href = `/details2/${code}`;
+      barcodeHandleDetails.click();
+    }
+
+    //run a timeout of 200ms at the first read and clear everything
+    if (!reading) {
+      reading = true;
+      setTimeout(() => {
+        code = "";
+        reading = false;
+      }, 200); //200 works fine for me but you can adjust it
+    }
+  });
+</script>
+
+<%- include('./partials/footer.ejs') %>

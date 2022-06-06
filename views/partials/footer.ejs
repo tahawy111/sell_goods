@@ -14,6 +14,39 @@ $(document).ready(function (){
      })
 
 })
+
+
+  let code = "";
+  let reading = false;
+  const barcodeHandleSell = document.querySelector(".barcode-handle-sell");
+  const barcodeHandleDetails = document.querySelector(".barcode-handle-details");
+
+  document.addEventListener("keypress", (e) => {
+    //usually scanners throw an 'Enter' key at the end of read
+    if (e.keyCode === 13) {
+      if (code.length > 10) {
+        console.log(code);
+        /// code ready to use
+        code = "";
+      }
+    } else {
+      code += e.key; //while this is not an 'enter' it stores the every key
+      barcodeHandleSell.href = `/cart/${code}`;
+      barcodeHandleDetails.href = `/details/${code}`;
+      barcodeHandleDetails.click();
+      barcodeHandleSell.click();
+    }
+
+    //run a timeout of 200ms at the first read and clear everything
+    if (!reading) {
+      reading = true;
+      setTimeout(() => {
+        code = "";
+        reading = false;
+      }, 200); //200 works fine for me but you can adjust it
+    }
+  });
+
 </script>
 </body>
 </html>

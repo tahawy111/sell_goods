@@ -208,7 +208,7 @@ router.get("/full-search-result", ensureAuthenticated, (req, res) => {
     ],
   }).then((result) => {
     res.render("full-search-result", {
-      title: "Full Search Result",
+      title: "ناتج البحث الكامل",
       data: result,
       admin: req.user,
       totalProducts,
@@ -218,6 +218,46 @@ router.get("/full-search-result", ensureAuthenticated, (req, res) => {
 
 router.get("/not_found", ensureAuthenticated, (req, res) => {
   res.render("404");
+});
+
+router.get("/search-by-barcode", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+  res.render("search-by-barcode", {
+    title: "البحث بالباركود",
+    admin: req.user,
+    totalProducts,
+  });
+});
+
+router.get("/details2/:barcode", ensureAuthenticated, (req, res) => {
+  const barcode = +req.params.barcode;
+
+  console.log(barcode);
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  ProductModel.findOne({ barcode: barcode })
+    .then((result) => {
+      res.render("details", {
+        title: "Details",
+        data: result,
+        admin: req.user,
+        totalProducts,
+      });
+      console.log(result);
+    })
+    .catch((err) => console.log(err));
 });
 
 module.exports = router;

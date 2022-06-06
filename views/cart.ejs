@@ -20,7 +20,12 @@
             <tr>
               <td><%= index + 1 %></td>
               <td>
-                <%= ele.name %>
+                <a
+                  class="text-decoration-none a-hover"
+                  target="_blank"
+                  href="/details/<%= ele._id %>"
+                  ><%= ele.name %></a
+                >
                 <a
                   href="/cart/deleteProduct/<%= index %>"
                   class="btn btn-danger float-end"
