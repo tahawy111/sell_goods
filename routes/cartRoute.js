@@ -335,6 +335,7 @@ router.get("/cart/sell/newBill", ensureAuthenticated, (req, res) => {
         success_title: "تمت عملية البيع بنجاح",
         btn_title: "طباعة الفاتورة",
         btn_url: `/bills-list/print/${result._id}`,
+        target: "_blank",
         totalProducts,
       });
       CartModel.findByIdAndDelete(req.user.cart._id)

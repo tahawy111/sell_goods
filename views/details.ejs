@@ -1,6 +1,9 @@
 <%- include('./partials/head.ejs') %>
 
 <h1 class="my-3 pb-3 text-center border-2 border-bottom">Details Page</h1>
+<a class="d-none barcode-handle-details" href=""></a>
+
+<% if(data){ %>
 
 <div class="container d-flex">
   <img
@@ -13,7 +16,7 @@
     <div>
       <h1>اسم المنتج: <%= data.name %></h1>
       <h2>السعر: <%= data.price %> L.E</h2>
-      <h2>السعر الديلر: <%= data.dellerPrice %> L.E</h2>
+      <h2>السعر الديلر: <%= data.dealerPrice %> L.E</h2>
     </div>
 
     <div>
@@ -33,6 +36,9 @@
   </div>
 </div>
 
+<% }else{ %>
+<h1 class="text-center">لا توجد بيانات</h1>
+<% } %>
 <script>
   // here we are making the confirm message to delete button
   let del = document.querySelector(".delete");
@@ -40,6 +46,37 @@
     if (confirm("Do you want to delete") === true) {
     } else {
       e.preventDefault();
+    }
+  });
+</script>
+<script>
+  let code = "";
+  let reading = false;
+  const barcodeHandleDetails = document.querySelector(
+    ".barcode-handle-details"
+  );
+
+  document.addEventListener("keypress", (e) => {
+    //usually scanners throw an 'Enter' key at the end of read
+    if (e.keyCode === 13) {
+      if (code.length > 10) {
+        console.log(code);
+        /// code ready to use
+        code = "";
+      }
+    } else {
+      code += e.key; //while this is not an 'enter' it stores the every key
+      barcodeHandleDetails.href = `/details2/${code}`;
+      barcodeHandleDetails.click();
+    }
+
+    //run a timeout of 200ms at the first read and clear everything
+    if (!reading) {
+      reading = true;
+      setTimeout(() => {
+        code = "";
+        reading = false;
+      }, 200); //200 works fine for me but you can adjust it
     }
   });
 </script>

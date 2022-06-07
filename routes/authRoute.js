@@ -98,6 +98,7 @@ router.post("/create-admin", ensureAuthenticated, isAdmin, (req, res) => {
                   admin: req.user,
                   success_title: "تمت اضافة المدير بنجاح",
                   btn_title: "أذهب الي الصفحة الرئيسية",
+                  target: "_self",
                   btn_url: "/",
                 });
               })

@@ -3,4 +3,5 @@ module.exports = (app) => {
   app.use(require("./authRoute"));
   app.use(require("./cartRoute"));
   app.use(require("./billRoute"));
+  app.use(require("./userDealerRoute"));
 };

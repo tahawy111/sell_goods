@@ -73,7 +73,7 @@ router.post("/add", ensureAuthenticated, upload, (req, res) => {
   const product = new ProductModel({
     name: req.body.name,
     price: req.body.price,
-    dellerPrice: req.body.dellerPrice,
+    dealerPrice: req.body.dealerPrice,
     quantity: req.body.quantity,
     barcode: req.body.barcode,
     category: req.body.category,
@@ -170,7 +170,7 @@ router.post("/update/:id", ensureAuthenticated, upload, (req, res) => {
   ProductModel.findByIdAndUpdate(req.params.id, {
     name: req.body.name,
     price: req.body.price,
-    dellerPrice: req.body.dellerPrice,
+    dealerPrice: req.body.dealerPrice,
     quantity: req.body.quantity,
     barcode: req.body.barcode,
     category: req.body.category,
@@ -245,7 +245,7 @@ router.get("/full-search-result", ensureAuthenticated, (req, res) => {
     $or: [
       { name: req.query.name },
       { price: req.query.price },
-      { quantity: req.query.quantity },
+      { quantity: { $lte: req.query.quantity } },
     ],
   }).then((result) => {
     res.render("full-search-result", {

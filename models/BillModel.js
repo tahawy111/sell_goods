@@ -25,7 +25,7 @@ const billSchema = new mongoose.Schema(
     },
     billNumber: {
       type: Number,
-      default: () => counter++,
+      default: Date.now(),
     },
   },
   { timestamps: true }
