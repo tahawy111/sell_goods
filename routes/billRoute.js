@@ -62,42 +62,46 @@ router.get("/bills-list/bill-search-result", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-// router.get("/search-for-bills", ensureAuthenticated, (req, res) => {
-//   let totalProducts = null;
+router.get("/search-for-bills", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
 
-//   if (!req.user.cart) {
-//     totalProducts = "";
-//   } else {
-//     totalProducts = req.user.cart.totalQuantity;
-//   }
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
 
-//   res.render("search-for-bills", {
-//     title: "البحث عن الفواتير",
-//     admin: req.user,
-//     totalProducts,
-//   });
-// });
+  res.render("search-for-bills", {
+    title: "البحث عن الفواتير",
+    admin: req.user,
+    totalProducts,
+  });
+});
 
-// router.get("/search-for-bills-result", ensureAuthenticated, (req, res) => {
-//   const { sDate, eDate } = req.body;
-// });
+router.get("/search-for-bills-result", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
 
-// router.get("/search-for-bills-result", ensureAuthenticated, (req, res) => {
-//   let totalProducts = null;
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
 
-//   if (!req.user.cart) {
-//     totalProducts = "";
-//   } else {
-//     totalProducts = req.user.cart.totalQuantity;
-//   }
+  const IsoSDate = new Date(req.query.sDate);
+  const IsoEDate = new Date(req.query.eDate);
 
-//   console.log(req.body);
-
-//   res.render("search-for-bills-result", {
-//     title: "البحث عن الفواتير",
-//     admin: req.user,
-//     totalProducts,
-//   });
-// });
+  BillModel.find({
+    createdAt: { $lte: IsoEDate, $gte: IsoSDate },
+  })
+    .then((result) => {
+      res.render("search-for-bills-result", {
+        title: "ناتج البحث عن الفواتير بالتاريخ",
+        admin: req.user,
+        totalProducts,
+        data: result,
+      });
+    })
+    .catch((err) => console.log(err));
+});
 
 module.exports = router;
