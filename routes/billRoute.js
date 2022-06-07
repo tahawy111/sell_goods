@@ -40,7 +40,8 @@ router.get("/bills-list/print/:id", ensureAuthenticated, (req, res) => {
     .catch((err) => console.log(err));
 });
 
-router.get("/search-for-bills", ensureAuthenticated, (req, res) => {
+router.get("/bills-list/bill-search-result", (req, res) => {
+  const { search } = req.query;
   let totalProducts = null;
 
   if (!req.user.cart) {
@@ -49,32 +50,54 @@ router.get("/search-for-bills", ensureAuthenticated, (req, res) => {
     totalProducts = req.user.cart.totalQuantity;
   }
 
-  res.render("search-for-bills", {
-    title: "البحث عن الفواتير",
-    admin: req.user,
-    totalProducts,
-  });
+  BillModel.findOne({ billNumber: search })
+    .then((result) => {
+      res.render("bill-search-result", {
+        title: "ناتج البحث برقم الفاتورة",
+        admin: req.user,
+        totalProducts,
+        data: result,
+      });
+    })
+    .catch((err) => console.log(err));
 });
-router.get("/search-for-bills-result", ensureAuthenticated, (req, res) => {
-  const { sDate, eDate } = req.body;
-});
 
-router.get("/search-for-bills-result", ensureAuthenticated, (req, res) => {
-  let totalProducts = null;
+// router.get("/search-for-bills", ensureAuthenticated, (req, res) => {
+//   let totalProducts = null;
 
-  if (!req.user.cart) {
-    totalProducts = "";
-  } else {
-    totalProducts = req.user.cart.totalQuantity;
-  }
+//   if (!req.user.cart) {
+//     totalProducts = "";
+//   } else {
+//     totalProducts = req.user.cart.totalQuantity;
+//   }
 
-  console.log(req.body);
+//   res.render("search-for-bills", {
+//     title: "البحث عن الفواتير",
+//     admin: req.user,
+//     totalProducts,
+//   });
+// });
 
-  res.render("search-for-bills-result", {
-    title: "البحث عن الفواتير",
-    admin: req.user,
-    totalProducts,
-  });
-});
+// router.get("/search-for-bills-result", ensureAuthenticated, (req, res) => {
+//   const { sDate, eDate } = req.body;
+// });
+
+// router.get("/search-for-bills-result", ensureAuthenticated, (req, res) => {
+//   let totalProducts = null;
+
+//   if (!req.user.cart) {
+//     totalProducts = "";
+//   } else {
+//     totalProducts = req.user.cart.totalQuantity;
+//   }
+
+//   console.log(req.body);
+
+//   res.render("search-for-bills-result", {
+//     title: "البحث عن الفواتير",
+//     admin: req.user,
+//     totalProducts,
+//   });
+// });
 
 module.exports = router;

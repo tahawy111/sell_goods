@@ -33,7 +33,6 @@ router.get("/", ensureAuthenticated, (req, res) => {
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
-  console.log(category);
 
   if (category && category != "الكل") {
     CategoryModel.find()

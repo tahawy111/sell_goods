@@ -17,6 +17,7 @@
           </thead>
 
           <tbody style="vertical-align: middle">
+            <% if(data){ %>
             <tr>
               <td>1</td>
               <td>
@@ -32,6 +33,11 @@
               <td><%= data.totalQuantity %></td>
               <td><%= data.billNumber %></td>
             </tr>
+            <% }else{ %>
+            <tr>
+              <h1 class="text-center">لاتوجد فواتير بهذا الرقم</h1>
+            </tr>
+            <% } %>
           </tbody>
         </table>
       </div>
