@@ -1,0 +1,67 @@
+<%- include('./partials/head.ejs') %>
+
+<div class="row w-100">
+  <div class="col-lg-6 mx-auto mt-4">
+    <div class="card shadow">
+      <div class="card-header bg-primary">
+        <h3 class="text-light">تعديل العميل ()</h3>
+      </div>
+      <div class="card-body p-4">
+        <form
+          action="/user-dealer-list/edit-user-dealer/<%= data._id %>"
+          method="post"
+          id="edit-user-dealer"
+        >
+          <div class="mb-3">
+            <label class="fs-5" for="name">الاسم</label>
+            <input
+              type="text"
+              name="name"
+              class="form-control form-control-lg"
+              placeholder="ادخل اسم العميل"
+              value="<%= data.name %> "
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="address">العنوان</label>
+            <input
+              type="text"
+              name="address"
+              class="form-control form-control-lg"
+              placeholder="ادخل العنوان"
+              value="<%= data.address %> "
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="phoneNumber">رقم الهاتف</label>
+            <input
+              type="number"
+              name="phoneNumber"
+              class="form-control form-control-lg"
+              placeholder="ادخل رقم الهاتف المحمول"
+              value="<%= data.phoneNumber %>"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="telephoneFix">رقم الهاتف الارضي</label>
+            <input
+              type="number"
+              name="telephoneFix"
+              class="form-control form-control-lg"
+              placeholder="ادخل رقم الهاتف الارضي"
+              value="<%= data.telephoneFix %>"
+            />
+          </div>
+
+          <input
+            type="submit"
+            value="تعديل العميل"
+            class="btn btn-primary btn-lg"
+          />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('./partials/footer.ejs') %>

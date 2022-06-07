@@ -25,16 +25,10 @@
               <td><%= ele.phoneNumber %></td>
               <td><%= ele.telephoneFix %></td>
               <td>
-                <a
-                  href="/user-dealer-list/delete-user-dealer/<%= ele._id %> "
-                  class="btn btn-danger del"
-                  >حذف العميل</a
-                >
-                <a
-                  href="/user-dealer-list/edit-user-dealer/<%= ele._id %>"
-                  class="btn btn-warning"
-                  >تعديل العميل</a
-                >
+                <form action="/index-dealer" method="get">
+                  <input type="hidden" name="userId" value="<%= ele._id %>" />
+                  <button class="btn btn-success" type="submit">اختر</button>
+                </form>
               </td>
             </tr>
             <% }) %>
@@ -44,20 +38,5 @@
     </div>
   </div>
 </div>
-
-<script>
-  // to make a confirm to all btns
-  let del = document.querySelectorAll(".del");
-  // get array from buttons
-  const delBtns = Array.from(del);
-  delBtns.forEach((e) => {
-    e.addEventListener("click", (el) => {
-      if (confirm("هل تريد الحذف")) {
-      } else {
-        el.preventDefault();
-      }
-    });
-  });
-</script>
 
 <%- include('./partials/footer.ejs') %>

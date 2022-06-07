@@ -19,6 +19,7 @@
               <th>#</th>
               <th>الاسم</th>
               <th>السعر</th>
+              <th>السعر الديلر</th>
               <th>العدد</th>
               <th>الباركود</th>
               <th>الصورة</th>
@@ -33,6 +34,7 @@
               <td><%= index + 1 %></td>
               <td><%= ele.name %></td>
               <td><%= ele.price %></td>
+              <td><%= ele.dealerPrice %></td>
               <td><%= ele.quantity %></td>
               <td><%= ele.barcode %></td>
               <td>
@@ -50,7 +52,7 @@
               <td>
                 <a
                   class="btn btn-success"
-                  href="/cart/<%= ele._id %>/<%= ele.name %>/<%= ele.price %>/<%= ele.quantity %>"
+                  href="/cart/<%= ele._id %>/<%= ele.name %>/<%= ele.price %>/<%= ele.quantity %>/<%= userId %>"
                   >بيع</a
                 >
               </td>

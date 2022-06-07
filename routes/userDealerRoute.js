@@ -71,4 +71,69 @@ router.get("/user-dealer-list", ensureAuthenticated, (req, res) => {
   });
 });
 
+router.get(
+  "/user-dealer-list/delete-user-dealer/:id",
+  ensureAuthenticated,
+  (req, res) => {
+    UserDealerModel.findByIdAndDelete(req.params.id)
+      .then((result) => {
+        res.redirect("/user-dealer-list");
+      })
+      .catch((err) => console.log(err));
+  }
+);
+router.get(
+  "/user-dealer-list/edit-user-dealer/:id",
+  ensureAuthenticated,
+  (req, res) => {
+    let totalProducts = null;
+
+    if (!req.user.cart) {
+      totalProducts = "";
+    } else {
+      totalProducts = req.user.cart.totalQuantity;
+    }
+
+    UserDealerModel.findById(req.params.id).then((result) => {
+      res.render("edit-user-dealer", {
+        title: "تعديل العميل الجملة",
+        admin: req.user,
+        totalProducts,
+        data: result,
+      });
+    });
+  }
+);
+
+router.post(
+  "/user-dealer-list/edit-user-dealer/:id",
+  ensureAuthenticated,
+  (req, res) => {
+    UserDealerModel.findByIdAndUpdate(req.params.id, req.body)
+      .then((result) => {
+        res.redirect("/user-dealer-list");
+      })
+      .catch((err) => console.log(err));
+  }
+);
+
+router.get("/select-user-for-dealer-sell", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  UserDealerModel.find().then((result) => {
+    res.render("select-user-dealer-for-sell", {
+      title: "قائمة العملاء الجملة",
+      admin: req.user,
+      totalProducts,
+      data: result,
+    });
+  });
+});
+
 module.exports = router;

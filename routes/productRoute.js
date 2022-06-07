@@ -68,6 +68,53 @@ router.get("/", ensureAuthenticated, (req, res) => {
       .catch((err) => console.log(err));
   }
 });
+router.get("/index-dealer", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+  const { category, userId } = req.query;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  if (category && category != "الكل") {
+    CategoryModel.find()
+      .then((doc) => {
+        ProductModel.find({ category })
+          .then((result) => {
+            const idOfUser = userId;
+            res.render("index-dealer", {
+              title: "Home",
+              userId,
+              data: result,
+              category: doc,
+              admin: req.user,
+              totalProducts,
+            });
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  } else {
+    CategoryModel.find()
+      .then((doc) => {
+        ProductModel.find()
+          .then((result) => {
+            res.render("index-dealer", {
+              title: "Home dealer",
+              data: result,
+              userId,
+              category: doc,
+              admin: req.user,
+              totalProducts,
+            });
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  }
+});
 
 router.post("/add", ensureAuthenticated, upload, (req, res) => {
   const product = new ProductModel({
