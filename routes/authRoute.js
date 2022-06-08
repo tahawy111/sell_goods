@@ -181,13 +181,11 @@ router.get("/edit-admin/:id", ensureAuthenticated, isAdmin, (req, res) => {
 
 // Update Admin
 router.post("/update-admin/:id", ensureAuthenticated, isAdmin, (req, res) => {
-  console.log(req.body.manageAdmins === undefined);
   if (req.body.manageAdmins === undefined) {
     req.body.manageAdmins = false;
   } else {
     req.body.manageAdmins = true;
   }
-  console.log(req.body.manageAdmins);
   // hash password
   let updatedData = {
     name: req.body.name,

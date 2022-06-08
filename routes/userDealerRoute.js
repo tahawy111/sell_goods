@@ -117,23 +117,4 @@ router.post(
   }
 );
 
-router.get("/select-user-for-dealer-sell", ensureAuthenticated, (req, res) => {
-  let totalProducts = null;
-
-  if (!req.user.cart) {
-    totalProducts = "";
-  } else {
-    totalProducts = req.user.cart.totalQuantity;
-  }
-
-  UserDealerModel.find().then((result) => {
-    res.render("select-user-dealer-for-sell", {
-      title: "قائمة العملاء الجملة",
-      admin: req.user,
-      totalProducts,
-      data: result,
-    });
-  });
-});
-
 module.exports = router;

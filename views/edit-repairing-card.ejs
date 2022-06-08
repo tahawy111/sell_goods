@@ -1,0 +1,93 @@
+<%- include('./partials/head.ejs') %>
+
+<div class="row w-100">
+  <div class="col-lg-6 mx-auto mt-4">
+    <div class="card shadow">
+      <div class="card-header bg-primary">
+        <h3 class="text-light">تعديل كرت الصيانة (<%= data.name %>)</h3>
+      </div>
+      <div class="card-body p-4">
+        <form
+          action="/repaingCard/edit-repairing-card/<%= data._id %> "
+          method="post"
+          id="edit-repairing-card"
+        >
+          <div class="mb-3">
+            <label class="fs-5" for="name">الاسم</label>
+            <input
+              type="text"
+              name="name"
+              class="form-control form-control-lg"
+              placeholder="ادخل اسم العميل"
+              value="<%= data.name %>"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="damageName">العطل</label>
+            <input
+              type="text"
+              name="damageName"
+              class="form-control form-control-lg"
+              placeholder="ادخل العطل"
+              value="<%= data.damageName %>"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="phoneNumber">رقم الهاتف</label>
+            <input
+              type="text"
+              name="phoneNumber"
+              class="form-control form-control-lg"
+              placeholder="ادخل رقم الهاتف المحمول"
+              value="<%= data.phoneNumber %>"
+            />
+          </div>
+
+          <div class="border-dark border-top border-bottom my-2 py-2">
+            <h4 class="text-center">الحالة</h4>
+          </div>
+
+          <div class="form-check">
+            <input class="check form-check-input" name="state" type="checkbox"
+            <%= data.state ? "checked" : "" %> id="MA">
+            <label class="form-check-label" for="MA"> خلص ؟ </label>
+          </div>
+
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+
+          <input
+            type="submit"
+            value="تعديل العميل"
+            class="btn btn-primary btn-lg"
+          />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let check = document.querySelector(".check");
+  check.addEventListener("change", (e) => {
+    if (check.checked === true) {
+      check.setAttribute("value", true);
+      check.setAttribute("checked", "");
+    } else {
+      check.setAttribute("value", false);
+      check.removeAttribute("checked");
+    }
+  });
+  window.onload = function () {
+    if (check.checked === true) {
+      check.value = true;
+    } else {
+      check.value = false;
+    }
+  };
+</script>
+
+<%- include('./partials/footer.ejs') %>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="icon" href="/project_files/imgs/Shopping.png" />
+    <link rel="stylesheet" href="/css/cairo.css" />
+    <title>طباعة كرت الصيانة</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        font-family: "Cairo", sans-serif;
+      }
+      .cont {
+        width: 800px;
+        height: 710px;
+        border: 1px solid black;
+        border-radius: 10px;
+      }
+      .brand {
+        transform: translateY(-35px);
+        border-bottom: 1px solid black;
+      }
+      .brand-2 {
+        transform: translateY(0);
+        border-bottom: 1px solid black;
+      }
+      .brand img {
+        width: 110px;
+      }
+      .title {
+        transform: translateY(-30px);
+      }
+      .num {
+        transform: translateY(-30px);
+      }
+      .brand-2 img {
+        width: 110px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cont">
+      <div class="text-center brand mt-3">
+        <img src="/project_files/imgs/Elfath-Logo.png" />
+        <div class="fs-4 title">الفتح ستور</div>
+        <div class="num">01063310981, 01117419902, 01145681652</div>
+      </div>
+
+      <div class="content">
+        <h3 style="padding-right: 30px">الاسم: <%= data.name %></h3>
+        <h3 style="padding-right: 30px">اسم العطل: <%= data.damageName %></h3>
+        <h3 style="padding-right: 30px">رقم الهاتف: <%= data.phoneNumber %></h3>
+        <h3 style="padding-right: 30px">
+          التاريخ: <%= data.createdAt.toLocaleDateString('ar-EG') %>
+        </h3>
+      </div>
+      <div style="border-top: 1px solid black" class="text-center brand-2">
+        <img src="/project_files/imgs/Elfath-Logo.png" />
+        <div class="fs-4 title">الفتح ستور</div>
+        <div class="num">01063310981, 01117419902, 01145681652</div>
+      </div>
+
+      <div class="content">
+        <h3 style="padding-right: 30px">الاسم: <%= data.name %></h3>
+        <h3 style="padding-right: 30px">اسم العطل: <%= data.damageName %></h3>
+        <h3 style="padding-right: 30px">رقم الهاتف: <%= data.phoneNumber %></h3>
+        <h3 style="padding-right: 30px">
+          التاريخ: <%= data.createdAt.toLocaleDateString('ar-EG') %>
+        </h3>
+      </div>
+    </div>
+  </body>
+</html>
