@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const BillModel = require("../models/BillModel");
+const PullMoneyModel = require("../models/PullMoneyModel");
+const CloseAccountModel = require("../models/CloseAccountModel");
 const {
   ensureAuthenticated,
   forwardAuthenticated,
@@ -104,4 +106,265 @@ router.get("/search-for-bills-result", ensureAuthenticated, (req, res) => {
     .catch((err) => console.log(err));
 });
 
+router.get("/close-account-daily", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+  let total = 0;
+  let totalPull = 0;
+  let date = new Date();
+
+  // for searching by today's date
+  let d = new Date();
+  d.setHours(0, 0, 0, 0);
+
+  let endOfDayDate = new Date(
+    d.getFullYear(),
+    d.getMonth(),
+    d.getDate(),
+    23,
+    59,
+    59
+  );
+  // get week days in array
+  const weekDays = [
+    "السبت",
+    "الاحد",
+    "الاثنين",
+    "الثلاث",
+    "الاربع",
+    "الخميس",
+    "الجمعة",
+  ];
+
+  // get today's date
+  const dateOfToday = date.toLocaleDateString("ar-EG");
+
+  // get yaeserday time stamp date
+  function getYesterdayDate() {
+    let d = new Date();
+    d.setHours(23, 59, 59);
+    return new Date(d.getTime() - 22 * 60 * 60 * 1000);
+  }
+  console.log(getYesterdayDate());
+
+  CloseAccountModel.findOne({
+    $or: [
+      { createdAt: { $lte: getYesterdayDate() } },
+      { updatedAt: { $lte: getYesterdayDate() } },
+    ],
+  })
+    .then((result) => {
+      let oldAmount = 0;
+      if (result) {
+        oldAmount = result.totalAmount;
+      } else {
+        oldAmount = 0;
+      }
+
+      PullMoneyModel.find({
+        createdAt: { $gte: d, $lte: endOfDayDate },
+      })
+        .then((result) => {
+          result.forEach((item) => {
+            totalPull += item.amount;
+          });
+
+          BillModel.find({
+            createdAt: { $gte: d, $lte: endOfDayDate },
+          }).then((ele) => {
+            ele.forEach((item) => {
+              total += item.totalPrice;
+            });
+            res.render("close-account-daily", {
+              title: "تقفيل الحساب يوميا",
+              admin: req.user,
+              totalProducts,
+              totalBill: total,
+              weekDays: weekDays[date.getDay() + 1],
+              totalPull,
+              dateOfToday,
+              oldAmount,
+            });
+          });
+        })
+        .catch((err) => console.log(err));
+    })
+    .catch((err) => console.log(err));
+});
+router.post("/close-account-daily", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+  const { weekDay, dateOfToday } = req.body;
+  const oldAmount = +req.body.oldAmount;
+  const totalPull = +req.body.totalPull;
+  const addedMoney = +req.body.addedMoney;
+  const totalBill = +req.body.totalBill;
+  const shop = +req.body.shop;
+  const name = req.user.name;
+
+  const totalAmount = totalBill + addedMoney - totalPull - shop;
+
+  const newCloseAccount = new CloseAccountModel({
+    name,
+    weekDay,
+    dateOfToday,
+    oldAmount,
+    totalPull,
+    addedMoney,
+    totalBill,
+    totalAmount,
+    shop,
+  });
+
+  newCloseAccount
+    .save()
+    .then((result) => {
+      res.render("success-page", {
+        title: "تم تقفيل الحساب اليومي بنجاح",
+        admin: req.user,
+        success_title: "تم تقفيل الحساب اليومي بنجاح",
+        btn_title: "اذهب الي الصفحة الرئيسية",
+        btn_url: `/`,
+        target: "_self",
+        totalProducts,
+      });
+    })
+    .catch((err) => console.log(err));
+});
+
+router.get("/daily-accounts-list", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+  CloseAccountModel.find().then((result) => {
+    res.render("daily-accounts-list", {
+      title: "قائمة الحسابات اليومية",
+      admin: req.user,
+      totalProducts,
+      data: result,
+    });
+  });
+});
+
+router.get("/edit-daily-account/:id", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+  CloseAccountModel.findById(req.params.id).then((result) => {
+    res.render("edit-daily-account", {
+      title: "تعديل الحساب اليومي",
+      admin: req.user,
+      totalProducts,
+      data: result,
+    });
+  });
+});
+router.post("/close-account-daily/:id", ensureAuthenticated, (req, res) => {
+  CloseAccountModel.findByIdAndUpdate(req.params.id, req.body).then(
+    (result) => {
+      res.redirect("/daily-accounts-list");
+    }
+  );
+});
+router.get("/delete-daily-account/:id", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+  CloseAccountModel.findByIdAndRemove(req.params.id).then((result) => {
+    res.redirect("/daily-accounts-list");
+  });
+});
+
+router.get("/pull-Money", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  res.render("pull-money", {
+    title: "عملية سحب فلوس",
+    admin: req.user,
+    totalProducts,
+  });
+});
+
+router.post("/pull-Money", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  const pullMoney = new PullMoneyModel(req.body);
+
+  pullMoney
+    .save()
+    .then((result) => {
+      res.render("success-page", {
+        title: "تمت اضافة عملية سحب الفلوس",
+        admin: req.user,
+        success_title: "تمت اضافة عملية سحب الفلوس",
+        btn_title: "اذهب الي الصفحة الرئيسية",
+        btn_url: `/`,
+        target: "_self",
+        totalProducts,
+      });
+    })
+    .catch((err) => console.log(err));
+});
+
+router.get("/pull-Money-list", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  PullMoneyModel.find()
+    .then((result) => {
+      res.render("pull-Money-list", {
+        title: "عملية سحب فلوس",
+        admin: req.user,
+        totalProducts,
+        data: result,
+      });
+    })
+    .catch((err) => console.log(err));
+});
+router.get("/delete-pull-money/:id", ensureAuthenticated, (req, res) => {
+  PullMoneyModel.findByIdAndRemove(req.params.id)
+    .then((result) => {
+      res.redirect("/pull-Money-list");
+    })
+    .catch((err) => console.log(err));
+});
 module.exports = router;

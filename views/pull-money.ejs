@@ -4,47 +4,46 @@
   <div class="col-lg-6 mx-auto mt-4">
     <div class="card shadow">
       <div class="card-header bg-primary">
-        <h3 class="text-light">اضافة كرت جديد</h3>
+        <h3 class="text-light">اضافة عملية سحب فلوس</h3>
       </div>
       <div class="card-body p-4">
-        <form
-          action="/repaingCard/add-repairing-card"
-          method="post"
-          id="add-reapiring-cart-form"
-        >
+        <form action="/pull-Money" method="post" id="add-form">
           <div class="mb-3">
             <label class="fs-5" for="name">الاسم</label>
             <input
               type="text"
               name="name"
               class="form-control form-control-lg"
-              placeholder="ادخل اسم العميل"
+              placeholder="ادخل اسم الشخص الذي سحب الفلوس"
               required
             />
           </div>
           <div class="mb-3">
-            <label class="fs-5" for="damageName">اسم العطل</label>
-            <input
-              type="text"
-              name="damageName"
-              class="form-control form-control-lg"
-              placeholder="ادخل اسم العطل"
-              required
-            />
-          </div>
-          <div class="mb-3">
-            <label class="fs-5" for="phoneNumber">رقم الهاتف</label>
+            <label class="fs-5" for="amount">المبلغ</label>
             <input
               type="number"
-              name="phoneNumber"
+              name="amount"
               class="form-control form-control-lg"
-              placeholder="ادخل رقم الهاتف"
+              placeholder="ادخل المبلغ المسحوب"
               required
             />
           </div>
+
+          <div class="form-floating mb-3">
+            <textarea
+              class="form-control"
+              placeholder="ليه"
+              name="why"
+              id="floatingTextarea2"
+              style="height: 100px"
+            ></textarea>
+            <label for="floatingTextarea2">سبب السحب</label>
+          </div>
+
           <input
             type="submit"
-            value="اضافة كرت جديد"
+            name="submit"
+            value="اضافة عملية سحب فلوس"
             class="btn btn-primary btn-lg"
           />
         </form>

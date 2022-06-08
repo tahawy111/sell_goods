@@ -69,13 +69,14 @@
         <div class="num">01063310981, 01117419902, 01145681652</div>
       </div>
 
-      <div class="content">
+      <div class="content position-relative">
         <h3 style="padding-right: 30px">الاسم: <%= data.name %></h3>
         <h3 style="padding-right: 30px">اسم العطل: <%= data.damageName %></h3>
         <h3 style="padding-right: 30px">رقم الهاتف: <%= data.phoneNumber %></h3>
         <h3 style="padding-right: 30px">
           التاريخ: <%= data.createdAt.toLocaleDateString('ar-EG') %>
         </h3>
+        <h4 style="position: absolute; right: 40%; top: 80%">سعر التصليح:</h4>
       </div>
     </div>
   </body>

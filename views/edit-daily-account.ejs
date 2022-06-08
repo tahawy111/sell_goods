@@ -1,0 +1,99 @@
+<%- include('./partials/head.ejs') %>
+
+<div class="row w-100">
+  <div class="col-lg-6 mx-auto mt-4">
+    <div class="card shadow">
+      <div class="card-header bg-primary">
+        <h3 class="text-light">تقفيل الحساب يوميا</h3>
+      </div>
+      <div class="card-body p-4">
+        <form
+          action="/close-account-daily/<%= data._id %>"
+          method="post"
+        >
+        <div class="mb-3">
+          <label class="fs-5" for="weekDay">اليوم</label>
+          <input
+            type="text"
+            name="weekDay"
+            class="form-control form-control-lg"
+            placeholder="ادخل اليوم الاسبوعي"
+            value="<%= data.weekDay %>"
+          />
+        </div>
+        <div class="mb-3">
+          <label class="fs-5" for="dateOfToday">التاريخ</label>
+          <input
+            type="text"
+            name="dateOfToday"
+            class="form-control form-control-lg"
+            placeholder="ادخل تاريخ اليوم"
+            value="<%= data.dateOfToday %>"
+          />
+        </div>
+
+          <div class="mb-3">
+            <label class="fs-5" for="oldAmount">المبلغ القديم</label>
+            <input
+              type="number"
+              name="oldAmount"
+              value="<%= data.oldAmount %>"
+              class="form-control form-control-lg"
+              placeholder="ادخل المبلغ القديم"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="totalBill">فواتير اليوم</label>
+            <input
+              type="number"
+              name="totalBill"
+              value="<%= data.totalBill %>"
+              class="form-control form-control-lg"
+              placeholder="ادخل فواتير اليوم"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label class="fs-5" for="totalPull">اجمالي المسحوبات</label>
+            <input
+              type="number"
+              name="totalPull"
+              value="<%= data.totalPull %>"
+              class="form-control form-control-lg"
+              placeholder="ادخل اجمالي المسحوبات"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="addedMoney">المبلغ المضاف</label>
+            <input
+              type="number"
+              name="addedMoney"
+              value="<%= data.addedMoney %>"
+              class="form-control form-control-lg"
+              placeholder="ادخل المبلغ المضاف"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="fs-5" for="shop">المحل</label>
+              <input
+              type="number"
+              name="shop"
+              value="<%= data.shop %>"
+              class="form-control form-control-lg"
+              placeholder="ادخل المبلغ المضاف"
+            />
+          </div>
+
+            <input
+              type="submit"
+              value="تعديل"
+              class="btn btn-primary btn-lg"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('./partials/footer.ejs') %>
