@@ -260,6 +260,89 @@ router.get("/daily-accounts-list", ensureAuthenticated, (req, res) => {
   });
 });
 
+router.get("/monthly-accounts-list", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+  const now = new Date();
+  // get the first day of the current mounth
+  const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  // get the last day of the current mounth
+  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+  CloseAccountModel.find({
+    $or: [
+      { createdAt: { $gte: firstDay, $lte: lastDay } },
+      { updatedAt: { $gte: firstDay, $lte: lastDay } },
+    ],
+  }).then((result) => {
+    res.render("monthly-accounts-list", {
+      title: "قائمة الحسابات الشهرية",
+      admin: req.user,
+      totalProducts,
+      data: result,
+    });
+  });
+});
+router.get("/search-for-closing-account", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  res.render("search-for-closing-account", {
+    title: "قائمة الحسابات الشهرية",
+    admin: req.user,
+    totalProducts,
+  });
+});
+router.get(
+  "/search-for-closing-account-result",
+  ensureAuthenticated,
+  (req, res) => {
+    let totalProducts = null;
+
+    if (!req.user.cart) {
+      totalProducts = "";
+    } else {
+      totalProducts = req.user.cart.totalQuantity;
+    }
+
+    const IsoSDate = new Date(req.query.sDate);
+    const IsoEDate = new Date(req.query.eDate);
+
+    let total = 0;
+
+    CloseAccountModel.find({
+      $or: [
+        { createdAt: { $lte: IsoEDate, $gte: IsoSDate } },
+        { updatedAt: { $lte: IsoEDate, $gte: IsoSDate } },
+      ],
+    })
+      .then((result) => {
+        result.forEach((item) => {
+          total += item.totalAmount;
+        });
+        res.render("search-for-closing-account-result", {
+          title: "قائمة الحسابات الشهرية",
+          admin: req.user,
+          totalProducts,
+          data: result,
+          totalAmount: total,
+        });
+      })
+      .catch((err) => console.log(err));
+  }
+);
+
 router.get("/edit-daily-account/:id", ensureAuthenticated, (req, res) => {
   let totalProducts = null;
 
