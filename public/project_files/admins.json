@@ -1,0 +1,99 @@
+[{
+  "_id": {
+    "$oid": "629782e521771dd17bb44642"
+  },
+  "password": "$2a$10$W3xZ/D21c.i44DMl0j0QJuS8IioZgd7SVavz.SBJ.Os3zy6uPE0ma",
+  "comment": "123465",
+  "manageAdmins": true,
+  "createdAt": {
+    "$date": {
+      "$numberLong": "1654092135667"
+    }
+  },
+  "updatedAt": {
+    "$date": {
+      "$numberLong": "1654092135667"
+    }
+  },
+  "username": "admin123",
+  "name": "amer"
+},{
+  "_id": {
+    "$oid": "62989d08830e21d063f6385f"
+  },
+  "name": "amer",
+  "username": "amer.582",
+  "password": "$2a$10$NwSCfFbhFo7mlC3Uk.15YebVD9xrET7.oQYDO15Lxl7G/1B5UmYgi",
+  "comment": "123456",
+  "createdAt": {
+    "$date": {
+      "$numberLong": "1654168840556"
+    }
+  },
+  "updatedAt": {
+    "$date": {
+      "$numberLong": "1654168851578"
+    }
+  },
+  "__v": 0,
+  "manageAdmins": true
+},{
+  "_id": {
+    "$oid": "6298be689bc9bccfcfbadcae"
+  },
+  "name": "user admin",
+  "username": "user.admin",
+  "password": "$2a$10$fd3pGoRtKAXB4m9DrzpXi.HwKsw7g/l6G/lgMPPSczIBarZvA95EG",
+  "comment": "123456",
+  "manageAdmins": true,
+  "createdAt": {
+    "$date": {
+      "$numberLong": "1654177384262"
+    }
+  },
+  "updatedAt": {
+    "$date": {
+      "$numberLong": "1654181664118"
+    }
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "6298be979bc9bccfcfbadcb3"
+  },
+  "name": "user user",
+  "username": "user.user",
+  "password": "$2a$10$zgpGGejwlyEPzf6r2J4Lheip5iAI40EoMAFTkU9h3Oj3zzBkX5Iq6",
+  "comment": "123456",
+  "createdAt": {
+    "$date": {
+      "$numberLong": "1654177431974"
+    }
+  },
+  "updatedAt": {
+    "$date": {
+      "$numberLong": "1654181667519"
+    }
+  },
+  "__v": 0,
+  "manageAdmins": false
+},{
+  "_id": {
+    "$oid": "629d077762854c6a156fd767"
+  },
+  "name": "test",
+  "username": "test",
+  "password": "$2a$10$H38pFkx4ySERyIYwvNAY6eTS5H9K2.17MZvnkbG5p057ZSbhcQkOG",
+  "comment": "123456",
+  "createdAt": {
+    "$date": {
+      "$numberLong": "1654458231278"
+    }
+  },
+  "updatedAt": {
+    "$date": {
+      "$numberLong": "1654458231278"
+    }
+  },
+  "__v": 0
+}]

@@ -1,5 +1,7 @@
 const express = require("express");
 const passport = require("passport");
+const { spawn } = require("child_process");
+const path = require("path");
 const app = express();
 // Passport Config
 require("./config/passport")(passport);
@@ -42,13 +44,45 @@ app.use((req, res, next) => {
 require("./routes")(app);
 
 mongoose
-  .connect(
-    "mongodb+srv://admin:admin123456@cluster0.04rgz.mongodb.net/images?retryWrites=true&w=majority"
-  )
+  .connect("mongodb://localhost:27017")
   .then(() => {
     console.log("DB Connected");
   })
   .catch((err) => console.log(err));
+
+// // handle data backup
+
+// const DB_NAME = "images";
+// const ARCHIVE_PATH = path.join(__dirname, "public", `${DB_NAME}.gzip`);
+
+// backupMongoDB();
+
+// function backupMongoDB() {
+//   const child = spawn("mongodump", [
+//     `--db=${DB_NAME}`,
+//     `--archive=${ARCHIVE_PATH}`,
+//     "gzip",
+//   ]);
+
+//   child.stdout.on("data", (data) => {
+//     console.log("stdout:\n", data);
+//   });
+//   child.stderr.on("data", (data) => {
+//     console.log("stdout:\n", data);
+//   });
+
+//   child.on("error", (error) => {
+//     console.log("error:\n", error);
+//   });
+
+//   child.on("exit", (code, signal) => {
+//     if (code) console.log("Process exit with code:", code);
+//     else if (signal) console.log("Process killed with signal:", signal);
+//     else console.log("Backup is successfull");
+//   });
+// }
+
+// // handle data backup
 
 // Server
 app.listen(PORT, () => {

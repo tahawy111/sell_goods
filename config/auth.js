@@ -3,7 +3,7 @@ module.exports = {
     if (req.isAuthenticated()) {
       return next();
     }
-    req.flash("error_msg", "من فضلك سجل الدخو لتري هذا الموقع");
+    req.flash("error_msg", "من فضلك سجل الدخول لتري هذا الموقع");
     res.redirect("/login");
   },
   forwardAuthenticated: (req, res, next) => {

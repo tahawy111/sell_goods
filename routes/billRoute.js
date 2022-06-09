@@ -250,12 +250,17 @@ router.get("/daily-accounts-list", ensureAuthenticated, (req, res) => {
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
+  let total = 0;
   CloseAccountModel.find().then((result) => {
+    result.forEach((item) => {
+      total += item.totalAmount;
+    });
     res.render("daily-accounts-list", {
       title: "قائمة الحسابات اليومية",
       admin: req.user,
       totalProducts,
       data: result,
+      totalAmount: total,
     });
   });
 });
@@ -292,6 +297,7 @@ router.get("/monthly-accounts-list", ensureAuthenticated, (req, res) => {
       admin: req.user,
       totalProducts,
       data: result,
+      totalAmount: total,
     });
   });
 });
