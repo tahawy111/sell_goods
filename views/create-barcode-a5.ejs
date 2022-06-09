@@ -4,18 +4,17 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>إنشاء الباركود</title>
+    <title>إنشاء الباركود A5</title>
     <!-- Link Css File -->
-    <link rel="stylesheet" href="./css/bootstrap.min.css" />
-    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="icon" href="/project_files/imgs/barcode-scanner.png" />
   </head>
   <body>
     <style>
       .barcode-container {
-        width: 1100px;
+        width: 800px;
         position: relative;
-        left: 13%;
+        left: 18%;
       }
 
       @media print {
@@ -23,7 +22,7 @@
           display: none !important;
         }
         .barcode-container {
-          width: 1200px;
+          width: 800px;
           position: relative;
           left: 1%;
         }
@@ -34,6 +33,9 @@
         <div class="card shadow">
           <div class="card-header bg-primary">
             <h3 class="text-light">انشئ الباركود وبعدها اضغط علي زر الطباعة</h3>
+            <span style="color: #fff"
+              >وانت بتطبع خلي Margin تبقي None :تنبيه</span
+            >
           </div>
           <div class="card-body p-4">
             <div class="mb-3">
@@ -57,6 +59,9 @@
 
     <div class="barcode-container"></div>
 
+    <script src="./js/barcode.js"></script>
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
     <script>
       let submit = document.querySelector(".submit");
       let data = document.querySelector(".input");
@@ -73,9 +78,7 @@
         });
       });
 
-      barcodeContainer.innerHTML = `<svg id="barcode"></svg>`.repeat(56);
+      barcodeContainer.innerHTML = `<svg id="barcode"></svg>`.repeat(30);
     </script>
-
-    <script src="/js/barcode.js"></script>
   </body>
 </html>

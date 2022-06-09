@@ -356,7 +356,22 @@ router.get("/create-barcode", ensureAuthenticated, (req, res) => {
   }
 
   res.render("create-barcode", {
-    title: "انشاء باركود",
+    title: "انشاء باركود A4",
+    admin: req.user,
+    totalProducts,
+  });
+});
+router.get("/create-barcode-a5", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  res.render("create-barcode-a5", {
+    title: "انشاء باركود A5",
     admin: req.user,
     totalProducts,
   });
