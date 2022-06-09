@@ -15,7 +15,7 @@ module.exports = (passport) => {
           .then((user) => {
             if (!user) {
               return done(null, false, {
-                message: "That username is not registred! ",
+                message: "هذا الحساب غير مسجل",
               });
             }
 
@@ -26,7 +26,7 @@ module.exports = (passport) => {
               if (isMatch) {
                 return done(null, user);
               } else {
-                return done(null, false, { message: "Password incorrect" });
+                return done(null, false, { message: "الباسورد خاطئ" });
               }
             });
           })

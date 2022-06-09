@@ -275,12 +275,18 @@ router.get("/monthly-accounts-list", ensureAuthenticated, (req, res) => {
   // get the last day of the current mounth
   const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
+  let total = 0;
+
   CloseAccountModel.find({
     $or: [
       { createdAt: { $gte: firstDay, $lte: lastDay } },
       { updatedAt: { $gte: firstDay, $lte: lastDay } },
     ],
   }).then((result) => {
+    result.forEach((item) => {
+      total += item.totalAmount;
+    });
+
     res.render("monthly-accounts-list", {
       title: "قائمة الحسابات الشهرية",
       admin: req.user,
