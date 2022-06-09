@@ -27,6 +27,7 @@
               <th>السعر الاجمالي</th>
               <th>الكمية</th>
               <th>رقم الفاتورة</th>
+              <th>تمت بواسطة</th>
             </tr>
           </thead>
 
@@ -46,6 +47,7 @@
               <td><%= ele.totalPrice %></td>
               <td><%= ele.totalQuantity %></td>
               <td><%= ele.billNumber %></td>
+              <td><%= ele.adminUsername %></td>
             </tr>
             <% }) %>
           </tbody>
