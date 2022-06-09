@@ -4,77 +4,77 @@
   <div class="col-lg-6 mx-auto mt-4">
     <div class="card shadow">
       <div class="card-header bg-dark mb-4">
-        <h3 class="text-light">Create Admin</h3>
+        <h3 class="text-light">اضافة مدير</h3>
       </div>
       <%- include('./partials/message') %>
       <div class="card-body p-4">
         <form action="/create-admin" method="post">
           <div class="mb-3">
-            <label class="fs-5" for="name">Enter Your Name</label>
+            <label class="fs-5" for="name">الاسم</label>
             <input
               type="text"
               name="name"
               class="form-control form-control-lg"
-              placeholder="Enter Name"
+              placeholder="ادخل الاسم"
               value="<%= typeof username != 'undefined' ? username : '' %>"
             />
           </div>
           <div class="mb-3">
-            <label class="fs-5" for="username">Username</label>
+            <label class="fs-5" for="username">اسم المستخدم</label>
             <input
               type="text"
               name="username"
               class="form-control form-control-lg"
-              placeholder="Enter Username"
+              placeholder="ادخل اسم المستخدم"
               value="<%= typeof username != 'undefined' ? username : '' %>"
             />
           </div>
           <div class="mb-3">
-            <label class="fs-5" for="password">Password</label>
+            <label class="fs-5" for="password">الباسورد</label>
             <input
               type="text"
               name="password"
               class="form-control form-control-lg"
-              placeholder="Enter Password"
+              placeholder="ادخل الباسورد"
               value="<%= typeof password != 'undefined' ? password : '' %>"
             />
           </div>
           <div class="mb-3">
-            <label class="fs-5" for="password2">Confirm Password</label>
+            <label class="fs-5" for="password2">تأكيد الباسورد</label>
             <input
               type="text"
               name="password2"
               class="form-control form-control-lg"
-              placeholder="Confirm Password"
+              placeholder="تأكيد الباسورد"
               value="<%= typeof password2 != 'undefined' ? password2 : '' %>"
             />
           </div>
           <div class="form-floating mb-3">
             <textarea
               class="form-control"
-              placeholder="Leave a comment here"
+              placeholder="اترك تعليقا هنا"
               name="comment"
               id="floatingTextarea2"
               style="height: 100px"
             >
 <%= typeof comment != 'undefined' ? comment : '' %></textarea
             >
-            <label for="floatingTextarea2">Comment</label>
+            <label for="floatingTextarea2">تعليق</label>
           </div>
 
           <div class="border-dark border-top border-bottom my-2 py-2">
-            <h4 class="text-center">Permissions</h4>
+            <h4 class="text-center">الصلاحيات</h4>
           </div>
           <div class="form-check">
             <input class="form-check-input" name="manageAdmins" type="checkbox" value="<%= this.checked ? false : true %>" id="MA">
             <label class="form-check-label" for="MA">
-              Manage Admins
+              ادارة المديرين
             </label>
           </div>
           </div>
           <br />
           <br />
-          <input type="submit" value="Create" class="btn btn-dark btn-lg" />
+          <input type="submit" value="اضافة" class="btn btn-dark btn-lg" />
         </form>
       </div>
     </div>

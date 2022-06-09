@@ -8,10 +8,10 @@
           <thead>
             <tr class="table-dark">
               <th>#</th>
-              <th>Name</th>
-              <th>Username</th>
-              <th>Edit Admin</th>
-              <th>Delete Admin</th>
+              <th>الاسم</th>
+              <th>اسم المستخدم</th>
+              <th>تعديل المدير</th>
+              <th>حذف المدير</th>
             </tr>
           </thead>
 
@@ -23,14 +23,14 @@
               <td><%= ele.username %></td>
               <td>
                 <a href="/edit-admin/<%= ele._id %>" class="btn btn-primary"
-                  >Edit Admin</a
+                  >تعديل المدير</a
                 >
               </td>
               <td class="del_td">
                 <a
                   href="/delete-admin/<%= ele._id %>"
                   class="btn btn-danger del"
-                  >Delete</a
+                  >حذف المدير</a
                 >
               </td>
             </tr>

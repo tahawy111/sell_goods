@@ -8,10 +8,10 @@
           <thead>
             <tr class="table-dark">
               <th>#</th>
-              <th>Product Name</th>
-              <th>Quantity</th>
-              <th>Price Of One</th>
-              <th>Total Price</th>
+              <th>اسم المنتج</th>
+              <th>العدد</th>
+              <th>سعر القطعة</th>
+              <th>السعر الاجمالي</th>
             </tr>
           </thead>
 
@@ -61,7 +61,7 @@
             <tr>
               <td colspan="2"></td>
               <td class="fw-bold">
-                Total Quantity: <%= admin.cart.totalQuantity %>
+                العدد الكامل: <%= admin.cart.totalQuantity %>
               </td>
               <td></td>
               <td class="fw-bold">Total Price: <%= admin.cart.totalPrice %></td>
@@ -83,7 +83,9 @@
 <script>
   const delAll = document.querySelector(`.delAll`);
   delAll.addEventListener("click", (e) => {
-    if (confirm("Do you want to delete all products from your cart") === true) {
+    if (
+      confirm("هل انت متأكد من انك تريد حذف جميع المنتجات من العربة") === true
+    ) {
     } else {
       e.preventDefault();
     }

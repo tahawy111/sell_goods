@@ -9,10 +9,10 @@
           <thead>
             <tr class="table-dark">
               <th>#</th>
-              <th>Name</th>
-              <th>price</th>
-              <th>Quantity</th>
-              <th>Image</th>
+              <th>الاسم</th>
+              <th>السعر</th>
+              <th>الكمية</th>
+              <th>الصورة</th>
               <th></th>
               <th></th>
             </tr>
@@ -31,8 +31,13 @@
                 class="img-thumbnail"
                 src="/uploads/images/<%= ele.image %>"
                 />
-                <td><a href="/details/<%= ele._id %>" class="btn btn-primary">More</a></td>
-                <td><a href="/sell/<%= ele._id %> " class="btn btn-success">Sell</a></td>
+                <td><a href="/details/<%= ele._id %>" class="btn btn-primary">اكثر</a></td>
+                <td>
+                  <a
+                  class="btn btn-success"
+                  href="/cart/<%= ele._id %>/<%= ele.name %>/<%= ele.price %>/<%= ele.quantity %>"
+                  >بيع</a
+                ></td>
               </td>
             </tr>
             <% }) %>
