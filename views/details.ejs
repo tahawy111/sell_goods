@@ -21,16 +21,21 @@
 
     <div>
       <a
+        class="btn ms-2 btn-success"
+        href="/cart/<%= data._id %>/<%= data.name %>/<%= data.price %>/<%= data.quantity %>"
+        >بيع</a
+      >
+      <a
         class="btn ms-2 btn-warning"
         style="width: min-content"
         href="/edit/<%= data._id %>"
-        >Edit</a
+        >تعديل</a
       >
       <a
         class="btn btn-danger delete"
         style="width: min-content"
         href="/delete/<%= data._id %>"
-        >Delete</a
+        >حذف</a
       >
     </div>
   </div>
