@@ -44,9 +44,9 @@ app.use((req, res, next) => {
 require("./routes")(app);
 
 // mongodb+srv://admin:admin123456@cluster0.04rgz.mongodb.net/images?retryWrites=true&w=majority
-// mongodb://localhost:27017
+// mongodb://localhost:27017/sell_goods
 mongoose
-  .connect("mongodb://localhost:27017")
+  .connect("mongodb://localhost:27017/sell_goods")
   .then(() => {
     console.log("DB Connected");
   })
