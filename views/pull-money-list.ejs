@@ -27,12 +27,14 @@
               <td><%= ele.why %></td>
               <td><%= ele.createdAt.toLocaleDateString('ar-EG') %></td>
               <td>
+                <% if(ele.file !== "No Data"){ %>
                 <a
-                  href="/uploads/files/<%= ele.file %> "
+                  href="/uploads/files/<%= ele.file %>"
                   class="btn btn-success"
                   download
-                  >تحميل</a
+                  ><%= ele.file %></a
                 >
+                <% }else{ %> لا يوجد ملف <% } %>
               </td>
               <td>
                 <a

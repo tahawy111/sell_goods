@@ -435,13 +435,12 @@ router.post("/pull-Money", ensureAuthenticated, upload, (req, res) => {
     name: req.body.name,
     amount: req.body.amount,
     why: req.body.why,
-    file: req.file.filename,
+    file: req.file ? req.file.filename : "No Data",
   });
 
   pullMoney
     .save()
     .then((result) => {
-      console.log(result);
       res.render("success-page", {
         title: "تمت اضافة عملية سحب الفلوس",
         admin: req.user,

@@ -36,11 +36,13 @@
               <td><%= ele.quantity %></td>
               <td><%= ele.barcode %></td>
               <td>
+                <% if(ele.image !== "No Data"){ %>
                 <img
                   width="50"
                   class="img-thumbnail"
                   src="/uploads/images/<%= ele.image %>"
                 />
+                <% }else{ %> لا توجد صورة <% } %>
               </td>
               <td>
                 <a href="/details/<%= ele._id %>" class="btn btn-primary"

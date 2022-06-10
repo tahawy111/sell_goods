@@ -5,7 +5,7 @@ const path = require("path");
 const app = express();
 // Passport Config
 require("./config/passport")(passport);
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 const mongoose = require("mongoose");
 app.set("view engine", "ejs");
 const flash = require("connect-flash");

@@ -124,7 +124,7 @@ router.post("/add", ensureAuthenticated, upload, (req, res) => {
     quantity: req.body.quantity,
     barcode: req.body.barcode,
     category: req.body.category,
-    image: req.file.filename,
+    image: req.file ? req.file.filename : "No Data",
   });
   product.save();
   res.redirect("/");
@@ -233,8 +233,12 @@ router.get("/delete/:id", ensureAuthenticated, (req, res) => {
   ProductModel.findByIdAndRemove(req.params.id)
     .then((result) => {
       // remove image from storage place
-      fs.unlinkSync(`./public/uploads/images/${result.image}`);
-      res.redirect("/");
+      if (req.file) {
+        fs.unlinkSync(`./public/uploads/images/${result.image}`);
+        res.redirect("/");
+      } else {
+        res.redirect("/");
+      }
     })
     .catch((err) => console.log(err));
 });
