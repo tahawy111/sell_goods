@@ -8,7 +8,7 @@ const {
   forwardAuthenticated,
   isAdmin,
 } = require("../config/auth");
-const ProductModel = require("../models/ProductModel");
+const ProductModel = require("../models/productModel");
 
 router.get(
   "/cart/:id/:name/:price/:qtyinstore",
