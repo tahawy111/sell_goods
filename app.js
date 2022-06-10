@@ -5,7 +5,7 @@ const path = require("path");
 const app = express();
 // Passport Config
 require("./config/passport")(passport);
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 const mongoose = require("mongoose");
 app.set("view engine", "ejs");
 const flash = require("connect-flash");
@@ -44,8 +44,9 @@ app.use((req, res, next) => {
 require("./routes")(app);
 
 // mongodb+srv://admin:admin123456@cluster0.04rgz.mongodb.net/images?retryWrites=true&w=majority
+// mongodb://localhost:27017
 mongoose
-  .connect("mongodb+srv://admin:admin123456@cluster0.04rgz.mongodb.net/images?retryWrites=true&w=majority")
+  .connect("mongodb://localhost:27017")
   .then(() => {
     console.log("DB Connected");
   })

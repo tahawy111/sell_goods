@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
+const fs = require("fs");
 const BillModel = require("../models/BillModel");
 const PullMoneyModel = require("../models/PullMoneyModel");
 const CloseAccountModel = require("../models/CloseAccountModel");
@@ -8,6 +10,18 @@ const {
   forwardAuthenticated,
   isAdmin,
 } = require("../config/auth");
+
+// file upload
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./public/uploads/files");
+  },
+  filename: function (req, file, cb) {
+    cb(null, `${file.fieldname}_${Date.now()}_${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage: storage }).single("file");
 
 router.get("/bills-list", ensureAuthenticated, (req, res) => {
   let totalProducts = null;
@@ -408,7 +422,7 @@ router.get("/pull-Money", ensureAuthenticated, (req, res) => {
   });
 });
 
-router.post("/pull-Money", ensureAuthenticated, (req, res) => {
+router.post("/pull-Money", ensureAuthenticated, upload, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
@@ -417,11 +431,17 @@ router.post("/pull-Money", ensureAuthenticated, (req, res) => {
     totalProducts = req.user.cart.totalQuantity;
   }
 
-  const pullMoney = new PullMoneyModel(req.body);
+  const pullMoney = new PullMoneyModel({
+    name: req.body.name,
+    amount: req.body.amount,
+    why: req.body.why,
+    file: req.file.filename,
+  });
 
   pullMoney
     .save()
     .then((result) => {
+      console.log(result);
       res.render("success-page", {
         title: "تمت اضافة عملية سحب الفلوس",
         admin: req.user,

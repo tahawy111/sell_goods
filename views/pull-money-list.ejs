@@ -13,6 +13,7 @@
               <th>السعر</th>
               <th>العدد</th>
               <th>التاريخ</th>
+              <th>تحميل الملف</th>
               <th></th>
             </tr>
           </thead>
@@ -25,6 +26,14 @@
               <td><%= ele.amount %></td>
               <td><%= ele.why %></td>
               <td><%= ele.createdAt.toLocaleDateString('ar-EG') %></td>
+              <td>
+                <a
+                  href="/uploads/files/<%= ele.file %> "
+                  class="btn btn-success"
+                  download
+                  >تحميل</a
+                >
+              </td>
               <td>
                 <a
                   href="/delete-pull-money/<%= ele._id %>"
