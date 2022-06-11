@@ -3,6 +3,7 @@ const passport = require("passport");
 const { spawn } = require("child_process");
 const path = require("path");
 const app = express();
+const cron = require("node-cron");
 // Passport Config
 require("./config/passport")(passport);
 const PORT = process.env.PORT || 3000;
@@ -52,39 +53,48 @@ mongoose
   })
   .catch((err) => console.log(err));
 
-// // handle data backup
+// handle data backup
+// mongodump --db=sell_goods --archive=./sell_goods.gzip --gzip
 
-// const DB_NAME = "images";
-// const ARCHIVE_PATH = path.join(__dirname, "public", `${DB_NAME}.gzip`);
+// restore command
+// mongorestore --db=sell_goods --archive=./public/backup/sell_goods.gzip --gzip
 
-// backupMongoDB();
+const DB_NAME = "sell_goods";
+const ARCHIVE_PATH = path.join(
+  __dirname,
+  "public",
+  "backup",
+  `${DB_NAME}.gzip`
+);
 
-// function backupMongoDB() {
-//   const child = spawn("mongodump", [
-//     `--db=${DB_NAME}`,
-//     `--archive=${ARCHIVE_PATH}`,
-//     "gzip",
-//   ]);
+cron.schedule("0 0 * * *", () => backupMongodb());
 
-//   child.stdout.on("data", (data) => {
-//     console.log("stdout:\n", data);
-//   });
-//   child.stderr.on("data", (data) => {
-//     console.log("stdout:\n", data);
-//   });
+function backupMongodb() {
+  const child = spawn("mongodump", [
+    `--db=${DB_NAME}`,
+    `--archive=${ARCHIVE_PATH}`,
+    "--gzip",
+  ]);
 
-//   child.on("error", (error) => {
-//     console.log("error:\n", error);
-//   });
+  child.stdout.on("data", (data) => {
+    console.log("stdout:\n", data);
+  });
+  child.stderr.on("data", (data) => {
+    console.log("stderr:\n", data);
+  });
 
-//   child.on("exit", (code, signal) => {
-//     if (code) console.log("Process exit with code:", code);
-//     else if (signal) console.log("Process killed with signal:", signal);
-//     else console.log("Backup is successfull");
-//   });
-// }
+  child.on("error", (error) => {
+    console.log(`error:\n`, error);
+  });
 
-// // handle data backup
+  child.on("exit", (code, signal) => {
+    if (code) console.log("Process exit with code:", code);
+    else if (signal) console.log("Process killed with signal:", signal);
+    else console.log("Backup is successfull ✅");
+  });
+}
+
+// handle data backup
 
 // Server
 app.listen(PORT, () => {
