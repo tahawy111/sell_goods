@@ -121,6 +121,7 @@ router.post("/add", ensureAuthenticated, upload, (req, res) => {
     name: req.body.name,
     price: req.body.price,
     dealerPrice: req.body.dealerPrice,
+    wholesale: req.body.wholesale,
     quantity: req.body.quantity,
     barcode: req.body.barcode,
     category: req.body.category,
@@ -140,14 +141,12 @@ router.get("/add", ensureAuthenticated, (req, res) => {
   }
   CategoryModel.find()
     .then((doc) => {
-      res
-        .render("add", {
-          title: "Add",
-          category: doc,
-          admin: req.user,
-          totalProducts,
-        })
-        .catch((err) => console.log(err));
+      res.render("add", {
+        title: "Add",
+        category: doc,
+        admin: req.user,
+        totalProducts,
+      });
     })
     .catch((err) => console.log(err));
 });
@@ -218,6 +217,7 @@ router.post("/update/:id", ensureAuthenticated, upload, (req, res) => {
     name: req.body.name,
     price: req.body.price,
     dealerPrice: req.body.dealerPrice,
+    wholesale: req.body.wholesale,
     quantity: req.body.quantity,
     barcode: req.body.barcode,
     category: req.body.category,
@@ -396,6 +396,60 @@ router.get("/create-category", ensureAuthenticated, (req, res) => {
     totalProducts,
   });
 });
+router.get("/delete-category", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  CategoryModel.find().then((result) => {
+    res.render("delete-category", {
+      title: "انشاء فئة",
+      admin: req.user,
+      totalProducts,
+      category: result,
+    });
+  });
+});
+
+router.get("/delete-category", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  CategoryModel.find().then((result) => {
+    res.render("delete-category", {
+      title: "انشاء فئة",
+      admin: req.user,
+      totalProducts,
+      category: result,
+    });
+  });
+});
+
+router.post("/delete-category", ensureAuthenticated, (req, res) => {
+  // let totalProducts = null;
+
+  // if (!req.user.cart) {
+  //   totalProducts = "";
+  // } else {
+  //   totalProducts = req.user.cart.totalQuantity;
+  // }
+
+  CategoryModel.findOneAndDelete({ category: req.body.category })
+    .then((result) => {
+      res.redirect("/");
+    })
+    .catch((err) => console.log(err));
+});
+
 router.post("/create-category", ensureAuthenticated, (req, res) => {
   const newCategory = new CategoryModel(req.body);
   newCategory
