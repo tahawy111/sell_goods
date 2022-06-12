@@ -405,7 +405,7 @@ router.post("/create-category", ensureAuthenticated, (req, res) => {
     .catch((err) => console.log(err));
 });
 
-router.get("/system-data", (req, res) => {
+router.get("/system-data", ensureAuthenticated, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
@@ -420,10 +420,13 @@ router.get("/system-data", (req, res) => {
 
   ProductModel.find().then((result) => {
     result.forEach((ele) => {
-      // const totalDealerQ = ele.dealerPrice * ele.quantity;
-      totalDealer += ele.dealerPrice;
-      total += ele.price;
-      totalwholesale += ele.wholesale;
+      const totalQ = ele.price * ele.quantity;
+      const totalDealerQ = ele.dealerPrice * ele.quantity;
+      const totalwholesaleQ = ele.wholesale * ele.quantity;
+
+      totalDealer += totalDealerQ;
+      total += totalQ;
+      totalwholesale += totalwholesaleQ;
     });
 
     res.render("system-data", {

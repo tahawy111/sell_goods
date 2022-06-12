@@ -13,6 +13,7 @@
               <th>اسم الشركة</th>
               <th>رقم الهاتف</th>
               <th>رقم الهاتف الارضي</th>
+              <th>الفواتير</th>
               <th>Action</th>
               <th>عملية بيع ديلر</th>
             </tr>
@@ -29,7 +30,15 @@
               <td><%= ele.telephoneFix %></td>
               <td>
                 <a
-                  href="/user-dealer-list/delete-user-dealer/<%= ele._id %> "
+                  class="btn btn-dark"
+                  href="/user-dealer-list/bills/<%= ele._id %>"
+                  >الفواتير</a
+                >
+              </td>
+
+              <td>
+                <a
+                  href="/user-dealer-list/delete-user-dealer/<%= ele._id %>"
                   class="btn btn-danger del"
                   >حذف</a
                 >

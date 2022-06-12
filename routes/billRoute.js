@@ -36,7 +36,7 @@ router.get("/bills-list", ensureAuthenticated, (req, res) => {
   BillModel.find()
     .then((doc) => {
       res.render("bills-list", {
-        title: "Bills List",
+        title: "قائمة الفواتير",
         totalProducts,
         admin: req.user,
         data: doc,
@@ -603,5 +603,27 @@ router.get(
       .catch((err) => console.log(err));
   }
 );
+
+router.get("/user-dealer-list/bills/:id", ensureAuthenticated, (req, res) => {
+  const { id } = req.params;
+
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  BillModel.find({ "userDealer.dealerUserId": id }).then((result) => {
+    console.log(result);
+    res.render("user-dealer-bills", {
+      title: "قائمة الفواتير",
+      totalProducts,
+      admin: req.user,
+      data: result,
+    });
+  });
+});
 
 module.exports = router;
