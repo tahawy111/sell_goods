@@ -5,6 +5,7 @@ const fs = require("fs");
 const BillModel = require("../models/BillModel");
 const PullMoneyModel = require("../models/PullMoneyModel");
 const CloseAccountModel = require("../models/CloseAccountModel");
+const ComplaintModel = require("../models/ComplaintModel");
 const {
   ensureAuthenticated,
   forwardAuthenticated,
@@ -481,4 +482,126 @@ router.get("/delete-pull-money/:id", ensureAuthenticated, (req, res) => {
     })
     .catch((err) => console.log(err));
 });
+
+router.get("/add-complaint", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  res.render("add-complaint", {
+    title: "اضافة شكوي",
+    admin: req.user,
+    totalProducts,
+  });
+});
+router.post("/add-complaint", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  if (req.body.solved === undefined) {
+    req.body.solved = false;
+  } else {
+    req.body.solved = true;
+  }
+
+  const complaint = new ComplaintModel(req.body);
+
+  complaint
+    .save()
+    .then(() => {
+      res.render("success-page", {
+        title: "شكوي",
+        admin: req.user,
+        success_title: "تمت اضافة الشكوي بنجاح",
+        btn_title: "اذهب الي قائمة الشكاوي",
+        btn_url: `/complaints-list`,
+        target: "_self",
+        totalProducts,
+      });
+    })
+    .catch((err) => console.log(err));
+});
+router.get("/complaints-list", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  ComplaintModel.find()
+    .then((result) => {
+      res.render("complaints-list", {
+        title: "فائمة الشكاوي",
+        admin: req.user,
+        totalProducts,
+        data: result,
+      });
+    })
+    .catch((err) => console.log(err));
+});
+router.get("/complaints/edit/:id", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  ComplaintModel.findById(req.params.id)
+    .then((result) => {
+      res.render("edit-complaint", {
+        title: "تحديث شكوي",
+        admin: req.user,
+        totalProducts,
+        data: result,
+      });
+    })
+    .catch((err) => console.log(err));
+});
+router.post("/edit-complaint/:id", ensureAuthenticated, isAdmin, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  if (req.body.solved === undefined) {
+    req.body.solved = false;
+  } else {
+    req.body.solved = true;
+  }
+
+  ComplaintModel.findByIdAndUpdate(req.params.id, req.body)
+    .then((result) => {
+      res.redirect("/complaints-list");
+    })
+    .catch((err) => console.log(err));
+});
+router.get(
+  "/complaints/delete/:id",
+  ensureAuthenticated,
+  isAdmin,
+  (req, res) => {
+    ComplaintModel.findByIdAndRemove(req.params.id)
+      .then((result) => {
+        res.redirect("/complaints-list");
+      })
+      .catch((err) => console.log(err));
+  }
+);
+
 module.exports = router;

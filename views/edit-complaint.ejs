@@ -1,0 +1,102 @@
+<%- include('./partials/head.ejs') %>
+
+<div class="row w-100">
+  <div class="col-lg-6 mx-auto mt-4">
+    <div class="card shadow">
+      <div class="card-header bg-primary">
+        <h3 class="text-light">تعديل شكوة <%= data.name %></h3>
+      </div>
+      <div class="card-body p-4">
+        <form
+          action="/edit-complaint/<%= data._id %>"
+          method="post"
+          id="edit-complaint"
+        >
+
+
+          <div class="mb-3">
+            <label class="fs-5" for="name">الاسم الشاكي</label>
+            <input
+              type="text"
+              name="name"
+              class="form-control form-control-lg"
+              placeholder="ادخل الاسم الشاكي"
+              value="<%= data.name %>"
+              />
+          </div>
+          
+          <div class="mb-3">
+               <label class="fs-5" for="number">رقم الشاكي</label>
+               <input
+               type="text"
+               name="number"
+               class="form-control form-control-lg"
+               placeholder="ادخل رقم الشاكي"
+               value="<%= data.number %>"
+               />
+            </div>
+
+            <div class="form-floating mb-3">
+              <textarea
+                class="form-control"
+                placeholder="اترك محتوي الشكوي هنا"
+                name="complaintContent"
+                id="floatingTextarea2"
+                style="height: 100px"
+              >
+<%= typeof comment != 'undefined' ? comment : '' %><%= data.complaintContent %></textarea
+              >
+              <label for="floatingTextarea2">محتوي الشكوي</label>
+            </div>
+
+            <div class="form-check">
+              <input
+                class="form-check-input check"
+                name="solved"
+                type="checkbox"
+                value="<%= this.checked ? false : true %>"
+                id="solved"
+              />
+              <label class="form-check-label" for="solved">تم حلها</label>
+            </div>
+            <br />
+            <br />
+            <br />
+          </div>
+          <input
+            type="submit"
+            value="اضافة شكوي"
+            class="btn btn-primary btn-lg"
+          />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+     let check = document.querySelector('.check');
+     check.addEventListener('change',(e) => {
+       if(check.checked === true){
+         check.setAttribute("value",true)
+         check.setAttribute('checked',"")
+       }
+       else{
+         check.setAttribute("value",false)
+         check.removeAttribute('checked');
+       }
+     }
+     )
+     window.onload = function () {
+       if (check.checked) {
+       check.value = true;
+     } else {
+       check.value = false;      
+     }
+   };
+   </script>
+
+
+<%- include('./partials/footer.ejs') %>

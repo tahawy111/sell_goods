@@ -1,0 +1,68 @@
+<%- include('./partials/head.ejs') %>
+
+</form>
+<div class="container-fluid">
+  <div class="row my-4">
+    <div class="col-lg-12">
+      <div class="table-responsive">
+        <table class="table table-striped text-center my-3 table-data">
+          <thead>
+            <tr class="table-dark">
+              <th>#</th>
+              <th>اسم الشاكي</th>
+              <th>محتوي الشكوة</th>
+              <th>رقم الشاكي</th>
+              <th>تمت ؟</th>
+              <th>التاريخ</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody style="vertical-align: middle">
+            <% data.forEach((ele,index)=>{ %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= ele.name %></td>
+              <td><%= ele.complaintContent %></td>
+              <td><%= ele.number %></td>
+              <td><%= ele.solved ? "تم حلها" : "لم يتم حلها" %></td>
+              <td><%= ele.createdAt.toISOString() %></td>
+              <td>
+               <% if(admin.manageAdmins){ %>
+                    <a
+                    class="btn btn-danger del"
+                    href="/complaints/delete/<%= ele._id %>"
+                    >حذف</a
+                  >
+                    <% } %> 
+                <a
+                  class="btn btn-warning"
+                  href="/complaints/edit/<%= ele._id %>"
+                  >تعديل</a
+                >
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+     // to make a confirm to all btns
+     let del = document.querySelectorAll(".del");
+     // get array from buttons
+     const delBtns = Array.from(del);
+     delBtns.forEach((e) => {
+       e.addEventListener("click", (el) => {
+         if (confirm("هل تريد الحذف")) {
+         } else {
+           el.preventDefault();
+         }
+       });
+     });
+   </script>
+
+<%- include('./partials/footer.ejs') %>

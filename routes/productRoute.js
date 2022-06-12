@@ -435,14 +435,6 @@ router.get("/delete-category", ensureAuthenticated, (req, res) => {
 });
 
 router.post("/delete-category", ensureAuthenticated, (req, res) => {
-  // let totalProducts = null;
-
-  // if (!req.user.cart) {
-  //   totalProducts = "";
-  // } else {
-  //   totalProducts = req.user.cart.totalQuantity;
-  // }
-
   CategoryModel.findOneAndDelete({ category: req.body.category })
     .then((result) => {
       res.redirect("/");
@@ -458,6 +450,37 @@ router.post("/create-category", ensureAuthenticated, (req, res) => {
       res.redirect("/");
     })
     .catch((err) => console.log(err));
+});
+
+router.get("/system-data", (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  let totalDealer = 0;
+  let total = 0;
+  let totalwholesale = 0;
+
+  ProductModel.find().then((result) => {
+    result.forEach((ele) => {
+      totalDealer += ele.dealerPrice;
+      total += ele.price;
+      totalwholesale += ele.wholesale;
+    });
+
+    res.render("system-data", {
+      title: "معلومات السيستم",
+      admin: req.user,
+      totalProducts,
+      totalDealer,
+      total,
+      totalwholesale,
+    });
+  });
 });
 
 module.exports = router;
