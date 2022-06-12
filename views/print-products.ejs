@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="icon" href="/project_files/imgs/Shopping.png" />
+    <link rel="stylesheet" href="/css/datatables.min.css" />
+    <!-- fontawesome -->
+    <link rel="stylesheet" href="/css/all.min.css" />
+  </head>
+  <style>
+    @media print {
+      .hide {
+        display: none;
+      }
+    }
+  </style>
+  <body>
+    <a class="d-none barcode-handle-sell" href=""></a>
+    <div class="container-fluid">
+      <div class="d-flex justify-content-between">
+        <div>
+          <img width="150" src="/project_files/imgs/Elfath-Logo.png" alt="" />
+          <div style="transform: translateY(-30px)" class="fs-1">
+            الفتح ستور
+          </div>
+        </div>
+
+        <h2 class="mt-5">01117419902<br />01063310981<br />01145681652</h2>
+      </div>
+      <div class="row my-4">
+        <form
+          class="d-flex justify-content-center mb-1 hide"
+          method="get"
+          action="/print-products"
+        >
+          <select name="category" class="form-control form-control-lg hide">
+            <% category.forEach((ele) => { %>
+            <option value="<%= ele.category %>"><%= ele.category %></option>
+            <% }) %>
+          </select>
+          <button class="btn btn-outline-success hide" type="submit">
+            Filter
+          </button>
+        </form>
+        <div class="col-lg-12">
+          <div class="table-responsive me-5">
+            <table class="table table-striped text-center my-3">
+              <thead>
+                <tr class="table-dark">
+                  <th>#</th>
+                  <th>الاسم</th>
+                  <th>السعر</th>
+                  <th class="hide">العدد</th>
+                  <th class="hide">الباركود</th>
+                  <th>الصورة</th>
+                </tr>
+              </thead>
+
+              <tbody style="vertical-align: middle">
+                <% data.forEach((ele,index)=>{ %>
+                <tr>
+                  <td><%= index + 1 %></td>
+                  <td><%= ele.name %></td>
+                  <td><%= ele.price %></td>
+                  <td class="hide"><%= ele.quantity %></td>
+                  <td class="hide"><%= ele.barcode %></td>
+                  <td>
+                    <% if(ele.image !== "No Data"){ %>
+                    <img
+                      width="50"
+                      class="img-thumbnail"
+                      src="/uploads/images/<%= ele.image %>"
+                    />
+                    <% }else{ %> لا توجد صورة <% } %>
+                  </td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let code = "";
+      let reading = false;
+      const barcodeHandleSell = document.querySelector(".barcode-handle-sell");
+      document.addEventListener("keypress", (e) => {
+        //usually scanners throw an 'Enter' key at the end of read
+        if (e.keyCode === 13) {
+          if (code.length > 10) {
+            console.log(code);
+            /// code ready to use
+            code = "";
+          }
+        } else {
+          code += e.key; //while this is not an 'enter' it stores the every key
+          barcodeHandleSell.href = `/cart/${code}`;
+          barcodeHandleSell.click();
+        }
+
+        //run a timeout of 200ms at the first read and clear everything
+        if (!reading) {
+          reading = true;
+          setTimeout(() => {
+            code = "";
+            reading = false;
+          }, 200); //200 works fine for me but you can adjust it
+        }
+      });
+    </script>
+
+    <%- include('./partials/footer.ejs') %>
+  </body>
+</html>

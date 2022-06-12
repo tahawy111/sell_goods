@@ -1,15 +1,25 @@
 <%- include('./partials/head.ejs') %>
 <a class="d-none barcode-handle-sell" href=""></a>
-
+<style>
+  @media print {
+    .hide {
+      display: none;
+    }
+  }
+</style>
 <div class="container-fluid">
   <div class="row my-4">
-    <form class="d-flex justify-content-center mb-1" method="get" action="/">
-      <select name="category" class="form-control form-control-lg">
+    <form
+      class="d-flex justify-content-center mb-1 hide"
+      method="get"
+      action="/"
+    >
+      <select name="category" class="form-control form-control-lg hide">
         <% category.forEach((ele) => { %>
         <option value="<%= ele.category %>"><%= ele.category %></option>
         <% }) %>
       </select>
-      <button class="btn btn-outline-success" type="submit">Filter</button>
+      <button class="btn btn-outline-success hide" type="submit">Filter</button>
     </form>
     <div class="col-lg-12">
       <div class="table-responsive me-5">
@@ -45,21 +55,23 @@
                 <% }else{ %> لا توجد صورة <% } %>
               </td>
               <td>
-                <a href="/details/<%= ele._id %>" class="btn btn-primary"
+                <a href="/details/<%= ele._id %>" class="btn btn-primary hide"
                   >اكثر</a
                 >
               </td>
               <td>
                 <% if (typeof userId === "undefined") { %>
 
-                <a class="btn btn-success" href="/cart/<%= ele._id %>">بيع</a>
+                <a class="btn btn-success hide" href="/cart/<%= ele._id %>"
+                  >بيع</a
+                >
 
                 <% }else{ %>
 
                 <form action="/cart" method="post">
                   <input type="hidden" name="id" value="<%= ele._id %>" />
                   <input type="hidden" name="userId" value="<%= userId %>" />
-                  <button class="btn btn-success" type="submit">
+                  <button class="btn btn-success hide" type="submit">
                     بيع ديلر
                   </button>
                 </form>

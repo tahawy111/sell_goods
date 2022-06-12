@@ -440,4 +440,49 @@ router.get("/system-data", ensureAuthenticated, (req, res) => {
   });
 });
 
+router.get("/print-products", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+  const { category } = req.query;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  if (category && category != "الكل") {
+    CategoryModel.find()
+      .then((doc) => {
+        ProductModel.find({ category })
+          .then((result) => {
+            res.render("print-products", {
+              title: "طباعة المنتجات",
+              data: result,
+              category: doc,
+              admin: req.user,
+              totalProducts,
+            });
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  } else {
+    CategoryModel.find()
+      .then((doc) => {
+        ProductModel.find()
+          .then((result) => {
+            res.render("print-products", {
+              title: "طباعة المنتجات",
+              data: result,
+              category: doc,
+              admin: req.user,
+              totalProducts,
+            });
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  }
+});
+
 module.exports = router;
