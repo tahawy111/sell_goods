@@ -1,5 +1,23 @@
-<%- include('./partials/head.ejs') %> <% if (admin.cart.selectedProduct) { %>
+<%- include('./partials/head.ejs') %> <% if (admin.cart.selectedProduct) { %> <%
+if (admin.cart.userDealer) { %>
+<h2 class="border border-bottom border-top-0 text-center mt-1">
+  بيانات العميل
+</h2>
 
+<h3>اسم العميل: <%= admin.cart.userDealer.dealerName %></h3>
+<h3>عنوان العميل: <%= admin.cart.userDealer.address %></h3>
+<h3>
+  اسم الشركة: <%= admin.cart.userDealer.companyName
+  ?admin.cart.userDealer.companyName : "لايوجد" %>
+</h3>
+<h3>رقم الهاتف: <%= admin.cart.userDealer.phoneNumber %></h3>
+<h3>
+  رقم الهاتف الارضي: <%= admin.cart.userDealer.telephoneFix ?
+  admin.cart.userDealer.telephoneFix : "لايوجد" %>
+</h3>
+<h1 class="border border-bottom text-center"></h1>
+
+<% } %>
 <div class="container-fluid">
   <div class="row my-4">
     <div class="col-lg-12">

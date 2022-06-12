@@ -239,6 +239,7 @@ router.get("/cart/:barcode", ensureAuthenticated, (req, res, next) => {
       const name = result.name;
       const price = +result.price;
       const qtyInStore = +result.quantity;
+      const dealerPrice = +result.dealerPrice;
 
       const newProduct = {
         _id: id,
@@ -278,7 +279,26 @@ router.get("/cart/:barcode", ensureAuthenticated, (req, res, next) => {
             }
             // if i chosed the same product it's gonna update
             if (indexOfProduct >= 0) {
-              if (indexOfProduct >= 0) {
+              if (cart.dealer === true) {
+                console.log(cart.dealer);
+                cart.selectedProduct[indexOfProduct].quantity =
+                  cart.selectedProduct[indexOfProduct].quantity + 1;
+
+                cart.selectedProduct[indexOfProduct].price =
+                  cart.selectedProduct[indexOfProduct].price + dealerPrice;
+
+                cart.totalQuantity = cart.totalQuantity + 1;
+
+                cart.totalPrice = cart.totalPrice + dealerPrice;
+
+                CartModel.updateOne({ _id: cartId }, { $set: cart })
+                  .then((doc) => {
+                    // console.log(doc);
+                    // console.log(cart);
+                    res.redirect("/");
+                  })
+                  .catch((err) => console.log(err));
+              } else {
                 cart.selectedProduct[indexOfProduct].quantity =
                   cart.selectedProduct[indexOfProduct].quantity + 1;
 
@@ -456,6 +476,7 @@ router.get("/cart/sell/newBill", ensureAuthenticated, (req, res) => {
     selectedProduct: req.user.cart.selectedProduct,
     adminName: req.user.name,
     adminUsername: req.user.username,
+    userDealer: req.user.cart.userDealer,
   });
   bill
     .save()

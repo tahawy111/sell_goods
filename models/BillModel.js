@@ -27,6 +27,10 @@ const billSchema = new mongoose.Schema(
       type: Number,
       default: Date.now(),
     },
+    userDealer: {
+      required: false,
+      type: Object,
+    },
   },
   { timestamps: true }
 );
