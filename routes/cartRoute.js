@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const CartModel = require("../models/CartModel");
 const BillModel = require("../models/BillModel");
+const UserDealerModel = require("../models/UserDealerModel");
 
 const {
   ensureAuthenticated,
@@ -10,104 +11,234 @@ const {
 } = require("../config/auth");
 const ProductModel = require("../models/productModel");
 
-router.get(
-  "/cart/:id/:name/:price/:qtyinstore",
-  ensureAuthenticated,
-  (req, res, next) => {
-    const { id, name } = req.params;
-    const price = +req.params.price;
-    const qtyInStore = +req.params.qtyinstore;
-    const cartId = req.user.id;
+router.get("/cart/:id", ensureAuthenticated, (req, res, next) => {
+  const { id } = req.params;
 
-    const newProduct = {
-      _id: id,
-      price,
-      priceOfOne: price,
-      name,
-      quantity: 1,
-      qtyInStore,
-    };
-    // console.log(req.user);
-    // console.log(req.user.cart);
-    CartModel.findById(cartId)
-      .then((cart) => {
-        if (!cart) {
-          const newCart = CartModel({
-            _id: cartId,
-            totalQuantity: 1,
-            totalPrice: price,
-            selectedProduct: [newProduct],
-          });
-          newCart
-            .save()
-            .then((doc) => {
-              res.redirect("/");
-            })
-            .catch((err) => console.log(err));
-        }
-        if (cart) {
-          let indexOfProduct = -1;
-          for (let i = 0; i < cart.selectedProduct.length; i++) {
-            if (id === cart.selectedProduct[i]._id) {
-              indexOfProduct = i;
-              break;
+  const cartId = req.user.id;
+
+  ProductModel.findById(id)
+    .then((result) => {
+      const name = result.name;
+      const price = +result.price;
+
+      const dealerPrice = +result.dealerPrice;
+
+      const qtyInStore = +result.quantity;
+      const newProduct = {
+        _id: id,
+        price: price,
+        priceOfOne: price,
+        name,
+        quantity: 1,
+        qtyInStore,
+      };
+      CartModel.findById(cartId)
+        .then((cart) => {
+          if (!cart) {
+            const newCart = CartModel({
+              _id: cartId,
+              totalQuantity: 1,
+              totalPrice: price,
+              selectedProduct: [newProduct],
+              dealer: false,
+            });
+            newCart
+              .save()
+              .then((doc) => {
+                res.redirect("/");
+              })
+              .catch((err) => console.log(err));
+          }
+          if (cart) {
+            let indexOfProduct = -1;
+            for (let i = 0; i < cart.selectedProduct.length; i++) {
+              if (id === cart.selectedProduct[i]._id) {
+                indexOfProduct = i;
+                break;
+              }
+            }
+            // if i chosed the same product it's gonna update
+            if (indexOfProduct >= 0) {
+              if (cart.dealer === true) {
+                console.log(cart.dealer);
+                cart.selectedProduct[indexOfProduct].quantity =
+                  cart.selectedProduct[indexOfProduct].quantity + 1;
+
+                cart.selectedProduct[indexOfProduct].price =
+                  cart.selectedProduct[indexOfProduct].price + dealerPrice;
+
+                cart.totalQuantity = cart.totalQuantity + 1;
+
+                cart.totalPrice = cart.totalPrice + dealerPrice;
+
+                CartModel.updateOne({ _id: cartId }, { $set: cart })
+                  .then((doc) => {
+                    // console.log(doc);
+                    // console.log(cart);
+                    res.redirect("/");
+                  })
+                  .catch((err) => console.log(err));
+              } else {
+                cart.selectedProduct[indexOfProduct].quantity =
+                  cart.selectedProduct[indexOfProduct].quantity + 1;
+
+                cart.selectedProduct[indexOfProduct].price =
+                  cart.selectedProduct[indexOfProduct].price + price;
+
+                cart.totalQuantity = cart.totalQuantity + 1;
+
+                cart.totalPrice = cart.totalPrice + price;
+
+                CartModel.updateOne({ _id: cartId }, { $set: cart })
+                  .then((doc) => {
+                    // console.log(doc);
+                    // console.log(cart);
+                    res.redirect("/");
+                  })
+                  .catch((err) => console.log(err));
+              }
+            }
+            // if i chosed another unique product
+            else {
+              // update qty
+              cart.totalQuantity = cart.totalQuantity + 1;
+
+              // update total price
+              cart.totalPrice = cart.totalPrice + price;
+
+              // update product list
+              cart.selectedProduct.push(newProduct);
+
+              // update in mongodb
+              CartModel.updateOne({ _id: cartId }, { $set: cart })
+                .then((doc) => {
+                  // console.log(doc);
+                  // console.log(cart);
+                  res.redirect("/");
+                })
+                .catch((err) => console.log(err));
             }
           }
-          // if i chosed the same product it's gonna update
-          if (indexOfProduct >= 0) {
-            cart.selectedProduct[indexOfProduct].quantity =
-              cart.selectedProduct[indexOfProduct].quantity + 1;
+        })
+        .catch((err) => console.log(err));
+    })
+    .catch((err) => console.log(err));
+});
+router.post("/cart", ensureAuthenticated, (req, res, next) => {
+  const { id } = req.body;
+  const dealerUserId = req.body.userId;
+  const cartId = req.user.id;
 
-            cart.selectedProduct[indexOfProduct].price =
-              cart.selectedProduct[indexOfProduct].price + price;
+  UserDealerModel.findById(dealerUserId)
+    .then((userResult) => {
+      const dealerName = userResult.name;
+      const address = userResult.address;
+      const companyName = userResult.companyName;
+      const phoneNumber = +userResult.phoneNumber;
+      const telephoneFix = +userResult.telephoneFix;
 
-            cart.totalQuantity = cart.totalQuantity + 1;
+      ProductModel.findById(id)
+        .then((result) => {
+          const name = result.name;
+          const qtyInStore = +result.quantity;
+          const price = +result.dealerPrice;
+          const newProduct = {
+            _id: id,
+            price,
+            priceOfOne: price,
+            name,
+            quantity: 1,
+            qtyInStore,
+          };
 
-            cart.totalPrice = cart.totalPrice + price;
+          CartModel.findById(cartId)
+            .then((cart) => {
+              if (!cart) {
+                const newCart = CartModel({
+                  _id: cartId,
 
-            CartModel.updateOne({ _id: cartId }, { $set: cart })
-              .then((doc) => {
-                // console.log(doc);
-                // console.log(cart);
-                res.redirect("/");
-              })
-              .catch((err) => console.log(err));
-          }
-          // if i chosed another unique product
-          else {
-            // update qty
-            cart.totalQuantity = cart.totalQuantity + 1;
+                  totalQuantity: 1,
+                  totalPrice: price,
+                  selectedProduct: [newProduct],
+                  userDealer: {
+                    dealerUserId,
+                    dealerName,
+                    address,
+                    companyName,
+                    phoneNumber,
+                    telephoneFix,
+                  },
+                  dealer: true,
+                });
+                newCart
+                  .save()
+                  .then((doc) => {
+                    res.redirect("/");
+                  })
+                  .catch((err) => console.log(err));
+              }
+              if (cart) {
+                let indexOfProduct = -1;
+                for (let i = 0; i < cart.selectedProduct.length; i++) {
+                  if (id === cart.selectedProduct[i]._id) {
+                    indexOfProduct = i;
+                    break;
+                  }
+                }
+                // if i chosed the same product it's gonna update
+                if (indexOfProduct >= 0) {
+                  cart.selectedProduct[indexOfProduct].quantity =
+                    cart.selectedProduct[indexOfProduct].quantity + 1;
 
-            // update total price
-            cart.totalPrice = cart.totalPrice + price;
+                  cart.selectedProduct[indexOfProduct].price =
+                    cart.selectedProduct[indexOfProduct].price + price;
 
-            // update product list
-            cart.selectedProduct.push(newProduct);
+                  cart.totalQuantity = cart.totalQuantity + 1;
 
-            // update in mongodb
-            CartModel.updateOne({ _id: cartId }, { $set: cart })
-              .then((doc) => {
-                // console.log(doc);
-                // console.log(cart);
-                res.redirect("/");
-              })
-              .catch((err) => console.log(err));
-          }
-        }
-      })
-      .catch((err) => console.log(err));
-  }
-);
+                  cart.totalPrice = cart.totalPrice + price;
+
+                  CartModel.updateOne({ _id: cartId }, { $set: cart })
+                    .then((doc) => {
+                      res.redirect("/");
+                    })
+                    .catch((err) => console.log(err));
+                }
+                // if i chosed another unique product
+                else {
+                  // update qty
+                  cart.totalQuantity = cart.totalQuantity + 1;
+
+                  // update total price
+                  cart.totalPrice = cart.totalPrice + price;
+
+                  // update product list
+                  cart.selectedProduct.push(newProduct);
+
+                  // update in mongodb
+                  CartModel.updateOne({ _id: cartId }, { $set: cart })
+                    .then((doc) => {
+                      res.redirect("/");
+                    })
+                    .catch((err) => console.log(err));
+                }
+              }
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+    })
+    .catch((err) => console.log(err));
+});
 
 router.get("/cart/:barcode", ensureAuthenticated, (req, res, next) => {
   const { barcode } = req.params;
+  const cartId = req.user.id;
   ProductModel.findOne({ barcode: barcode })
     .then((result) => {
       const id = result._id;
       const name = result.name;
       const price = +result.price;
       const qtyInStore = +result.quantity;
-      const cartId = req.user.id;
 
       const newProduct = {
         _id: id,

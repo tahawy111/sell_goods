@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const UserDealerModel = require("../models/UserDealerModel");
+const ProductModel = require("../models/productModel");
+const CategoryModel = require("../models/CategoryModel");
 
 const {
   ensureAuthenticated,
@@ -116,5 +118,53 @@ router.post(
       .catch((err) => console.log(err));
   }
 );
+
+router.post("/", ensureAuthenticated, (req, res) => {
+  console.log(req.body);
+  let totalProducts = null;
+  const { category } = req.query;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  if (category && category != "الكل") {
+    CategoryModel.find()
+      .then((doc) => {
+        ProductModel.find({ category })
+          .then((result) => {
+            res.render("index", {
+              title: "Home",
+              data: result,
+              category: doc,
+              admin: req.user,
+              totalProducts,
+              userId: req.body.userId,
+            });
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  } else {
+    CategoryModel.find()
+      .then((doc) => {
+        ProductModel.find()
+          .then((result) => {
+            res.render("index", {
+              title: "Home",
+              data: result,
+              category: doc,
+              admin: req.user,
+              totalProducts,
+              userId: req.body.userId,
+            });
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  }
+});
 
 module.exports = router;

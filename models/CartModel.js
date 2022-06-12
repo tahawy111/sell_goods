@@ -18,6 +18,14 @@ const cartSchema = new mongoose.Schema(
       required: true,
       type: Array,
     },
+    userDealer: {
+      required: false,
+      type: Object,
+    },
+    dealer: {
+      required: true,
+      type: Boolean,
+    },
   },
   { timestamps: true }
 );

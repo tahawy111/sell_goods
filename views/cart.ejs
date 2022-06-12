@@ -1,4 +1,4 @@
-<%- include('./partials/head.ejs') %>
+<%- include('./partials/head.ejs') %> <% if (admin.cart.selectedProduct) { %>
 
 <div class="container-fluid">
   <div class="row my-4">
@@ -29,8 +29,8 @@
                 <a
                   href="/cart/deleteProduct/<%= index %>"
                   class="btn btn-danger float-end"
-                  ><i class="fa-solid fa-trash"></i
-                ></a>
+                  ><i class="fa-solid fa-trash"></i>
+                </a>
               </td>
               <td>
                 <% if (ele.quantity <= 1) { %>
@@ -92,4 +92,4 @@
   });
 </script>
 
-<%- include('./partials/footer.ejs') %>
+<% }else{ %> لايوجد منتجات <% } %> <%- include('./partials/footer.ejs') %>

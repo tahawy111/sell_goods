@@ -10,9 +10,11 @@
               <th>#</th>
               <th>اسم العميل</th>
               <th>العنوان</th>
+              <th>اسم الشركة</th>
               <th>رقم الهاتف</th>
               <th>رقم الهاتف الارضي</th>
-              <th></th>
+              <th>Action</th>
+              <th>عملية بيع ديلر</th>
             </tr>
           </thead>
 
@@ -22,19 +24,28 @@
               <td><%= index + 1 %></td>
               <td><%= ele.name %></td>
               <td><%= ele.address %></td>
+              <td><%= ele.companyName %></td>
               <td><%= ele.phoneNumber %></td>
               <td><%= ele.telephoneFix %></td>
               <td>
                 <a
                   href="/user-dealer-list/delete-user-dealer/<%= ele._id %> "
                   class="btn btn-danger del"
-                  >حذف العميل</a
+                  >حذف</a
                 >
                 <a
                   href="/user-dealer-list/edit-user-dealer/<%= ele._id %>"
                   class="btn btn-warning"
-                  >تعديل العميل</a
+                  >تعديل</a
                 >
+              </td>
+              <td>
+                <form method="post" action="/">
+                  <input type="hidden" name="userId" value="<%= ele._id %>" />
+                  <button type="submit" class="btn btn-success">
+                    بيع لهذا العميل
+                  </button>
+                </form>
               </td>
             </tr>
             <% }) %>

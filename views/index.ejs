@@ -50,11 +50,21 @@
                 >
               </td>
               <td>
-                <a
-                  class="btn btn-success"
-                  href="/cart/<%= ele._id %>/<%= ele.name %>/<%= ele.price %>/<%= ele.quantity %>"
-                  >بيع</a
-                >
+                <% if (typeof userId === "undefined") { %>
+
+                <a class="btn btn-success" href="/cart/<%= ele._id %>">بيع</a>
+
+                <% }else{ %>
+
+                <form action="/cart" method="post">
+                  <input type="hidden" name="id" value="<%= ele._id %>" />
+                  <input type="hidden" name="userId" value="<%= userId %>" />
+                  <button class="btn btn-success" type="submit">
+                    بيع ديلر
+                  </button>
+                </form>
+
+                <% } %>
               </td>
             </tr>
             <% }) %>
