@@ -28,6 +28,7 @@
               <th>الكمية</th>
               <th>رقم الفاتورة</th>
               <th>تمت بواسطة</th>
+              <th>استرجاع</th>
             </tr>
           </thead>
 
@@ -48,6 +49,13 @@
               <td><%= ele.totalQuantity %></td>
               <td><%= ele.billNumber %></td>
               <td><%= ele.adminName %></td>
+              <td>
+                <a
+                  class="btn btn-danger recover"
+                  href="/bills-list/recover/<%= ele._id %>"
+                  >استرجاع</a
+                >
+              </td>
             </tr>
             <% }) %>
           </tbody>
@@ -56,5 +64,24 @@
     </div>
   </div>
 </div>
+
+<script>
+  // to make a confirm to all btns
+  let del = document.querySelectorAll(".recover");
+  // get array from buttons
+  const delBtns = Array.from(del);
+  delBtns.forEach((e) => {
+    e.addEventListener("click", (el) => {
+      if (
+        confirm(
+          "هل انت متأكد من انك تريد استرجاع الفاتورة مع العلم ان الفاتورة ستحذف من القائمة"
+        )
+      ) {
+      } else {
+        el.preventDefault();
+      }
+    });
+  });
+</script>
 
 <%- include('./partials/footer.ejs') %>

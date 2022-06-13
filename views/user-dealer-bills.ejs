@@ -1,7 +1,8 @@
 <%- include('./partials/head.ejs') %>
 
 <div class="container-fluid">
-  <h3 class="mt-2">قائمة فواتير: <%= data[0].userDealer.dealerName %></h3>
+  <h2 class="mt-2 text-center">قائمة فواتير العميل الديلر</h2>
+
   <div class="row my-4">
     <div class="col-lg-12">
       <div class="table-responsive">
@@ -17,6 +18,7 @@
               <th>الكمية</th>
               <th>رقم الفاتورة</th>
               <th>تمت بواسطة</th>
+              <th>استرجاع</th>
             </tr>
           </thead>
 
@@ -37,6 +39,13 @@
               <td><%= ele.totalQuantity %></td>
               <td><%= ele.billNumber %></td>
               <td><%= ele.adminName %></td>
+              <td>
+                <a
+                  class="btn btn-danger recover"
+                  href="/bills-list/recover/<%= ele._id %>"
+                  >استرجاع</a
+                >
+              </td>
             </tr>
             <% }) %>
           </tbody>

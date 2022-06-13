@@ -6,6 +6,7 @@ const BillModel = require("../models/BillModel");
 const PullMoneyModel = require("../models/PullMoneyModel");
 const CloseAccountModel = require("../models/CloseAccountModel");
 const ComplaintModel = require("../models/ComplaintModel");
+const ProductModel = require("../models/productModel");
 const {
   ensureAuthenticated,
   forwardAuthenticated,
@@ -52,6 +53,30 @@ router.get("/bills-list/print/:id", ensureAuthenticated, (req, res) => {
         title: "فاتورة مبيعات",
         admin: req.user,
         data: doc,
+      });
+    })
+    .catch((err) => console.log(err));
+});
+
+router.get("/bills-list/recover/:id", ensureAuthenticated, (req, res) => {
+  BillModel.findById(req.params.id)
+    .then((result) => {
+      result.selectedProduct.forEach((bill) => {
+        ProductModel.findById(bill._id)
+          .then((product) => {
+            product.quantity = +product.quantity + +bill.quantity;
+
+            ProductModel.findByIdAndUpdate(bill._id, {
+              quantity: product.quantity,
+            }).then((result) => {});
+          })
+          .catch((err) => console.log(err));
+
+        BillModel.findByIdAndRemove(req.params.id)
+          .then(() => {
+            res.redirect("/");
+          })
+          .catch((err) => console.log(err));
       });
     })
     .catch((err) => console.log(err));
