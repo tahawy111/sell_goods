@@ -4,6 +4,8 @@ const multer = require("multer");
 const fs = require("fs");
 const ProductModel = require("../models/productModel");
 const CategoryModel = require("../models/CategoryModel");
+const RecoverBillModel = require("../models/RecoverBillModel");
+const mongoose = require("mongoose");
 
 const {
   ensureAuthenticated,
@@ -499,6 +501,53 @@ router.get("/create-recover-bill", ensureAuthenticated, (req, res) => {
     admin: req.user,
     totalProducts,
   });
+});
+
+router.post("/recover/add", ensureAuthenticated, (req, res) => {
+  const { name } = req.body;
+  const price = +req.body.price;
+  const quantity = +req.body.quantity;
+  const totalPrice = price * quantity;
+  const oid = mongoose.Types.ObjectId();
+  let billList = [];
+
+  const newProduct = { _id: oid, name, price, quantity, totalPrice };
+
+  RecoverBillModel.find().then((result) => {
+    console.log(result);
+    if (!result) {
+      billList.push(newProduct);
+
+      const newRecoverBill = new RecoverBillModel({ billList: billList });
+
+      newRecoverBill
+        .save()
+        .then((result) => {
+          console.log(result);
+          res.redirect("/create-recover-bill");
+        })
+        .catch((err) => console.log(err));
+    }
+    if (result) {
+      billList.push(newProduct);
+
+      RecoverBillModel.findByIdAndUpdate(result._id, {
+        billList: billList,
+      });
+    }
+  });
+
+  billList.push(newProduct);
+
+  const newRecoverBill = new RecoverBillModel({ billList: billList });
+
+  newRecoverBill
+    .save()
+    .then((result) => {
+      console.log(result);
+      res.redirect("/create-recover-bill");
+    })
+    .catch((err) => console.log(err));
 });
 
 module.exports = router;
