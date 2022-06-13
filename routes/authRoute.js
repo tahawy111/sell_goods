@@ -27,6 +27,13 @@ router.get("/create-admin", ensureAuthenticated, isAdmin, (req, res) => {
   });
 });
 router.post("/create-admin", ensureAuthenticated, isAdmin, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
   const { name, username, password, password2, comment, manageAdmins } =
     req.body;
 
@@ -100,6 +107,7 @@ router.post("/create-admin", ensureAuthenticated, isAdmin, (req, res) => {
                   btn_title: "أذهب الي الصفحة الرئيسية",
                   target: "_self",
                   btn_url: "/",
+                  totalProducts,
                 });
               })
               .catch((err) => console.log(err));
