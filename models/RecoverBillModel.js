@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 
 const recoverBilSchema = new mongoose.Schema(
   {
-    billList: { type: Array, required: true },
+    name: { type: String, required: true },
+    price: { type: Number, required: true },
+    quantity: { type: Number, default: 1 },
+    totalPrice: { type: Number, required: true },
   },
   { timestamps: true }
 );

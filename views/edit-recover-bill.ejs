@@ -1,0 +1,50 @@
+<%- include('./partials/head.ejs') %>
+
+<div class="row w-100">
+  <div class="col-lg-6 mx-auto mt-4">
+    <div class="card shadow">
+      <div class="card-header bg-dark mb-4">
+        <h3 class="text-light">تعديل منتج من فاتورة المرتجعات</h3>
+      </div>
+      <%- include('./partials/message') %>
+      <div class="card-body p-4">
+        <form action="/update-recover-bill/<%= data._id %>" method="post">
+          <div class="mb-3">
+            <label class="fs-5" for="name">الاسم</label>
+            <input
+              type="text"
+              name="name"
+              class="form-control form-control-lg"
+              placeholder="ادخل الاسم"
+              value="<%= data.name %>"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="price">السعر</label>
+            <input
+              type="number"
+              name="price"
+              class="form-control form-control-lg"
+              placeholder="ادخل السعر"
+              value="<%= data.price %>"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="fs-5" for="quantity">العدد</label>
+            <input
+              type="number"
+              name="quantity"
+              class="form-control form-control-lg"
+              placeholder="ادخل العدد"
+              value="<%= data.quantity %>"
+            />
+          </div>
+
+          <input type="submit" value="تعديل" class="btn btn-dark btn-lg" />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('./partials/footer.ejs') %>

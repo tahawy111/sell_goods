@@ -5,6 +5,7 @@ const fs = require("fs");
 const ProductModel = require("../models/productModel");
 const CategoryModel = require("../models/CategoryModel");
 const RecoverBillModel = require("../models/RecoverBillModel");
+const RecoverBillListModel = require("../models/RecoverBillListModel");
 const mongoose = require("mongoose");
 
 const {
@@ -496,10 +497,13 @@ router.get("/create-recover-bill", ensureAuthenticated, (req, res) => {
     totalProducts = req.user.cart.totalQuantity;
   }
 
-  res.render("create-recover-bill", {
-    title: "انشاء فاتورة مرتجعات",
-    admin: req.user,
-    totalProducts,
+  RecoverBillModel.find().then((result) => {
+    res.render("create-recover-bill", {
+      title: "انشاء فاتورة مرتجعات",
+      admin: req.user,
+      totalProducts,
+      data: result,
+    });
   });
 });
 
@@ -508,44 +512,158 @@ router.post("/recover/add", ensureAuthenticated, (req, res) => {
   const price = +req.body.price;
   const quantity = +req.body.quantity;
   const totalPrice = price * quantity;
-  const oid = mongoose.Types.ObjectId();
-  let billList = [];
+  let total = totalPrice;
+  // const oid = mongoose.Types.ObjectId();
 
-  const newProduct = { _id: oid, name, price, quantity, totalPrice };
+  const newProduct = {
+    name,
+    price,
+    quantity,
+    totalPrice,
+  };
 
-  RecoverBillModel.find().then((result) => {
-    console.log(result);
-    if (!result) {
-      billList.push(newProduct);
-
-      const newRecoverBill = new RecoverBillModel({ billList: billList });
-
-      newRecoverBill
-        .save()
-        .then((result) => {
-          console.log(result);
-          res.redirect("/create-recover-bill");
-        })
-        .catch((err) => console.log(err));
-    }
-    if (result) {
-      billList.push(newProduct);
-
-      RecoverBillModel.findByIdAndUpdate(result._id, {
-        billList: billList,
-      });
-    }
-  });
-
-  billList.push(newProduct);
-
-  const newRecoverBill = new RecoverBillModel({ billList: billList });
+  const newRecoverBill = new RecoverBillModel(newProduct);
 
   newRecoverBill
     .save()
     .then((result) => {
       console.log(result);
       res.redirect("/create-recover-bill");
+    })
+    .catch((err) => console.log(err));
+});
+router.get("/edit-recover-bill/:id", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  RecoverBillModel.findById(req.params.id).then((result) => {
+    res.render("edit-recover-bill", {
+      title: "تعديل فاتورة مرتجعات",
+      admin: req.user,
+      totalProducts,
+      data: result,
+    });
+  });
+});
+router.get("/delete-recover-bill/:id", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  RecoverBillModel.findByIdAndRemove(req.params.id).then((result) => {
+    res.redirect("/create-recover-bill");
+  });
+});
+router.post("/update-recover-bill/:id", ensureAuthenticated, (req, res) => {
+  const { name } = req.body;
+  const price = +req.body.price;
+  const quantity = +req.body.quantity;
+  const totalPrice = price * quantity;
+
+  RecoverBillModel.findByIdAndUpdate(req.params.id, {
+    name,
+    price,
+    quantity,
+    totalPrice,
+  }).then((result) => {
+    res.redirect("/create-recover-bill");
+  });
+});
+
+router.get("/recover-bill/create", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  RecoverBillModel.find().then((result) => {
+    let total = 0;
+    let totalQuantity = 0;
+    result.forEach((ele) => {
+      total += ele.totalPrice;
+      totalQuantity += ele.quantity;
+    });
+
+    const newRecoverBillList = new RecoverBillListModel({
+      createdBy: req.user.name,
+      recoverBillData: [...result],
+      total,
+      totalQuantity,
+    });
+
+    newRecoverBillList.save().then((result) => {
+      RecoverBillModel.remove()
+        .then((result) => {})
+        .catch((err) => console.log(err));
+      res.render("success-page", {
+        title: "تمت اضافة فاتورة مرتجعات",
+        admin: req.user,
+        success_title: "تمت اضافة فاتورة المرتجعات بنجاح",
+        btn_title: "طباعة الفاتورة",
+        target: "_self",
+        btn_url: `/recover-bill/print/${result._id}`,
+        totalProducts,
+      });
+    });
+  });
+});
+router.get("/recover-bill/print/:id", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  RecoverBillListModel.findById(req.params.id)
+    .then((result) => {
+      res.render("recover-bill-print", {
+        title: "فاتورة مرتجعات",
+        admin: req.user,
+        totalProducts,
+        data: result,
+      });
+    })
+    .catch((err) => console.log(err));
+});
+
+router.get("/recover-bill-list", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  RecoverBillListModel.find(req.params.id)
+    .then((result) => {
+      res.render("recover-bill-list", {
+        title: "قائمة فواتير المرتجعات",
+        admin: req.user,
+        totalProducts,
+        data: result,
+      });
+    })
+    .catch((err) => console.log(err));
+});
+router.get("/recover-bill/delete/:id", ensureAuthenticated, (req, res) => {
+  RecoverBillListModel.findByIdAndRemove(req.params.id)
+    .then((result) => {
+      res.redirect("/recover-bill-list");
     })
     .catch((err) => console.log(err));
 });
