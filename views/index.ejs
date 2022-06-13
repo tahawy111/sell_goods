@@ -1,5 +1,15 @@
-<%- include('./partials/head.ejs') %>
+<%- include('./partials/head.ejs') %> <% if (typeof userId === "undefined") { %>
+
 <a class="d-none barcode-handle-sell" href=""></a>
+
+<% }else{ %>
+
+<form action="/cart2" method="post">
+  <input type="hidden" name="userId" value="<%= userId %>" />
+  <input type="hidden" name="barcode" />
+</form>
+
+<% } %>
 <style>
   @media print {
     .hide {
@@ -91,6 +101,9 @@
   let code = "";
   let reading = false;
   const barcodeHandleSell = document.querySelector(".barcode-handle-sell");
+  const dealerBarcodeHandle = document.querySelector(`input[name="barcode"]`);
+  const barcodeForm = document.querySelector("form");
+
   document.addEventListener("keypress", (e) => {
     //usually scanners throw an 'Enter' key at the end of read
     if (e.keyCode === 13) {
@@ -101,8 +114,13 @@
       }
     } else {
       code += e.key; //while this is not an 'enter' it stores the every key
-      barcodeHandleSell.href = `/cart/${code}`;
-      barcodeHandleSell.click();
+      if (barcodeHandleSell) {
+        barcodeHandleSell.href = `/cart2/${code}`;
+        barcodeHandleSell.click();
+      } else {
+        dealerBarcodeHandle.value = code;
+        barcodeForm.submit();
+      }
     }
 
     //run a timeout of 200ms at the first read and clear everything
