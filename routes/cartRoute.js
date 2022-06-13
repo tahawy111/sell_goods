@@ -60,7 +60,6 @@ router.get("/cart/:id", ensureAuthenticated, (req, res, next) => {
             // if i chosed the same product it's gonna update
             if (indexOfProduct >= 0) {
               if (cart.dealer === true) {
-                console.log(cart.dealer);
                 cart.selectedProduct[indexOfProduct].quantity =
                   cart.selectedProduct[indexOfProduct].quantity + 1;
 
@@ -79,6 +78,7 @@ router.get("/cart/:id", ensureAuthenticated, (req, res, next) => {
                   })
                   .catch((err) => console.log(err));
               } else {
+                console.log(false);
                 cart.selectedProduct[indexOfProduct].quantity =
                   cart.selectedProduct[indexOfProduct].quantity + 1;
 
@@ -100,23 +100,46 @@ router.get("/cart/:id", ensureAuthenticated, (req, res, next) => {
             }
             // if i chosed another unique product
             else {
-              // update qty
-              cart.totalQuantity = cart.totalQuantity + 1;
+              if (cart.dealer === true) {
+                // update qty
+                cart.totalQuantity = cart.totalQuantity + 1;
 
-              // update total price
-              cart.totalPrice = cart.totalPrice + price;
+                // update total price
+                cart.totalPrice = cart.totalPrice + dealerPrice;
 
-              // update product list
-              cart.selectedProduct.push(newProduct);
+                newProduct.price = dealerPrice;
+                newProduct.priceOfOne = dealerPrice;
 
-              // update in mongodb
-              CartModel.updateOne({ _id: cartId }, { $set: cart })
-                .then((doc) => {
-                  // console.log(doc);
-                  // console.log(cart);
-                  res.redirect("/");
-                })
-                .catch((err) => console.log(err));
+                // update product list
+                cart.selectedProduct.push(newProduct);
+
+                // update in mongodb
+                CartModel.updateOne({ _id: cartId }, { $set: cart })
+                  .then((doc) => {
+                    // console.log(doc);
+                    // console.log(cart);
+                    res.redirect("/");
+                  })
+                  .catch((err) => console.log(err));
+              } else {
+                // update qty
+                cart.totalQuantity = cart.totalQuantity + 1;
+
+                // update total price
+                cart.totalPrice = cart.totalPrice + price;
+
+                // update product list
+                cart.selectedProduct.push(newProduct);
+
+                // update in mongodb
+                CartModel.updateOne({ _id: cartId }, { $set: cart })
+                  .then((doc) => {
+                    // console.log(doc);
+                    // console.log(cart);
+                    res.redirect("/");
+                  })
+                  .catch((err) => console.log(err));
+              }
             }
           }
         })
@@ -203,18 +226,89 @@ router.post("/cart", ensureAuthenticated, (req, res, next) => {
                     })
                     .catch((err) => console.log(err));
                 }
-                // if i chosed another unique product
-                else {
-                  // update qty
+              }
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+    })
+    .catch((err) => console.log(err));
+});
+router.post("/cart2", ensureAuthenticated, (req, res, next) => {
+  const { barcode } = req.body;
+  const dealerUserId = req.body.userId;
+  const cartId = req.user.id;
+  console.log(req.body);
+
+  UserDealerModel.findById(dealerUserId)
+    .then((userResult) => {
+      const dealerName = userResult.name;
+      const address = userResult.address;
+      const companyName = userResult.companyName;
+      const phoneNumber = +userResult.phoneNumber;
+      const telephoneFix = +userResult.telephoneFix;
+
+      ProductModel.findOne({ barcode: barcode })
+        .then((result) => {
+          const id = result._id;
+          const name = result.name;
+          const qtyInStore = +result.quantity;
+          const price = +result.dealerPrice;
+          const newProduct = {
+            _id: id,
+            price,
+            priceOfOne: price,
+            name,
+            quantity: 1,
+            qtyInStore,
+          };
+
+          CartModel.findById(cartId)
+            .then((cart) => {
+              if (!cart) {
+                const newCart = CartModel({
+                  _id: cartId,
+
+                  totalQuantity: 1,
+                  totalPrice: price,
+                  selectedProduct: [newProduct],
+                  userDealer: {
+                    dealerUserId,
+                    dealerName,
+                    address,
+                    companyName,
+                    phoneNumber,
+                    telephoneFix,
+                  },
+                  dealer: true,
+                });
+                newCart
+                  .save()
+                  .then((doc) => {
+                    res.redirect("/");
+                  })
+                  .catch((err) => console.log(err));
+              }
+              if (cart) {
+                let indexOfProduct = -1;
+                for (let i = 0; i < cart.selectedProduct.length; i++) {
+                  if (id === cart.selectedProduct[i]._id) {
+                    indexOfProduct = i;
+                    break;
+                  }
+                }
+                // if i chosed the same product it's gonna update
+                if (indexOfProduct >= 0) {
+                  cart.selectedProduct[indexOfProduct].quantity =
+                    cart.selectedProduct[indexOfProduct].quantity + 1;
+
+                  cart.selectedProduct[indexOfProduct].price =
+                    cart.selectedProduct[indexOfProduct].price + price;
+
                   cart.totalQuantity = cart.totalQuantity + 1;
 
-                  // update total price
                   cart.totalPrice = cart.totalPrice + price;
 
-                  // update product list
-                  cart.selectedProduct.push(newProduct);
-
-                  // update in mongodb
                   CartModel.updateOne({ _id: cartId }, { $set: cart })
                     .then((doc) => {
                       res.redirect("/");
@@ -230,26 +324,29 @@ router.post("/cart", ensureAuthenticated, (req, res, next) => {
     .catch((err) => console.log(err));
 });
 
-router.get("/cart/:barcode", ensureAuthenticated, (req, res, next) => {
+router.get("/cart2/:barcode", ensureAuthenticated, (req, res, next) => {
   const { barcode } = req.params;
   const cartId = req.user.id;
+
   ProductModel.findOne({ barcode: barcode })
     .then((result) => {
-      const id = result._id;
       const name = result.name;
       const price = +result.price;
-      const qtyInStore = +result.quantity;
+
       const dealerPrice = +result.dealerPrice;
 
+      const qtyInStore = +result.quantity;
+      const id = result._id;
+
+      console.log(name, price, dealerPrice, qtyInStore, id);
       const newProduct = {
         _id: id,
-        price,
+        price: price,
         priceOfOne: price,
         name,
         quantity: 1,
         qtyInStore,
       };
-
       CartModel.findById(cartId)
         .then((cart) => {
           if (!cart) {
@@ -258,6 +355,7 @@ router.get("/cart/:barcode", ensureAuthenticated, (req, res, next) => {
               totalQuantity: 1,
               totalPrice: price,
               selectedProduct: [newProduct],
+              dealer: false,
             });
             newCart
               .save()
@@ -280,7 +378,8 @@ router.get("/cart/:barcode", ensureAuthenticated, (req, res, next) => {
             // if i chosed the same product it's gonna update
             if (indexOfProduct >= 0) {
               if (cart.dealer === true) {
-                console.log(cart.dealer);
+                console.log(true, 380);
+
                 cart.selectedProduct[indexOfProduct].quantity =
                   cart.selectedProduct[indexOfProduct].quantity + 1;
 
@@ -293,12 +392,11 @@ router.get("/cart/:barcode", ensureAuthenticated, (req, res, next) => {
 
                 CartModel.updateOne({ _id: cartId }, { $set: cart })
                   .then((doc) => {
-                    // console.log(doc);
-                    // console.log(cart);
                     res.redirect("/");
                   })
                   .catch((err) => console.log(err));
               } else {
+                console.log(cart.dealer);
                 cart.selectedProduct[indexOfProduct].quantity =
                   cart.selectedProduct[indexOfProduct].quantity + 1;
 
@@ -320,20 +418,46 @@ router.get("/cart/:barcode", ensureAuthenticated, (req, res, next) => {
             }
             // if i chosed another unique product
             else {
-              // update qty
-              cart.totalQuantity = cart.totalQuantity + 1;
-              // update total price
-              cart.totalPrice = cart.totalPrice + price;
-              // update product list
-              cart.selectedProduct.push(newProduct);
-              // update in mongodb
-              CartModel.updateOne({ _id: cartId }, { $set: cart })
-                .then((doc) => {
-                  // console.log(doc);
-                  // console.log(cart);
-                  res.redirect("/");
-                })
-                .catch((err) => console.log(err));
+              if (cart.dealer === true) {
+                // update qty
+                cart.totalQuantity = cart.totalQuantity + 1;
+
+                // update total price
+                cart.totalPrice = cart.totalPrice + dealerPrice;
+
+                newProduct.price = dealerPrice;
+                newProduct.priceOfOne = dealerPrice;
+
+                // update product list
+                cart.selectedProduct.push(newProduct);
+
+                // update in mongodb
+                CartModel.updateOne({ _id: cartId }, { $set: cart })
+                  .then((doc) => {
+                    // console.log(doc);
+                    // console.log(cart);
+                    res.redirect("/");
+                  })
+                  .catch((err) => console.log(err));
+              } else {
+                // update qty
+                cart.totalQuantity = cart.totalQuantity + 1;
+
+                // update total price
+                cart.totalPrice = cart.totalPrice + price;
+
+                // update product list
+                cart.selectedProduct.push(newProduct);
+
+                // update in mongodb
+                CartModel.updateOne({ _id: cartId }, { $set: cart })
+                  .then((doc) => {
+                    // console.log(doc);
+                    // console.log(cart);
+                    res.redirect("/");
+                  })
+                  .catch((err) => console.log(err));
+              }
             }
           }
         })
@@ -402,7 +526,6 @@ router.get("/cart/decProduct/:index", ensureAuthenticated, (req, res) => {
 
   CartModel.updateOne({ _id: userCart._id }, { $set: userCart })
     .then((doc) => {
-      console.log(doc);
       res.redirect("/cart");
     })
     .catch((err) => console.log(err));
