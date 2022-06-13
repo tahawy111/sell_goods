@@ -485,4 +485,20 @@ router.get("/print-products", ensureAuthenticated, (req, res) => {
   }
 });
 
+router.get("/create-recover-bill", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  res.render("create-recover-bill", {
+    title: "انشاء فاتورة مرتجعات",
+    admin: req.user,
+    totalProducts,
+  });
+});
+
 module.exports = router;
