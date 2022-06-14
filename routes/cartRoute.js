@@ -59,38 +59,47 @@ router.get("/cart/:id", ensureAuthenticated, (req, res, next) => {
             }
             // if i chosed the same product it's gonna update
             if (indexOfProduct >= 0) {
-              if (cart.dealer === true) {
-                cart.selectedProduct[indexOfProduct].quantity =
-                  cart.selectedProduct[indexOfProduct].quantity + 1;
-
-                cart.selectedProduct[indexOfProduct].price =
-                  cart.selectedProduct[indexOfProduct].price + dealerPrice;
-
-                cart.totalQuantity = cart.totalQuantity + 1;
-
-                cart.totalPrice = cart.totalPrice + dealerPrice;
-
-                CartModel.updateOne({ _id: cartId }, { $set: cart })
-                  .then((doc) => {
-                    res.redirect("/");
-                  })
-                  .catch((err) => console.log(err));
+              if (
+                cart.selectedProduct[indexOfProduct].quantity >=
+                cart.selectedProduct[indexOfProduct].qtyInStore
+              ) {
+                res.redirect("/");
               } else {
-                cart.selectedProduct[indexOfProduct].quantity =
-                  cart.selectedProduct[indexOfProduct].quantity + 1;
+                console.log(cart.selectedProduct[indexOfProduct].quantity);
+                console.log(cart.selectedProduct[indexOfProduct].qtyInStore);
+                if (cart.dealer === true) {
+                  cart.selectedProduct[indexOfProduct].quantity =
+                    cart.selectedProduct[indexOfProduct].quantity + 1;
 
-                cart.selectedProduct[indexOfProduct].price =
-                  cart.selectedProduct[indexOfProduct].price + price;
+                  cart.selectedProduct[indexOfProduct].price =
+                    cart.selectedProduct[indexOfProduct].price + dealerPrice;
 
-                cart.totalQuantity = cart.totalQuantity + 1;
+                  cart.totalQuantity = cart.totalQuantity + 1;
 
-                cart.totalPrice = cart.totalPrice + price;
+                  cart.totalPrice = cart.totalPrice + dealerPrice;
 
-                CartModel.updateOne({ _id: cartId }, { $set: cart })
-                  .then((doc) => {
-                    res.redirect("/");
-                  })
-                  .catch((err) => console.log(err));
+                  CartModel.updateOne({ _id: cartId }, { $set: cart })
+                    .then((doc) => {
+                      res.redirect("/");
+                    })
+                    .catch((err) => console.log(err));
+                } else {
+                  cart.selectedProduct[indexOfProduct].quantity =
+                    cart.selectedProduct[indexOfProduct].quantity + 1;
+
+                  cart.selectedProduct[indexOfProduct].price =
+                    cart.selectedProduct[indexOfProduct].price + price;
+
+                  cart.totalQuantity = cart.totalQuantity + 1;
+
+                  cart.totalPrice = cart.totalPrice + price;
+
+                  CartModel.updateOne({ _id: cartId }, { $set: cart })
+                    .then((doc) => {
+                      res.redirect("/");
+                    })
+                    .catch((err) => console.log(err));
+                }
               }
             }
             // if i chosed another unique product
@@ -366,38 +375,45 @@ router.get("/cart2/:barcode", ensureAuthenticated, (req, res, next) => {
             }
             // if i chosed the same product it's gonna update
             if (indexOfProduct >= 0) {
-              if (cart.dealer === true) {
-                cart.selectedProduct[indexOfProduct].quantity =
-                  cart.selectedProduct[indexOfProduct].quantity + 1;
-
-                cart.selectedProduct[indexOfProduct].price =
-                  cart.selectedProduct[indexOfProduct].price + dealerPrice;
-
-                cart.totalQuantity = cart.totalQuantity + 1;
-
-                cart.totalPrice = cart.totalPrice + dealerPrice;
-
-                CartModel.updateOne({ _id: cartId }, { $set: cart })
-                  .then((doc) => {
-                    res.redirect("/");
-                  })
-                  .catch((err) => console.log(err));
+              if (
+                cart.selectedProduct[indexOfProduct].quantity >=
+                cart.selectedProduct[indexOfProduct].qtyInStore
+              ) {
+                res.redirect("/");
               } else {
-                cart.selectedProduct[indexOfProduct].quantity =
-                  cart.selectedProduct[indexOfProduct].quantity + 1;
+                if (cart.dealer === true) {
+                  cart.selectedProduct[indexOfProduct].quantity =
+                    cart.selectedProduct[indexOfProduct].quantity + 1;
 
-                cart.selectedProduct[indexOfProduct].price =
-                  cart.selectedProduct[indexOfProduct].price + price;
+                  cart.selectedProduct[indexOfProduct].price =
+                    cart.selectedProduct[indexOfProduct].price + dealerPrice;
 
-                cart.totalQuantity = cart.totalQuantity + 1;
+                  cart.totalQuantity = cart.totalQuantity + 1;
 
-                cart.totalPrice = cart.totalPrice + price;
+                  cart.totalPrice = cart.totalPrice + dealerPrice;
 
-                CartModel.updateOne({ _id: cartId }, { $set: cart })
-                  .then((doc) => {
-                    res.redirect("/");
-                  })
-                  .catch((err) => console.log(err));
+                  CartModel.updateOne({ _id: cartId }, { $set: cart })
+                    .then((doc) => {
+                      res.redirect("/");
+                    })
+                    .catch((err) => console.log(err));
+                } else {
+                  cart.selectedProduct[indexOfProduct].quantity =
+                    cart.selectedProduct[indexOfProduct].quantity + 1;
+
+                  cart.selectedProduct[indexOfProduct].price =
+                    cart.selectedProduct[indexOfProduct].price + price;
+
+                  cart.totalQuantity = cart.totalQuantity + 1;
+
+                  cart.totalPrice = cart.totalPrice + price;
+
+                  CartModel.updateOne({ _id: cartId }, { $set: cart })
+                    .then((doc) => {
+                      res.redirect("/");
+                    })
+                    .catch((err) => console.log(err));
+                }
               }
             }
             // if i chosed another unique product
