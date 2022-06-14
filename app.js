@@ -15,7 +15,7 @@ const session = require("express-session");
 // Static Folders
 app.use(express.static("public"));
 
-// BodyParser
+// BodyParser.
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // Express Session
