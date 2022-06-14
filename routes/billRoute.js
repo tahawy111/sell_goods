@@ -325,16 +325,13 @@ router.get("/monthly-accounts-list", ensureAuthenticated, (req, res) => {
     return myDate;
   };
 
-  var myDate = addDays("2016-05-10T06:34:17Z", 10);
+  var myDate = addDays("", 10);
   console.log(myDate);
 
   let total = 0;
 
   CloseAccountModel.find({
-    $or: [
-      { createdAt: { $gte: firstDay, $lte: lastDay } },
-      { updatedAt: { $gte: firstDay, $lte: lastDay } },
-    ],
+    $or: [{ createdAt: { $gte: firstDay, $lte: lastDay } }],
   }).then((result) => {
     result.forEach((item) => {
       total += item.totalAmount;
@@ -379,12 +376,21 @@ router.get(
     const IsoSDate = new Date(req.query.sDate);
     const IsoEDate = new Date(req.query.eDate);
 
+    var addDays = function (str, days) {
+      var myDate = new Date(str);
+      myDate.setDate(myDate.getDate() + parseInt(days));
+      return myDate;
+    };
+
+    var myDate = addDays(IsoEDate, 10);
+    console.log(myDate);
+
     let total = 0;
 
     CloseAccountModel.find({
       $or: [
-        { createdAt: { $lte: IsoEDate, $gte: IsoSDate } },
-        { updatedAt: { $lte: IsoEDate, $gte: IsoSDate } },
+        { createdAt: { $lte: myDate, $gte: IsoSDate } },
+        { updatedAt: { $lte: myDate, $gte: IsoSDate } },
       ],
     })
       .then((result) => {
