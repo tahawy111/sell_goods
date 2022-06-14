@@ -319,6 +319,14 @@ router.get("/monthly-accounts-list", ensureAuthenticated, (req, res) => {
 
   // get the last day of the current mounth
   const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  var addDays = function (str, days) {
+    var myDate = new Date(str);
+    myDate.setDate(myDate.getDate() + parseInt(days));
+    return myDate;
+  };
+
+  var myDate = addDays("2016-05-10T06:34:17Z", 10);
+  console.log(myDate);
 
   let total = 0;
 
