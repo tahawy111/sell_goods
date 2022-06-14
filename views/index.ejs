@@ -1,15 +1,4 @@
-<%- include('./partials/head.ejs') %> <% if (typeof userId === "undefined") { %>
-
-<a class="d-none barcode-handle-sell" href=""></a>
-
-<% }else{ %>
-
-<form action="/cart2" method="post">
-  <input type="hidden" name="userId" value="<%= userId %>" />
-  <input type="hidden" name="barcode" />
-</form>
-
-<% } %>
+<%- include('./partials/head.ejs') %>
 <style>
   @media print {
     .hide {
@@ -96,6 +85,19 @@
     </div>
   </div>
 </div>
+
+<% if (typeof userId === "undefined") { %>
+
+<a class="d-none barcode-handle-sell" href=""></a>
+
+<% }else{ %>
+
+<form action="/cart2" method="post">
+  <input type="hidden" name="userId" value="<%= userId %>" />
+  <input type="hidden" name="barcode" />
+</form>
+
+<% } %>
 
 <script>
   let code = "";
