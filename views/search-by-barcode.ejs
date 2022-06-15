@@ -9,33 +9,37 @@
 <a class="d-none barcode-handle-details" href=""></a>
 
 <script>
-  let code = "";
-  let reading = false;
-  const barcodeHandleDetails = document.querySelector(
-    ".barcode-handle-details"
-  );
+  const barcodeHandleSell = document.querySelector(".barcode-handle-sell");
+  const dealerBarcodeHandle = document.querySelector(`input[name="barcode"]`);
+  const barcodeForm = document.querySelector("form");
+  let barcode = "";
+  let interval;
 
-  document.addEventListener("keypress", (e) => {
-    //usually scanners throw an 'Enter' key at the end of read
-    if (e.keyCode === 13) {
-      if (code.length > 10) {
-        console.log(code);
-        /// code ready to use
-        code = "";
-      }
-    } else {
-      code += e.key; //while this is not an 'enter' it stores the every key
-      barcodeHandleDetails.href = `/details2/${code}`;
-      barcodeHandleDetails.click();
+  document.addEventListener("keydown", (evt) => {
+    if (interval) {
+      clearInterval(interval);
     }
 
-    //run a timeout of 200ms at the first read and clear everything
-    if (!reading) {
-      reading = true;
-      setTimeout(() => {
-        code = "";
-        reading = false;
-      }, 200); //200 works fine for me but you can adjust it
+    if (evt.code == "Enter") {
+      if (barcode) handleBarcode(barcode);
+      barcode = "";
+      return;
+    }
+
+    if (evt.code != "Shift") barcode += evt.key;
+
+    interval = setInterval(() => {
+      barcode = "";
+    }, 20);
+
+    function handleBarcode(scanned_barcode) {
+      if (barcodeHandleSell) {
+        barcodeHandleSell.href = `/cart2/${scanned_barcode}`;
+        barcodeHandleSell.click();
+      } else {
+        dealerBarcodeHandle.value = scanned_barcode;
+        barcodeForm.submit();
+      }
     }
   });
 </script>
