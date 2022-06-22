@@ -1,43 +1,43 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const multer = require("multer");
-const fs = require("fs");
-const BillModel = require("../models/BillModel");
-const PullMoneyModel = require("../models/PullMoneyModel");
-const CloseAccountModel = require("../models/CloseAccountModel");
-const ComplaintModel = require("../models/ComplaintModel");
-const ProductModel = require("../models/productModel");
+const multer = require('multer');
+const fs = require('fs');
+const BillModel = require('../models/BillModel');
+const PullMoneyModel = require('../models/PullMoneyModel');
+const CloseAccountModel = require('../models/CloseAccountModel');
+const ComplaintModel = require('../models/ComplaintModel');
+const ProductModel = require('../models/productModel');
 const {
   ensureAuthenticated,
   forwardAuthenticated,
   isAdmin,
-} = require("../config/auth");
+} = require('../config/auth');
 
 // file upload
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./public/uploads/files");
+    cb(null, './public/uploads/files');
   },
   filename: function (req, file, cb) {
     cb(null, `${file.fieldname}_${Date.now()}_${file.originalname}`);
   },
 });
 
-const upload = multer({ storage: storage }).single("file");
+const upload = multer({ storage: storage }).single('file');
 
-router.get("/bills-list", ensureAuthenticated, (req, res) => {
+router.get('/bills-list', ensureAuthenticated, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = "";
+    totalProducts = '';
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
 
   BillModel.find()
     .then((doc) => {
-      res.render("bills-list", {
-        title: "قائمة الفواتير",
+      res.render('bills-list', {
+        title: 'قائمة الفواتير',
         totalProducts,
         admin: req.user,
         data: doc,
@@ -46,11 +46,11 @@ router.get("/bills-list", ensureAuthenticated, (req, res) => {
     .catch((err) => console.log(err));
 });
 
-router.get("/bills-list/print/:id", ensureAuthenticated, (req, res) => {
+router.get('/bills-list/print/:id', ensureAuthenticated, (req, res) => {
   BillModel.findById(req.params.id)
     .then((doc) => {
-      res.render("bill", {
-        title: "فاتورة مبيعات",
+      res.render('bill', {
+        title: 'فاتورة مبيعات',
         admin: req.user,
         data: doc,
       });
@@ -58,7 +58,7 @@ router.get("/bills-list/print/:id", ensureAuthenticated, (req, res) => {
     .catch((err) => console.log(err));
 });
 
-router.get("/bills-list/recover/:id", ensureAuthenticated, (req, res) => {
+router.get('/bills-list/recover/:id', ensureAuthenticated, (req, res) => {
   BillModel.findById(req.params.id)
     .then((result) => {
       result.selectedProduct.forEach((bill) => {
@@ -74,7 +74,7 @@ router.get("/bills-list/recover/:id", ensureAuthenticated, (req, res) => {
 
         BillModel.findByIdAndRemove(req.params.id)
           .then(() => {
-            res.redirect("/");
+            res.redirect('/');
           })
           .catch((err) => console.log(err));
       });
@@ -82,20 +82,20 @@ router.get("/bills-list/recover/:id", ensureAuthenticated, (req, res) => {
     .catch((err) => console.log(err));
 });
 
-router.get("/bills-list/bill-search-result", (req, res) => {
+router.get('/bills-list/bill-search-result', (req, res) => {
   const { search } = req.query;
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = "";
+    totalProducts = '';
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
 
   BillModel.findOne({ billNumber: search })
     .then((result) => {
-      res.render("bill-search-result", {
-        title: "ناتج البحث برقم الفاتورة",
+      res.render('bill-search-result', {
+        title: 'ناتج البحث برقم الفاتورة',
         admin: req.user,
         totalProducts,
         data: result,
@@ -104,27 +104,27 @@ router.get("/bills-list/bill-search-result", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-router.get("/search-for-bills", ensureAuthenticated, (req, res) => {
+router.get('/search-for-bills', ensureAuthenticated, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = "";
+    totalProducts = '';
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
 
-  res.render("search-for-bills", {
-    title: "البحث عن الفواتير",
+  res.render('search-for-bills', {
+    title: 'البحث عن الفواتير',
     admin: req.user,
     totalProducts,
   });
 });
 
-router.get("/search-for-bills-result", ensureAuthenticated, (req, res) => {
+router.get('/search-for-bills-result', ensureAuthenticated, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = "";
+    totalProducts = '';
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
@@ -136,8 +136,8 @@ router.get("/search-for-bills-result", ensureAuthenticated, (req, res) => {
     createdAt: { $lte: IsoEDate, $gte: IsoSDate },
   })
     .then((result) => {
-      res.render("search-for-bills-result", {
-        title: "ناتج البحث عن الفواتير بالتاريخ",
+      res.render('search-for-bills-result', {
+        title: 'ناتج البحث عن الفواتير بالتاريخ',
         admin: req.user,
         totalProducts,
         data: result,
@@ -146,11 +146,11 @@ router.get("/search-for-bills-result", ensureAuthenticated, (req, res) => {
     .catch((err) => console.log(err));
 });
 
-router.get("/close-account-daily", ensureAuthenticated, (req, res) => {
+router.get('/close-account-daily', ensureAuthenticated, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = "";
+    totalProducts = '';
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
@@ -172,34 +172,32 @@ router.get("/close-account-daily", ensureAuthenticated, (req, res) => {
   );
   // get week days in array
   const weekDays = [
-    "السبت",
-    "الاحد",
-    "الاثنين",
-    "الثلاث",
-    "الاربع",
-    "الخميس",
-    "الجمعة",
+    'السبت',
+    'الاحد',
+    'الاثنين',
+    'الثلاث',
+    'الاربع',
+    'الخميس',
+    'الجمعة',
   ];
 
   // get today's date
-  const dateOfToday = date.toLocaleDateString("ar-EG");
+  const dateOfToday = date.toLocaleDateString('ar-EG');
 
   // get yaeserday time stamp date
   function getYesterdayDate() {
     let d = new Date();
-    d.setHours(23, 59, 59);
+    d.setHours(0, 0, 0);
     return new Date(d.getTime() - 22 * 60 * 60 * 1000);
   }
-  console.log(getYesterdayDate());
+  console.log(getYesterdayDate(), 'Yesterday Date');
 
   CloseAccountModel.findOne({
-    $or: [
-      { createdAt: { $lte: getYesterdayDate() } },
-      { updatedAt: { $lte: getYesterdayDate() } },
-    ],
+    $or: [{ createdAt: { $gte: getYesterdayDate() } }],
   })
     .then((result) => {
       let oldAmount = 0;
+
       if (result) {
         oldAmount = result.totalAmount;
       } else {
@@ -220,8 +218,8 @@ router.get("/close-account-daily", ensureAuthenticated, (req, res) => {
             ele.forEach((item) => {
               total += item.totalPrice;
             });
-            res.render("close-account-daily", {
-              title: "تقفيل الحساب يوميا",
+            res.render('close-account-daily', {
+              title: 'تقفيل الحساب يوميا',
               admin: req.user,
               totalProducts,
               totalBill: total,
@@ -236,11 +234,11 @@ router.get("/close-account-daily", ensureAuthenticated, (req, res) => {
     })
     .catch((err) => console.log(err));
 });
-router.post("/close-account-daily", ensureAuthenticated, (req, res) => {
+router.post('/close-account-daily', ensureAuthenticated, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = "";
+    totalProducts = '';
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
@@ -269,24 +267,24 @@ router.post("/close-account-daily", ensureAuthenticated, (req, res) => {
   newCloseAccount
     .save()
     .then((result) => {
-      res.render("success-page", {
-        title: "تم تقفيل الحساب اليومي بنجاح",
+      res.render('success-page', {
+        title: 'تم تقفيل الحساب اليومي بنجاح',
         admin: req.user,
-        success_title: "تم تقفيل الحساب اليومي بنجاح",
-        btn_title: "اذهب الي الصفحة الرئيسية",
+        success_title: 'تم تقفيل الحساب اليومي بنجاح',
+        btn_title: 'اذهب الي الصفحة الرئيسية',
         btn_url: `/`,
-        target: "_self",
+        target: '_self',
         totalProducts,
       });
     })
     .catch((err) => console.log(err));
 });
 
-router.get("/daily-accounts-list", ensureAuthenticated, (req, res) => {
+router.get('/daily-accounts-list', ensureAuthenticated, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = "";
+    totalProducts = '';
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
@@ -295,8 +293,8 @@ router.get("/daily-accounts-list", ensureAuthenticated, (req, res) => {
     result.forEach((item) => {
       total += item.totalAmount;
     });
-    res.render("daily-accounts-list", {
-      title: "قائمة الحسابات اليومية",
+    res.render('daily-accounts-list', {
+      title: 'قائمة الحسابات اليومية',
       admin: req.user,
       totalProducts,
       data: result,
@@ -305,11 +303,11 @@ router.get("/daily-accounts-list", ensureAuthenticated, (req, res) => {
   });
 });
 
-router.get("/monthly-accounts-list", ensureAuthenticated, (req, res) => {
+router.get('/monthly-accounts-list', ensureAuthenticated, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = "";
+    totalProducts = '';
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
@@ -325,7 +323,7 @@ router.get("/monthly-accounts-list", ensureAuthenticated, (req, res) => {
     return myDate;
   };
 
-  var myDate = addDays("", 10);
+  var myDate = addDays('', 10);
   console.log(myDate);
 
   let total = 0;
@@ -337,8 +335,8 @@ router.get("/monthly-accounts-list", ensureAuthenticated, (req, res) => {
       total += item.totalAmount;
     });
 
-    res.render("monthly-accounts-list", {
-      title: "قائمة الحسابات الشهرية",
+    res.render('monthly-accounts-list', {
+      title: 'قائمة الحسابات الشهرية',
       admin: req.user,
       totalProducts,
       data: result,
@@ -346,29 +344,29 @@ router.get("/monthly-accounts-list", ensureAuthenticated, (req, res) => {
     });
   });
 });
-router.get("/search-for-closing-account", ensureAuthenticated, (req, res) => {
+router.get('/search-for-closing-account', ensureAuthenticated, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = "";
+    totalProducts = '';
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
 
-  res.render("search-for-closing-account", {
-    title: "قائمة الحسابات الشهرية",
+  res.render('search-for-closing-account', {
+    title: 'قائمة الحسابات الشهرية',
     admin: req.user,
     totalProducts,
   });
 });
 router.get(
-  "/search-for-closing-account-result",
+  '/search-for-closing-account-result',
   ensureAuthenticated,
   (req, res) => {
     let totalProducts = null;
 
     if (!req.user.cart) {
-      totalProducts = "";
+      totalProducts = '';
     } else {
       totalProducts = req.user.cart.totalQuantity;
     }
@@ -397,8 +395,8 @@ router.get(
         result.forEach((item) => {
           total += item.totalAmount;
         });
-        res.render("search-for-closing-account-result", {
-          title: "قائمة الحسابات الشهرية",
+        res.render('search-for-closing-account-result', {
+          title: 'قائمة الحسابات الشهرية',
           admin: req.user,
           totalProducts,
           data: result,
@@ -409,64 +407,64 @@ router.get(
   }
 );
 
-router.get("/edit-daily-account/:id", ensureAuthenticated, (req, res) => {
+router.get('/edit-daily-account/:id', ensureAuthenticated, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = "";
+    totalProducts = '';
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
   CloseAccountModel.findById(req.params.id).then((result) => {
-    res.render("edit-daily-account", {
-      title: "تعديل الحساب اليومي",
+    res.render('edit-daily-account', {
+      title: 'تعديل الحساب اليومي',
       admin: req.user,
       totalProducts,
       data: result,
     });
   });
 });
-router.post("/close-account-daily/:id", ensureAuthenticated, (req, res) => {
+router.post('/close-account-daily/:id', ensureAuthenticated, (req, res) => {
   CloseAccountModel.findByIdAndUpdate(req.params.id, req.body).then(
     (result) => {
-      res.redirect("/daily-accounts-list");
+      res.redirect('/daily-accounts-list');
     }
   );
 });
-router.get("/delete-daily-account/:id", ensureAuthenticated, (req, res) => {
+router.get('/delete-daily-account/:id', ensureAuthenticated, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = "";
+    totalProducts = '';
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
   CloseAccountModel.findByIdAndRemove(req.params.id).then((result) => {
-    res.redirect("/daily-accounts-list");
+    res.redirect('/daily-accounts-list');
   });
 });
 
-router.get("/pull-Money", ensureAuthenticated, (req, res) => {
+router.get('/pull-Money', ensureAuthenticated, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = "";
+    totalProducts = '';
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
 
-  res.render("pull-money", {
-    title: "عملية سحب فلوس",
+  res.render('pull-money', {
+    title: 'عملية سحب فلوس',
     admin: req.user,
     totalProducts,
   });
 });
 
-router.post("/pull-Money", ensureAuthenticated, upload, (req, res) => {
+router.post('/pull-Money', ensureAuthenticated, upload, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = "";
+    totalProducts = '';
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
@@ -475,38 +473,38 @@ router.post("/pull-Money", ensureAuthenticated, upload, (req, res) => {
     name: req.body.name,
     amount: req.body.amount,
     why: req.body.why,
-    file: req.file ? req.file.filename : "No Data",
+    file: req.file ? req.file.filename : 'No Data',
   });
 
   pullMoney
     .save()
     .then((result) => {
-      res.render("success-page", {
-        title: "تمت اضافة عملية سحب الفلوس",
+      res.render('success-page', {
+        title: 'تمت اضافة عملية سحب الفلوس',
         admin: req.user,
-        success_title: "تمت اضافة عملية سحب الفلوس",
-        btn_title: "اذهب الي الصفحة الرئيسية",
+        success_title: 'تمت اضافة عملية سحب الفلوس',
+        btn_title: 'اذهب الي الصفحة الرئيسية',
         btn_url: `/`,
-        target: "_self",
+        target: '_self',
         totalProducts,
       });
     })
     .catch((err) => console.log(err));
 });
 
-router.get("/pull-Money-list", ensureAuthenticated, (req, res) => {
+router.get('/pull-Money-list', ensureAuthenticated, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = "";
+    totalProducts = '';
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
 
   PullMoneyModel.find()
     .then((result) => {
-      res.render("pull-Money-list", {
-        title: "عملية سحب فلوس",
+      res.render('pull-Money-list', {
+        title: 'عملية سحب فلوس',
         admin: req.user,
         totalProducts,
         data: result,
@@ -514,34 +512,34 @@ router.get("/pull-Money-list", ensureAuthenticated, (req, res) => {
     })
     .catch((err) => console.log(err));
 });
-router.get("/delete-pull-money/:id", ensureAuthenticated, (req, res) => {
+router.get('/delete-pull-money/:id', ensureAuthenticated, (req, res) => {
   PullMoneyModel.findByIdAndRemove(req.params.id)
     .then((result) => {
-      res.redirect("/pull-Money-list");
+      res.redirect('/pull-Money-list');
     })
     .catch((err) => console.log(err));
 });
 
-router.get("/add-complaint", ensureAuthenticated, (req, res) => {
+router.get('/add-complaint', ensureAuthenticated, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = "";
+    totalProducts = '';
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
 
-  res.render("add-complaint", {
-    title: "اضافة شكوي",
+  res.render('add-complaint', {
+    title: 'اضافة شكوي',
     admin: req.user,
     totalProducts,
   });
 });
-router.post("/add-complaint", ensureAuthenticated, (req, res) => {
+router.post('/add-complaint', ensureAuthenticated, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = "";
+    totalProducts = '';
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
@@ -557,31 +555,31 @@ router.post("/add-complaint", ensureAuthenticated, (req, res) => {
   complaint
     .save()
     .then(() => {
-      res.render("success-page", {
-        title: "شكوي",
+      res.render('success-page', {
+        title: 'شكوي',
         admin: req.user,
-        success_title: "تمت اضافة الشكوي بنجاح",
-        btn_title: "اذهب الي قائمة الشكاوي",
+        success_title: 'تمت اضافة الشكوي بنجاح',
+        btn_title: 'اذهب الي قائمة الشكاوي',
         btn_url: `/complaints-list`,
-        target: "_self",
+        target: '_self',
         totalProducts,
       });
     })
     .catch((err) => console.log(err));
 });
-router.get("/complaints-list", ensureAuthenticated, (req, res) => {
+router.get('/complaints-list', ensureAuthenticated, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = "";
+    totalProducts = '';
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
 
   ComplaintModel.find()
     .then((result) => {
-      res.render("complaints-list", {
-        title: "فائمة الشكاوي",
+      res.render('complaints-list', {
+        title: 'فائمة الشكاوي',
         admin: req.user,
         totalProducts,
         data: result,
@@ -589,19 +587,19 @@ router.get("/complaints-list", ensureAuthenticated, (req, res) => {
     })
     .catch((err) => console.log(err));
 });
-router.get("/complaints/edit/:id", ensureAuthenticated, (req, res) => {
+router.get('/complaints/edit/:id', ensureAuthenticated, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = "";
+    totalProducts = '';
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
 
   ComplaintModel.findById(req.params.id)
     .then((result) => {
-      res.render("edit-complaint", {
-        title: "تحديث شكوي",
+      res.render('edit-complaint', {
+        title: 'تحديث شكوي',
         admin: req.user,
         totalProducts,
         data: result,
@@ -609,11 +607,11 @@ router.get("/complaints/edit/:id", ensureAuthenticated, (req, res) => {
     })
     .catch((err) => console.log(err));
 });
-router.post("/edit-complaint/:id", ensureAuthenticated, isAdmin, (req, res) => {
+router.post('/edit-complaint/:id', ensureAuthenticated, isAdmin, (req, res) => {
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = "";
+    totalProducts = '';
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
@@ -626,38 +624,38 @@ router.post("/edit-complaint/:id", ensureAuthenticated, isAdmin, (req, res) => {
 
   ComplaintModel.findByIdAndUpdate(req.params.id, req.body)
     .then((result) => {
-      res.redirect("/complaints-list");
+      res.redirect('/complaints-list');
     })
     .catch((err) => console.log(err));
 });
 router.get(
-  "/complaints/delete/:id",
+  '/complaints/delete/:id',
   ensureAuthenticated,
   isAdmin,
   (req, res) => {
     ComplaintModel.findByIdAndRemove(req.params.id)
       .then((result) => {
-        res.redirect("/complaints-list");
+        res.redirect('/complaints-list');
       })
       .catch((err) => console.log(err));
   }
 );
 
-router.get("/user-dealer-list/bills/:id", ensureAuthenticated, (req, res) => {
+router.get('/user-dealer-list/bills/:id', ensureAuthenticated, (req, res) => {
   const { id } = req.params;
 
   let totalProducts = null;
 
   if (!req.user.cart) {
-    totalProducts = "";
+    totalProducts = '';
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
 
-  BillModel.find({ "userDealer.dealerUserId": id }).then((result) => {
+  BillModel.find({ 'userDealer.dealerUserId': id }).then((result) => {
     console.log(result);
-    res.render("user-dealer-bills", {
-      title: "قائمة الفواتير",
+    res.render('user-dealer-bills', {
+      title: 'قائمة الفواتير',
       totalProducts,
       admin: req.user,
       data: result,
