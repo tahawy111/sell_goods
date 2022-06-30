@@ -42,22 +42,8 @@
       </div>
       <div>السعر الاجمالي: <b><%= data.totalPrice %></b> جنيه</div>
       <div>العدد الاجمالي: <b><%= data.totalQuantity %></b></div>
-      <a href="<%= data.billNumber %>" class="d-none barcode-data"></a>
       <div class="hr"></div>
-      <svg id="barcode"></svg>
+      <div>رقم الفاتورة: <b><%= data.billNumber %></b></div>
     </div>
-
-    <script src="../public/js/barcode.js"></script>
-    <script>
-      let barcode = document.querySelector('#barcode');
-      const data = document.querySelector('.barcode-data').getAttribute('href');
-
-      JsBarcode('#barcode', data, {
-        background: '#fff',
-        color: '#000',
-        height: 70,
-        displayValue: true,
-      });
-    </script>
   </body>
 </html>

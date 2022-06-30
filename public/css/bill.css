@@ -12,6 +12,7 @@
   flex-direction: column;
   align-items: center;
   margin-right: 2cm;
+  font-size: 23px;
 }
 
 .barnd-container .img-container {
@@ -22,8 +23,8 @@
 
 .barnd-container img {
   position: absolute;
-  width: 2cm;
-  top: -10px;
+  width: 4.5cm;
+  top: 0px;
 }
 
 .barnd-container {
@@ -33,19 +34,19 @@
 }
 
 .barnd-container .barnd-name {
-  font-size: 18px;
-  margin-top: 1.2cm;
+  font-size: 25px;
+  margin-top: 3.5cm;
   text-align: center;
 }
 .barnd-container .phone-numbers {
-  font-size: 14px;
+  font-size: 20.5px;
   text-align: center;
 }
 
 .hr {
   height: 1px;
   width: 100%;
-  background-color: lightgray;
+  background-color: black;
 }
 
 .product-container {
