@@ -1,24 +1,63 @@
 * {
-  font-family: "Cairo", sans-serif;
-}
-body {
-  background: #eee;
+  font-family: 'Cairo', sans-serif;
 }
 
-.head {
+.bill-container {
+  width: 7cm;
+  height: 20cm;
+  /* border: 1px solid lightgray; */
+
+  /*  */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 2cm;
+}
+
+.barnd-container .img-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.barnd-container img {
+  position: absolute;
+  width: 2cm;
+  top: -10px;
+}
+
+.barnd-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.barnd-container .barnd-name {
+  font-size: 18px;
+  margin-top: 1.2cm;
+  text-align: center;
+}
+.barnd-container .phone-numbers {
+  font-size: 14px;
+  text-align: center;
+}
+
+.hr {
+  height: 1px;
+  width: 100%;
+  background-color: lightgray;
+}
+
+.product-container {
+  width: 100%;
+}
+.product-container .p-head {
+  font-weight: bold;
   display: flex;
   justify-content: space-between;
-  width: fit-content;
-  flex-direction: row;
-  height: fit-content;
 }
 
-.brand {
-  transform: translateY(-90px);
-}
-.brand img {
-  width: 150px;
-}
-.ttable {
-  position: relative;
+.product-container .p-body > div {
+  display: flex;
+  justify-content: space-between;
 }
