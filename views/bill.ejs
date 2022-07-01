@@ -17,29 +17,36 @@
         </div>
         <div class="barnd-name">الفتح ستور</div>
         <div class="phone-numbers">01063310981, 01117119902, 01145681652</div>
-      </div>
-      <div class="hr"></div>
+        <div class="hr"></div>
 
-      <div>الكاشير: <b><%= data.adminName %></b></div>
-      <div>فاتوره رقم: <b><%= data.billNumber %></b></div>
-      <div>
-        التاريخ: <b><%= data.createdAt.toLocaleDateString('ar-EG'); %></b>
-      </div>
-      <% if (data.userDealer) { %>
-      <div class="hr"></div>
-      <div>اسم العميل: <b><%= data.userDealer.dealerName %></b></div>
-      <div>موبيل رقم: <b><%= data.userDealer.phoneNumber %></b></div>
-      <div>عنوان العميل: <b><%= data.userDealer.address %></b></div>
-      <div>
-        رقم الهاتف الارضي:
-        <b
-          ><%= data.userDealer.telephoneFix ? data.userDealer.telephoneFix :
-          "لايوجد" %></b
-        >
+        <div class="me-2">الكاشير: <b><%= data.adminName %></b></div>
+        <div class="me-2">فاتوره رقم: <b><%= data.billNumber %></b></div>
+        <div class="me-2">
+          التاريخ: <b><%= data.createdAt.toLocaleDateString('ar-EG'); %></b>
+        </div>
+        <% if (data.userDealer) { %>
+        <div class="hr"></div>
+        <div class="me-2">
+          اسم العميل: <b><%= data.userDealer.dealerName %></b>
+        </div>
+        <div class="me-2">
+          موبيل رقم: <b><%= data.userDealer.phoneNumber %></b>
+        </div>
+        <div class="me-2">
+          عنوان العميل: <b><%= data.userDealer.address %></b>
+        </div>
+        <div class="me-2">
+          رقم الهاتف الارضي:
+          <b
+            ><%= data.userDealer.telephoneFix ? data.userDealer.telephoneFix :
+            "لايوجد" %></b
+          >
+        </div>
+
+        <% } %>
+        <div class="hr"></div>
       </div>
 
-      <% } %>
-      <div class="hr"></div>
       <div class="product-container">
         <table class="table">
           <thead>
@@ -61,8 +68,10 @@
           </tbody>
         </table>
         <div class="hr"></div>
-        <div>العدد الاجمالي: <b><%= data.totalQuantity %></b></div>
-        <div>السعر الاجمالي: <b><%= data.totalPrice %></b> جنيه</div>
+        <div class="me-2">العدد الاجمالي: <b><%= data.totalQuantity %></b></div>
+        <div class="me-2">
+          السعر الاجمالي: <b><%= data.totalPrice %></b> جنيه
+        </div>
         <!-- <div class="hr"></div>
         <div>
           <b>ملحوظة:</b> هذه الفاتوره تعتبر مستند لسداد قيمة الخدمة المقدمة جميع
