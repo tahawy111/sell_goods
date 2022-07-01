@@ -20,30 +20,55 @@
       </div>
       <div class="hr"></div>
 
+      <div>الكاشير: <b><%= data.adminName %></b></div>
+      <div>فاتوره رقم: <b><%= data.billNumber %></b></div>
+      <div>
+        التاريخ: <b><%= data.createdAt.toLocaleDateString('ar-EG'); %></b>
+      </div>
+      <% if (data.userDealer) { %>
+      <div class="hr"></div>
+      <div>اسم العميل: <b><%= data.userDealer.dealerName %></b></div>
+      <div>موبيل رقم: <b><%= data.userDealer.phoneNumber %></b></div>
+      <div>عنوان العميل: <b><%= data.userDealer.address %></b></div>
+      <div>
+        رقم الهاتف الارضي:
+        <b
+          ><%= data.userDealer.telephoneFix ? data.userDealer.telephoneFix :
+          "لايوجد" %></b
+        >
+      </div>
+
+      <% } %>
+      <div class="hr"></div>
       <div class="product-container">
         <table class="table">
           <thead>
             <tr>
               <th>الأسم</th>
+              <th></th>
               <th>العدد</th>
               <th>السعر</th>
             </tr>
           </thead>
-          <tbody style="text-align: center; vertical-align: middle">
+          <tbody>
             <% data.selectedProduct.forEach((ele,index)=>{ %>
             <tr>
-              <td><%= ele.name %></td>
-              <td><%= ele.quantity %></td>
-              <td><%= ele.price %></td>
+              <td colspan="2"><%= ele.name %></td>
+              <td style="max-width: 200px"><%= ele.quantity %></td>
+              <td style="max-width: 200px"><%= ele.price %></td>
             </tr>
             <% }) %>
           </tbody>
         </table>
+        <div class="hr"></div>
+        <div>العدد الاجمالي: <b><%= data.totalQuantity %></b></div>
+        <div>السعر الاجمالي: <b><%= data.totalPrice %></b> جنيه</div>
+        <!-- <div class="hr"></div>
+        <div>
+          <b>ملحوظة:</b> هذه الفاتوره تعتبر مستند لسداد قيمة الخدمة المقدمة جميع
+          الفواتير لدينا مسجله على النظام
+        </div> -->
       </div>
-      <div>السعر الاجمالي: <b><%= data.totalPrice %></b> جنيه</div>
-      <div>العدد الاجمالي: <b><%= data.totalQuantity %></b></div>
-      <div class="hr"></div>
-      <div>رقم الفاتورة: <b><%= data.billNumber %></b></div>
     </div>
   </body>
 </html>

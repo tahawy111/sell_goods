@@ -1,18 +1,21 @@
+@import './cairo.css';
+
 * {
   font-family: 'Cairo', sans-serif;
 }
 
 .bill-container {
-  width: 7cm;
+  width: 10cm;
   height: 20cm;
   /* border: 1px solid lightgray; */
 
   /*  */
+  font-size: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-right: 2cm;
-  font-size: 23px;
+  margin-right: 0cm;
+  font-weight: bold;
 }
 
 .barnd-container .img-container {
@@ -24,7 +27,7 @@
 .barnd-container img {
   position: absolute;
   width: 4.5cm;
-  top: 0px;
+  top: -30px;
 }
 
 .barnd-container {
@@ -34,8 +37,8 @@
 }
 
 .barnd-container .barnd-name {
-  font-size: 25px;
-  margin-top: 3.5cm;
+  font-size: 28px;
+  margin-top: 3cm;
   text-align: center;
 }
 .barnd-container .phone-numbers {
@@ -61,4 +64,8 @@
 .product-container .p-body > div {
   display: flex;
   justify-content: space-between;
+}
+table {
+  table-layout: fixed;
+  word-wrap: break-word;
 }
