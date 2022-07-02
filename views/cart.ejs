@@ -73,7 +73,24 @@ if (admin.cart.userDealer) { %>
                 <%}%>
               </td>
               <td><%= ele.priceOfOne %></td>
-              <td><%= ele.price %></td>
+              <td>
+                <form action="/cart/edit-single-price" method="post">
+                  <input
+                    type="number"
+                    class="form-control form-control-sm mb-1"
+                    name="totalPrice"
+                    value="<%= ele.price %>"
+                  />
+                  <input
+                    type="hidden"
+                    name="productId"
+                    value="<%= ele._id %>"
+                  />
+                  <button type="submit" class="btn btn-warning btn-sm">
+                    تحديث
+                  </button>
+                </form>
+              </td>
             </tr>
             <% }) %>
             <tr>
@@ -82,7 +99,7 @@ if (admin.cart.userDealer) { %>
                 العدد الكامل: <%= admin.cart.totalQuantity %>
               </td>
               <td></td>
-              <td class="fw-bold">Total Price: <%= admin.cart.totalPrice %></td>
+              <td>السعر الاجمالي: <%= admin.cart.totalPrice %></td>
             </tr>
           </tbody>
         </table>
@@ -98,11 +115,26 @@ if (admin.cart.userDealer) { %>
   </div>
 </div>
 
+<div class="card" style="width: 18rem">
+  <div class="card-body">
+    <h5 class="card-title">خصم السعر الاجمالي</h5>
+    <form action="/cart/general-discount" method="post">
+      <input
+        type="number"
+        class="form-control mb-2"
+        name="totalDiscount"
+        value="<%= admin.cart.totalPrice %>"
+      />
+      <button type="submit" class="btn btn-primary">خصم</button>
+    </form>
+  </div>
+</div>
+
 <script>
   const delAll = document.querySelector(`.delAll`);
-  delAll.addEventListener("click", (e) => {
+  delAll.addEventListener('click', (e) => {
     if (
-      confirm("هل انت متأكد من انك تريد حذف جميع المنتجات من العربة") === true
+      confirm('هل انت متأكد من انك تريد حذف جميع المنتجات من العربة') === true
     ) {
     } else {
       e.preventDefault();
