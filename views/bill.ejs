@@ -10,118 +10,73 @@
     <title>فاتورة مبيعات</title>
   </head>
   <body>
-    <div class="container mt-5">
-      <div class="d-flex justify-content-center row">
-        <div class="col-md-8">
-          <div class="p-3 bg-white rounded">
-            <div class="d-flex justify-content-between">
-              <div class="col-md-6">
-                <h1>فاتورة</h1>
-                <div class="billed">
-                  <span class="font-weight-bold text-uppercase"
-                    >تمت بواسطة:</span
-                  >
-                  <span class="ml-1"><%= data.adminName %></span>
-                </div>
-                <div class="billed">
-                  <span class="font-weight-bold text-uppercase">التاريخ:</span
-                  ><span class="ml-1"
-                    ><%= data.createdAt.toLocaleDateString('ar-EG') %></span
-                  >
-                </div>
-                <div class="billed w-100">
-                  <span class="font-weight-bold text-uppercase"
-                    >رقم الفاتورة:
-                  </span>
-                  <span class="ml-1"><%= data.billNumber %></span>
-                </div>
-                <% if (data.userDealer) { %>
-                <h5 class="mt-3" style="line-height: 0.2">
-                  بيانات العميل
-                  <hr />
-                </h5>
-
-                <div class="billed">
-                  <span class="font-weight-bold text-uppercase"
-                    >اسم العميل:</span
-                  >
-                  <span class="ml-1"><%= data.userDealer.dealerName %></span>
-                </div>
-                <div class="billed">
-                  <span class="font-weight-bold text-uppercase"
-                    >عنوان العميل:</span
-                  >
-                  <span class="ml-1"><%= data.userDealer.address %></span>
-                </div>
-
-                <div class="billed">
-                  <span class="font-weight-bold text-uppercase"
-                    >اسم الشركة:</span
-                  >
-                  <span class="ml-1"
-                    ><%= data.userDealer.companyName ?
-                    data.userDealer.companyName : "لايوجد" %></span
-                  >
-                </div>
-
-                <div class="billed">
-                  <span class="font-weight-bold text-uppercase"
-                    >رقم الهاتف:</span
-                  >
-                  <span class="ml-1"><%= data.userDealer.phoneNumber %></span>
-                </div>
-
-                <div class="billed mb-5">
-                  <span class="font-weight-bold text-uppercase"
-                    >رقم الهاتف الارضي:</span
-                  >
-                  <span class="ml-1"
-                    ><%= data.userDealer.telephoneFix ?
-                    data.userDealer.telephoneFix : "لايوجد" %></span
-                  >
-                </div>
-                <% } %>
-              </div>
-              <div class="text-center brand mt-5">
-                <img src="/project_files/imgs/Elfath-Logo.png" />
-                <div class="fs-2 title">الفتح ستور</div>
-
-                <div class="fs-5">01063310981, 01117419902, 01145681652</div>
-              </div>
-            </div>
-            <div style="transform: translateY(-46px)" class=".ttable">
-              <div class="table-responsive">
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th>المنتج</th>
-                      <th>سعر القطعة</th>
-                      <th>العدد</th>
-                      <th>السعر الاجمالي</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% data.selectedProduct.forEach((ele,index)=>{ %>
-                    <tr>
-                      <td><%= ele.name %></td>
-                      <td><%= ele.priceOfOne %></td>
-                      <td><%= ele.quantity %></td>
-                      <td><%= ele.price %></td>
-                    </tr>
-                    <% }) %>
-                    <td></td>
-                    <td>العدد الاجمالي: <%= data.totalQuantity %></td>
-                    <td></td>
-                    <td>
-                      <%= data.totalPrice %>
-                      <span class="fw-bold"> :السعر الاجمالي</span>
-                    </td>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+    <div class="bill-container">
+      <div class="barnd-container">
+        <div class="img-container">
+          <img src="/project_files/imgs/Elfath-Logo.png" />
         </div>
+        <div class="barnd-name">الفتح ستور</div>
+        <div class="phone-numbers">01063310981, 01117119902, 01145681652</div>
+        <div class="hr"></div>
+
+        <div class="me-2">الكاشير: <b><%= data.adminName %></b></div>
+        <div class="me-2">فاتوره رقم: <b><%= data.billNumber %></b></div>
+        <div class="me-2">
+          التاريخ: <b><%= data.createdAt.toLocaleDateString('ar-EG'); %></b>
+        </div>
+        <% if (data.userDealer) { %>
+        <div class="hr"></div>
+        <div class="me-2">
+          اسم العميل: <b><%= data.userDealer.dealerName %></b>
+        </div>
+        <div class="me-2">
+          موبيل رقم: <b><%= data.userDealer.phoneNumber %></b>
+        </div>
+        <div class="me-2">
+          عنوان العميل: <b><%= data.userDealer.address %></b>
+        </div>
+        <div class="me-2">
+          رقم الهاتف الارضي:
+          <b
+            ><%= data.userDealer.telephoneFix ? data.userDealer.telephoneFix :
+            "لايوجد" %></b
+          >
+        </div>
+
+        <% } %>
+        <div class="hr"></div>
+      </div>
+
+      <div class="product-container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>الأسم</th>
+              <th></th>
+              <th>العدد</th>
+              <th>السعر</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% data.selectedProduct.forEach((ele,index)=>{ %>
+            <tr>
+              <td colspan="2"><%= ele.name %></td>
+              <td style="max-width: 200px"><%= ele.quantity %></td>
+              <td style="max-width: 200px"><%= ele.price %></td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+        <div class="hr"></div>
+        <div class="me-2">العدد الاجمالي: <b><%= data.totalQuantity %></b></div>
+        <div class="me-2">
+          السعر الاجمالي: <b><%= data.totalPrice %></b> جنيه
+        </div>
+        <!-- <div class="hr"></div>
+        <div>
+          <b>ملحوظة:</b> هذه الفاتوره تعتبر مستند لسداد قيمة الخدمة المقدمة جميع
+          الفواتير لدينا مسجله على النظام
+        </div> -->
       </div>
     </div>
   </body>

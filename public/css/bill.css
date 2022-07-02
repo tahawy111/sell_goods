@@ -1,24 +1,72 @@
+@import './cairo.css';
+
 * {
-  font-family: "Cairo", sans-serif;
-}
-body {
-  background: #eee;
+  font-family: 'Cairo', sans-serif;
 }
 
-.head {
+.bill-container {
+  width: 10cm;
+  height: 20cm;
+  /* border: 1px solid lightgray; */
+
+  /*  */
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 0cm;
+  font-weight: bold;
+}
+
+.barnd-container .img-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.barnd-container img {
+  position: absolute;
+  width: 4.5cm;
+  top: -30px;
+}
+
+.barnd-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.barnd-container .barnd-name {
+  font-size: 28px;
+  margin-top: 3cm;
+  text-align: center;
+}
+.barnd-container .phone-numbers {
+  font-size: 20.5px;
+  text-align: center;
+}
+
+.hr {
+  height: 1px;
+  width: 100%;
+  background-color: black;
+}
+
+.product-container {
+  width: 100%;
+}
+.product-container .p-head {
+  font-weight: bold;
   display: flex;
   justify-content: space-between;
-  width: fit-content;
-  flex-direction: row;
-  height: fit-content;
 }
 
-.brand {
-  transform: translateY(-90px);
+.product-container .p-body > div {
+  display: flex;
+  justify-content: space-between;
 }
-.brand img {
-  width: 150px;
-}
-.ttable {
-  position: relative;
+
+table {
+  table-layout: fixed;
+  word-wrap: break-word;
 }
