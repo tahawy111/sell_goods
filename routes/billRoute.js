@@ -156,7 +156,6 @@ router.get('/close-account-daily', ensureAuthenticated, (req, res) => {
   }
   let total = 0;
   let totalPull = 0;
-  let date = new Date();
 
   // for searching by today's date
   let d = new Date();
@@ -170,19 +169,6 @@ router.get('/close-account-daily', ensureAuthenticated, (req, res) => {
     59,
     59
   );
-  // get week days in array
-  const weekDays = [
-    'السبت',
-    'الاحد',
-    'الاثنين',
-    'الثلاث',
-    'الاربع',
-    'الخميس',
-    'الجمعة',
-  ];
-
-  // get today's date
-  const dateOfToday = date.toLocaleDateString('ar-EG');
 
   // get yaeserday time stamp date
   function getYesterdayDate() {
@@ -196,13 +182,7 @@ router.get('/close-account-daily', ensureAuthenticated, (req, res) => {
     $or: [{ createdAt: { $gte: getYesterdayDate() } }],
   })
     .then((result) => {
-      let oldAmount = 0;
-
-      if (result) {
-        oldAmount = result.totalAmount;
-      } else {
-        oldAmount = 0;
-      }
+      oldAmount = 0;
 
       PullMoneyModel.find({
         createdAt: { $gte: d, $lte: endOfDayDate },
@@ -223,10 +203,7 @@ router.get('/close-account-daily', ensureAuthenticated, (req, res) => {
               admin: req.user,
               totalProducts,
               totalBill: total,
-              weekDays: weekDays[date.getDay() + 1],
               totalPull,
-              dateOfToday,
-              oldAmount,
             });
           });
         })
@@ -249,8 +226,7 @@ router.post('/close-account-daily', ensureAuthenticated, (req, res) => {
   const totalBill = +req.body.totalBill;
   const shop = +req.body.shop;
   const name = req.user.name;
-
-  const totalAmount = totalBill + addedMoney - totalPull - shop;
+  const totalAmount = +req.body.totalAmount;
 
   const newCloseAccount = new CloseAccountModel({
     name,

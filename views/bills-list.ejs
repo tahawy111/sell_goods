@@ -67,14 +67,14 @@
 
 <script>
   // to make a confirm to all btns
-  let del = document.querySelectorAll(".recover");
+  let del = document.querySelectorAll('.recover');
   // get array from buttons
   const delBtns = Array.from(del);
   delBtns.forEach((e) => {
-    e.addEventListener("click", (el) => {
+    e.addEventListener('click', (el) => {
       if (
         confirm(
-          "هل انت متأكد من انك تريد استرجاع الفاتورة مع العلم ان الفاتورة ستحذف من القائمة"
+          'هل انت متأكد من انك تريد استرجاع الفاتورة مع العلم ان الفاتورة ستحذف من القائمة'
         )
       ) {
       } else {
