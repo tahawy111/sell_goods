@@ -11,6 +11,7 @@
           <thead>
             <tr class="table-dark">
               <th>#</th>
+              <th>تم تسجيلها</th>
               <th>التاريخ</th>
               <th>اليوم</th>
               <th>المبلغ القديم</th>
@@ -28,6 +29,7 @@
             <tr>
               <td><%= index + 1 %></td>
               <td><%= ele.createdAt.toISOString() %></td>
+              <td><%= ele.dateOfToday %></td>
               <td><%= ele.weekDay %></td>
               <td><%= ele.oldAmount %></td>
               <td><%= ele.totalPull %></td>
@@ -58,12 +60,12 @@
 
 <script>
   // to make a confirm to all btns
-  let del = document.querySelectorAll(".del");
+  let del = document.querySelectorAll('.del');
   // get array from buttons
   const delBtns = Array.from(del);
   delBtns.forEach((e) => {
-    e.addEventListener("click", (el) => {
-      if (confirm("هل تريد الحذف")) {
+    e.addEventListener('click', (el) => {
+      if (confirm('هل تريد الحذف')) {
       } else {
         el.preventDefault();
       }
