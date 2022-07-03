@@ -129,18 +129,34 @@ router.get('/search-for-bills-result', ensureAuthenticated, (req, res) => {
     totalProducts = req.user.cart.totalQuantity;
   }
 
+  let amount = 0;
+
   const IsoSDate = new Date(req.query.sDate);
   const IsoEDate = new Date(req.query.eDate);
 
+  var addDays = function (str, days) {
+    var myDate = new Date(str);
+    myDate.setDate(myDate.getDate() + parseInt(days));
+    return myDate;
+  };
+
+  var myDate = addDays(IsoEDate, 1);
+  console.log(myDate);
+
   BillModel.find({
-    createdAt: { $lte: IsoEDate, $gte: IsoSDate },
+    createdAt: { $lte: myDate, $gte: IsoSDate },
   })
     .then((result) => {
+      result.forEach((ele) => {
+        amount += ele.totalPrice;
+      });
+      console.log(amount);
       res.render('search-for-bills-result', {
         title: 'ناتج البحث عن الفواتير بالتاريخ',
         admin: req.user,
         totalProducts,
         data: result,
+        amount,
       });
     })
     .catch((err) => console.log(err));
@@ -356,7 +372,7 @@ router.get(
       return myDate;
     };
 
-    var myDate = addDays(IsoEDate, 10);
+    var myDate = addDays(IsoEDate, 1);
     console.log(myDate);
 
     let total = 0;
@@ -639,4 +655,80 @@ router.get('/user-dealer-list/bills/:id', ensureAuthenticated, (req, res) => {
   });
 });
 
+router.get('/user-dealer-list/bills/:id', ensureAuthenticated, (req, res) => {
+  const { id } = req.params;
+
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = '';
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  BillModel.find({ 'userDealer.dealerUserId': id }).then((result) => {
+    console.log(result);
+    res.render('user-dealer-bills', {
+      title: 'قائمة الفواتير',
+      totalProducts,
+      admin: req.user,
+      data: result,
+    });
+  });
+});
+
+router.get('/search-for-pull-money', ensureAuthenticated, (req, res) => {
+  if (!req.user.cart) {
+    totalProducts = '';
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  res.render('search-for-pull-money', {
+    title: 'البحث عن المسحوبات',
+    totalProducts,
+    admin: req.user,
+  });
+});
+
+router.get('/search-for-pull-money-result', ensureAuthenticated, (req, res) => {
+  if (!req.user.cart) {
+    totalProducts = '';
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+  const IsoSDate = new Date(req.query.sDate);
+  const IsoEDate = new Date(req.query.eDate);
+
+  let amount = 0;
+
+  var addDays = function (str, days) {
+    var myDate = new Date(str);
+    myDate.setDate(myDate.getDate() + parseInt(days));
+    return myDate;
+  };
+
+  var myDate = addDays(IsoEDate, 1);
+
+  PullMoneyModel.find({
+    $or: [
+      { createdAt: { $lte: myDate, $gte: IsoSDate } },
+      { updatedAt: { $lte: myDate, $gte: IsoSDate } },
+    ],
+  })
+    .then((result) => {
+      result.forEach((item) => {
+        amount += item.amount;
+      });
+
+      res.render('search-for-pull-money-result', {
+        title: 'البحث عن المسحوبات',
+        totalProducts,
+        admin: req.user,
+        data: result,
+        amount, // it means the pull amount
+      });
+    })
+    .catch((err) => console.log(err));
+});
 module.exports = router;
