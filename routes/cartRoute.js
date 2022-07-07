@@ -610,14 +610,14 @@ router.get('/cart/sell/newBill', ensureAuthenticated, (req, res) => {
 });
 
 router.post(
-  '/cart/edit-single-price',
+  '/cart2/edit-single-price',
   ensureAuthenticated,
   async (req, res) => {
     const userCart = req.user.cart;
     const product = userCart.selectedProduct.find(
       (product) => product._id === req.body.productId
     );
-    const diffPrice = product.price - +req.body.totalPrice;
+    const diffPrice = +product.price - +req.body.totalPrice;
     product.price = +req.body.totalPrice;
 
     userCart.totalPrice = userCart.totalPrice - diffPrice;
