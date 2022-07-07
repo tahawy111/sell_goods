@@ -613,7 +613,6 @@ router.post(
   '/cart/edit-single-price',
   ensureAuthenticated,
   async (req, res) => {
-    console.log(req.body);
     const userCart = req.user.cart;
     const product = userCart.selectedProduct.find(
       (product) =>

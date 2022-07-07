@@ -100,27 +100,27 @@
 <% } %>
 
 <script>
-  const barcodeHandleSell = document.querySelector(".barcode-handle-sell");
+  const barcodeHandleSell = document.querySelector('.barcode-handle-sell');
   const dealerBarcodeHandle = document.querySelector(`input[name="barcode"]`);
-  const barcodeForm = document.querySelector("form");
-  let barcode = "";
+  const barcodeForm = document.querySelector(`form[action='/cart2']`);
+  let barcode = '';
   let interval;
 
-  document.addEventListener("keydown", (evt) => {
+  document.addEventListener('keydown', (evt) => {
     if (interval) {
       clearInterval(interval);
     }
 
-    if (evt.code == "Enter") {
+    if (evt.code == 'Enter') {
       if (barcode) handleBarcode(barcode);
-      barcode = "";
+      barcode = '';
       return;
     }
 
-    if (evt.code != "Shift") barcode += evt.key;
+    if (evt.code != 'Shift') barcode += evt.key;
 
     interval = setInterval(() => {
-      barcode = "";
+      barcode = '';
     }, 20);
 
     function handleBarcode(scanned_barcode) {
