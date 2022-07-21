@@ -1,0 +1,24 @@
+* {
+  font-family: "Cairo", sans-serif;
+}
+body {
+  background: #eee;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  width: fit-content;
+  flex-direction: row;
+  height: fit-content;
+}
+
+.brand {
+  transform: translateY(-90px);
+}
+.brand img {
+  width: 150px;
+}
+.ttable {
+  position: relative;
+}
