@@ -180,7 +180,7 @@ router.post("/update/:id", ensureAuthenticated, upload, (req, res) => {
     image: new_image,
   })
     .then((result) => {
-      res.redirect("/");
+      res.redirect(`/details/${req.params.id}`);
     })
     .catch((err) => console.log(err));
 });
