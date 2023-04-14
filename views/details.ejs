@@ -21,6 +21,8 @@
       <h2>العدد: <%= data.quantity %></h2>
     </div>
 
+    <button class="btn ms-2 btn-secondary" onclick="showHide()">بيع</button>
+
     <div>
       <a class="btn ms-2 btn-success" href="/cart/<%= data._id %>">بيع</a>
       <a
@@ -43,8 +45,18 @@
 <h1 class="text-center">لا توجد بيانات</h1>
 <% } %>
 <script>
+
+
+function showHide (e) {
+  if(e.style.display === "block") {
+    e.style.display = "none"
+  } else {
+    e.style.display = "block"
+  }
+}
+
   // here we are making the confirm message to delete button
-  let del = document.querySelector(".delete");
+  let del = document.querySelector(".delete")
   del.addEventListener("click", (e) => {
     if (confirm("هل تريد الحذف") === true) {
     } else {
