@@ -3,7 +3,7 @@
   <h1 class="my-3 pb-3 text-center border-2 border-bottom">Details Page</h1>
   <a class="d-none barcode-handle-details" href=""></a>
 
-  <% if(data){ %>
+  <button% if(data){ %>
 
     <div class="container d-flex">
       <img width="600" class="img-thumbnail" src="/uploads/images/<%= data.image %>" alt="" />
@@ -21,7 +21,7 @@
         </div>
 
         <button class="btn ms-2 btn-secondary d-none" onclick="showHide()">إظهار المزيد</button>
-
+        
         <div>
           <a class="btn ms-2 btn-success" href="/cart/<%= data._id %>">بيع</a>
           <a class="btn ms-2 btn-warning" style="width: min-content" href="/edit/<%= data._id %>">تعديل</a>
