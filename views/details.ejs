@@ -13,7 +13,7 @@
           </h1>
           <h2>السعر: <%= data.price %> L.E</h2>
         </div>
-        <div class="details d-block opacity-0 visually-hidden">
+        <div class="details d-block invisible">
           <h2>السعر الديلر: <%= data.dealerPrice %> L.E</h2>
           <h2>السعر الجملة: <%= data.wholesale %> L.E</h2>
           <h2>العدد: <%= data.quantity %>
@@ -41,8 +41,8 @@
 
 
         showMore.addEventListener("click", (e) => {
-          details.classList.toggle("visually-hidden opacity-0");
-            if (details.style.display && details.style.display === "block") {
+          details.classList.toggle("invisible");
+            if (e.target.innerHTML === "إظهار المزيد") {
               e.target.innerHTML = "إخفاء";
             } else {
               e.target.innerHTML = "إظهار المزيد";
