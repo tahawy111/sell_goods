@@ -13,15 +13,15 @@
           </h1>
           <h2>السعر: <%= data.price %> L.E</h2>
         </div>
-        <div class="details" style="display: none;">
+        <div class="details d-none">
           <h2>السعر الديلر: <%= data.dealerPrice %> L.E</h2>
           <h2>السعر الجملة: <%= data.wholesale %> L.E</h2>
           <h2>العدد: <%= data.quantity %>
           </h2>
         </div>
 
-        <button class="btn ms-2 btn-secondary" style="width: fit-content;" onclick="showHide()">إظهار المزيد</button>
-        
+        <button class="btn mx-2 btn-secondary" style="width: fit-content;" onclick="showHide()">إظهار المزيد</button>
+
         <div>
           <a class="btn ms-2 btn-success" href="/cart/<%= data._id %>">بيع</a>
           <a class="btn ms-2 btn-warning" style="width: min-content" href="/edit/<%= data._id %>">تعديل</a>
@@ -40,10 +40,10 @@
             let details = document.querySelector(".details");
             if (details.style.display === "block") {
               e.innerHTML = "إخفاء";
-              details.style.display = "none";
+              details.classList.toggle("none", true);
             } else {
               e.innerHTML = "إظهار المزيد";
-              details.style.display = "block";
+              details.classList.toggle("none", true);
             }
           }
 
