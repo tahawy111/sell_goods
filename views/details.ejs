@@ -20,7 +20,7 @@
           </h2>
         </div>
 
-        <a class="btn mx-2 btn-secondary" style="width: fit-content;" onclick="showHide()">إظهار المزيد</a>
+        <a class="btn mx-2 btn-secondary show-more" style="width: fit-content;">إظهار المزيد</a>
 
         <div>
           <a class="btn ms-2 btn-success" href="/cart/<%= data._id %>">بيع</a>
@@ -35,8 +35,12 @@
       <% } %>
 
       <script>
-        function showHide(e) {
-            let details = document.querySelector(".details");
+
+        let showMore = document.querySelector(".show-more");
+        let details = document.querySelector(".details");
+
+
+        showMore.addEventListener("click", (e) => {
             if (details.style.display === "block") {
               e.innerHTML = "إخفاء";
               details.classList.toggle("none", true);
@@ -44,7 +48,7 @@
               e.innerHTML = "إظهار المزيد";
               details.classList.toggle("none", true);
             }
-          }
+        })
       </script>
 
         <script>
