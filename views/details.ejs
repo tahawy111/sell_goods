@@ -13,14 +13,14 @@
           </h1>
           <h2>السعر: <%= data.price %> L.E</h2>
         </div>
-        <div class="details d-none">
+        <div class="details" style="display: none;">
           <h2>السعر الديلر: <%= data.dealerPrice %> L.E</h2>
           <h2>السعر الجملة: <%= data.wholesale %> L.E</h2>
           <h2>العدد: <%= data.quantity %>
           </h2>
         </div>
 
-        <button class="btn ms-2 btn-secondary" onclick="showHide()">إظهار المزيد</button>
+        <button class="btn ms-2 btn-secondary" style="width: fit-content;" onclick="showHide()">إظهار المزيد</button>
         
         <div>
           <a class="btn ms-2 btn-success" href="/cart/<%= data._id %>">بيع</a>
