@@ -33,10 +33,9 @@
     <% }else{ %>
       <h1 class="text-center">لا توجد بيانات</h1>
       <% } %>
-        <script>
 
-
-          function showHide(e) {
+      <script>
+        function showHide(e) {
             let details = document.querySelector(".details");
             if (details.style.display === "block") {
               e.innerHTML = "إخفاء";
@@ -46,7 +45,9 @@
               details.classList.toggle("none", true);
             }
           }
+      </script>
 
+        <script>
           // here we are making the confirm message to delete button
           let del = document.querySelector(".delete");
           del.addEventListener("click", (e) => {
