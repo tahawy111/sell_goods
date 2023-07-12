@@ -11,6 +11,7 @@ const mongoose = require("mongoose");
 app.set("view engine", "ejs");
 const flash = require("connect-flash");
 const session = require("express-session");
+require("dotenv").config();
 
 // Static Folders
 app.use(express.static("public"));
@@ -44,13 +45,10 @@ app.use((req, res, next) => {
 
 require("./routes")(app);
 
-// mongodb+srv://admin:admin123456@cluster0.04rgz.mongodb.net/images?retryWrites=true&w=majority
 // mongodb://localhost:27017/sell_goods
 
 mongoose
-  .connect(
-    "mongodb+srv://amer:9fAaabq4p51IumOY@amer.qdhk5lx.mongodb.net/?retryWrites=true&w=majority"
-  )
+  .connect(process.env.MONGODB_URL)
   .then(() => {
     console.log("DB Connected");
   })
