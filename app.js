@@ -48,9 +48,7 @@ require("./routes")(app);
 // mongodb://localhost:27017/sell_goods
 
 mongoose
-  .connect(
-    "mongodb://localhost:27017/sell_goods"
-  )
+  .connect("mongodb://localhost:27017/sell_goods")
   .then(() => {
     console.log("DB Connected");
   })
