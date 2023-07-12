@@ -1,19 +1,19 @@
-const express = require('express');
-const passport = require('passport');
-const { spawn } = require('child_process');
-const path = require('path');
+const express = require("express");
+const passport = require("passport");
+const { spawn } = require("child_process");
+const path = require("path");
 const app = express();
-const cron = require('node-cron');
+const cron = require("node-cron");
 // Passport Config
-require('./config/passport')(passport);
+require("./config/passport")(passport);
 const PORT = process.env.PORT || 3000;
-const mongoose = require('mongoose');
-app.set('view engine', 'ejs');
-const flash = require('connect-flash');
-const session = require('express-session');
+const mongoose = require("mongoose");
+app.set("view engine", "ejs");
+const flash = require("connect-flash");
+const session = require("express-session");
 
 // Static Folders
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 // BodyParser.
 app.use(express.urlencoded({ extended: true }));
@@ -21,7 +21,7 @@ app.use(express.json());
 // Express Session
 app.use(
   session({
-    secret: 'mmbkjmgstel 56756245ff kgjlo[few@75449.clhl.d',
+    secret: "mmbkjmgstel 56756245ff kgjlo[few@75449.clhl.d",
     resave: true,
     saveUninitialized: true,
   })
@@ -36,23 +36,23 @@ app.use(flash());
 
 // Global vars.
 app.use((req, res, next) => {
-  res.locals.success_msg = req.flash('success_msg');
-  res.locals.error_msg = req.flash('error_msg');
-  res.locals.error = req.flash('error');
+  res.locals.success_msg = req.flash("success_msg");
+  res.locals.error_msg = req.flash("error_msg");
+  res.locals.error = req.flash("error");
   next();
 });
 
-require('./routes')(app);
+require("./routes")(app);
 
 // mongodb+srv://admin:admin123456@cluster0.04rgz.mongodb.net/images?retryWrites=true&w=majority
 // mongodb://localhost:27017/sell_goods
 
 mongoose
   .connect(
-    'mongodb://localhost:27017/sell_goods'
+    "mongodb+srv://admin:admin123456@cluster0.04rgz.mongodb.net/images?retryWrites=true&w=majority"
   )
   .then(() => {
-    console.log('DB Connected');
+    console.log("DB Connected");
   })
   .catch((err) => console.log(err));
 
@@ -62,38 +62,38 @@ mongoose
 // restore command
 // mongorestore --db=sell_goods --archive=./public/backup/sell_goods.gzip --gzip
 
-const DB_NAME = 'sell_goods';
+const DB_NAME = "sell_goods";
 const ARCHIVE_PATH = path.join(
   __dirname,
-  'public',
-  'backup',
+  "public",
+  "backup",
   `${DB_NAME}.gzip`
 );
 
-cron.schedule('0 0 * * *', () => backupMongodb());
+cron.schedule("0 0 * * *", () => backupMongodb());
 
 function backupMongodb() {
-  const child = spawn('mongodump', [
+  const child = spawn("mongodump", [
     `--db=${DB_NAME}`,
     `--archive=${ARCHIVE_PATH}`,
-    '--gzip',
+    "--gzip",
   ]);
 
-  child.stdout.on('data', (data) => {
-    console.log('stdout:\n', data);
+  child.stdout.on("data", (data) => {
+    console.log("stdout:\n", data);
   });
-  child.stderr.on('data', (data) => {
-    console.log('stderr:\n', data);
+  child.stderr.on("data", (data) => {
+    console.log("stderr:\n", data);
   });
 
-  child.on('error', (error) => {
+  child.on("error", (error) => {
     console.log(`error:\n`, error);
   });
 
-  child.on('exit', (code, signal) => {
-    if (code) console.log('Process exit with code:', code);
-    else if (signal) console.log('Process killed with signal:', signal);
-    else console.log('Backup is successfull ✅');
+  child.on("exit", (code, signal) => {
+    if (code) console.log("Process exit with code:", code);
+    else if (signal) console.log("Process killed with signal:", signal);
+    else console.log("Backup is successfull ✅");
   });
 }
 
