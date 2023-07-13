@@ -7,6 +7,8 @@ const CategoryModel = require("../models/CategoryModel");
 const RecoverBillModel = require("../models/RecoverBillModel");
 const RecoverBillListModel = require("../models/RecoverBillListModel");
 const mongoose = require("mongoose");
+const {imageUpload,cloudinaryConfig} = require("../config/imageUpload");
+
 
 const {
   ensureAuthenticated,
@@ -72,7 +74,13 @@ router.get("/", ensureAuthenticated, (req, res) => {
   }
 });
 
-router.post("/add", ensureAuthenticated, upload, (req, res) => {
+router.post("/add", ensureAuthenticated, async (req, res) => {
+
+  const productImage = await imageUpload(req.file,{
+    CLOUDINARY_CLOUD_NAME:cloudinaryConfig.cloudName,
+    CLOUDINARY_UPLOAD_PRESET:cloudinaryConfig.uploadPreset,
+  })
+  
   const product = new ProductModel({
     name: req.body.name,
     price: req.body.price,
@@ -81,7 +89,7 @@ router.post("/add", ensureAuthenticated, upload, (req, res) => {
     quantity: req.body.quantity,
     barcode: req.body.barcode,
     category: req.body.category,
-    image: req.file ? req.file.filename : "No Data",
+    image: productImage.url,
   });
   product.save();
   res.redirect("/");
