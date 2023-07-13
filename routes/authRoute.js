@@ -8,7 +8,6 @@ const {
   forwardAuthenticated,
   isAdmin,
 } = require("../config/auth");
-
 // Admin routes
 
 // creating admins
