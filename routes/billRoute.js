@@ -162,6 +162,7 @@ router.get('/search-for-bills-result', ensureAuthenticated, (req, res) => {
     .catch((err) => console.log(err));
 });
 
+
 router.get('/close-account-daily', ensureAuthenticated, (req, res) => {
   let totalProducts = null;
 
