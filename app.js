@@ -6,7 +6,7 @@ const app = express();
 const cron = require("node-cron");
 // Passport Config
 require("./config/passport")(passport);
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 const mongoose = require("mongoose");
 app.set("view engine", "ejs");
 const flash = require("connect-flash");
@@ -48,7 +48,7 @@ require("./routes")(app);
 // mongodb://localhost:27017/sell_goods
 
 mongoose
-  .connect(process.env.MONGODB_URL)
+  .connect("mongodb+srv://amer:9fAaabq4p51IumOY@amer.qdhk5lx.mongodb.net/sell_goods?retryWrites=true&w=majority")
   .then(() => {
     console.log("DB Connected");
   })

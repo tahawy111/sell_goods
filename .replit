@@ -1,0 +1,4 @@
+run = "node -r repl.uptime/start app.js"
+
+[nix]
+channel = "stable-22_11"
