@@ -9,7 +9,7 @@
 
 <div class="container-fluid">
   <form
-    action="/recover/add"
+    action="/recover/edit/<%= data._id %>"
     method="post"
     style="align-items: flex-end"
     class="d-flex"
@@ -60,43 +60,70 @@
               <th>سعر المنتج</th>
               <th>العدد</th>
               <th>السعر الاجمالي للمنتج</th>
+              <th></th>
             </tr>
           </thead>
 
           <tbody style="vertical-align: middle">
-            <% if (data) { %> <% data.forEach((ele,index) => { %>
-            <tr>
-              <td><%= index + 1 %></td>
-              <td><%= ele.name %></td>
-              <td><%= ele.price %></td>
-              <td><%= ele.quantity %></td>
-              <td><%= ele.totalPrice %></td>
+            <% data.recoverBillData.forEach((ele,index) => { %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= ele.name %></td>
+                <td><%= ele.price %></td>
+                <td><%= ele.quantity %></td>
+                <td><%= ele.totalPrice %></td>
+                <td>
+                  <a
+                    href="/edit-update-recover-bill/<%= ele._id %>/<%= data._id %>"
+                    class="btn btn-warning"
+                    >تعديل</a
+                  >
+                  <a
+                    href="/delete-update-recover-bill/<%= ele._id %>/<%= data._id %>"
+                    class="btn btn-danger del"
+                    >حذف
+                    </a
+                  >
+                </td>
+              </tr>
+              </td>
             </tr>
-            <% }) %> <% } %>
+            <% }) %>
           </tbody>
         </table>
+        <a style="position:absolute;left:2%;" class="btn btn-success create" href="/recover-bill/create">حفظ</a>
       </div>
     </div>
   </div>
 </div>
 
+
 <script>
   // to make a confirm to all btns
-  let del = document.querySelectorAll(".recover");
+  let del = document.querySelectorAll(".del");
   // get array from buttons
   const delBtns = Array.from(del);
   delBtns.forEach((e) => {
     e.addEventListener("click", (el) => {
-      if (
-        confirm(
-          "هل انت متأكد من انك تريد استرجاع الفاتورة مع العلم ان الفاتورة ستحذف من القائمة"
-        )
-      ) {
+      if (confirm("هل تريد الحذف")) {
       } else {
         el.preventDefault();
       }
     });
   });
+
+
+  let create = document.querySelector(".create");
+  create.addEventListener("click", (e) => {
+    if (confirm("هل انت متاكد من انشاء فاتورة المرتجعات مع العلم انك لن تستطيع التعديل علي الفاتورة ابدا") === true) {
+    } else {
+      e.preventDefault();
+    }
+  });
 </script>
+
+
+
+
 
 <%- include('./partials/footer.ejs') %>

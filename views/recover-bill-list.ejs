@@ -36,6 +36,11 @@
               <td><%= ele.createdBy %></td>
               <td>
                 <a
+                  class="btn btn-warning"
+                  href="/recover-bill/edit/<%= ele._id %>"
+                  >تعديل</a
+                >
+                <a
                   class="btn btn-danger recover"
                   href="/recover-bill/delete/<%= ele._id %>"
                   >حذف</a
