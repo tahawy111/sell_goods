@@ -72,5 +72,6 @@ table {
 }
 
 .barcode-container{
+  margin-top: 2px;
   text-align: center;
 }
