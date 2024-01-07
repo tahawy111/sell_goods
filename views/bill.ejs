@@ -72,6 +72,7 @@
         <div class="me-2">
           السعر الاجمالي: <b><%= data.totalPrice %></b> جنيه
         </div>
+        <span class="bill-number" style="display: none;"><%= data.billNumber %></span>
 
         <!-- <div class="hr"></div>
         <div>
@@ -84,9 +85,10 @@
 
     <script>
       let barcodeContainer = document.querySelector(".barcode-container");
+      let billNumber = document.querySelector(".bill-number");
 
       window.addEventListener("load", () => {
-        JsBarcode("#barcode", Date.now(), {
+        JsBarcode("#barcode", +billNumber.textContent, {
           background: "#fff",
           color: "#000",
           height: 40,
