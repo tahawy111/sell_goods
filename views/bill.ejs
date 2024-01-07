@@ -72,12 +72,32 @@
         <div class="me-2">
           السعر الاجمالي: <b><%= data.totalPrice %></b> جنيه
         </div>
+
         <!-- <div class="hr"></div>
         <div>
           <b>ملحوظة:</b> هذه الفاتوره تعتبر مستند لسداد قيمة الخدمة المقدمة جميع
           الفواتير لدينا مسجله على النظام
         </div> -->
+        <div class="barcode-container"></div>
       </div>
     </div>
+
+    <script>
+      let barcodeContainer = document.querySelector(".barcode-container");
+
+      window.addEventListener("load", () => {
+        JsBarcode("#barcode", Date.now(), {
+          background: "#fff",
+          color: "#000",
+          height: 40,
+          width: 2.5,
+          displayValue: true,
+        });
+      });
+
+      barcodeContainer.innerHTML = `<svg id="barcode"></svg>`;
+    </script>
+
+    <script src="/js/barcode.js"></script>
   </body>
 </html>

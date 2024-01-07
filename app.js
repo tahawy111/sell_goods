@@ -44,12 +44,12 @@ app.use((req, res, next) => {
 
 require("./routes")(app);
 
-// mongodb+srv://admin:admin123456@cluster0.04rgz.mongodb.net/images?retryWrites=true&w=majority
+// mongodb+srv://amer:6hKN2fKifq1rpV1I@amer.9tksimx.mongodb.net/sell_goods
 // mongodb://localhost:27017/sell_goods
 // mongodb://127.0.0.1:27017/sell_goods
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/sell_goods")
+  .connect("mongodb+srv://amer:6hKN2fKifq1rpV1I@amer.9tksimx.mongodb.net/sell_goods")
   .then(() => {
     console.log("DB Connected");
   })

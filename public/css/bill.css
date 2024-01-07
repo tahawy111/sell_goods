@@ -70,3 +70,7 @@ table {
   table-layout: fixed;
   word-wrap: break-word;
 }
+
+.barcode-container{
+  text-align: center;
+}
