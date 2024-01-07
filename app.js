@@ -49,7 +49,7 @@ require("./routes")(app);
 // mongodb://127.0.0.1:27017/sell_goods
 
 mongoose
-  .connect("mongodb+srv://amer:6hKN2fKifq1rpV1I@amer.9tksimx.mongodb.net/sell_goods")
+  .connect("mongodb://127.0.0.1:27017/sell_goods")
   .then(() => {
     console.log("DB Connected");
   })
