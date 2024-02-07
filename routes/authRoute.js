@@ -128,6 +128,7 @@ router.get("/login", forwardAuthenticated, (req, res) => {
 router.post("/login", forwardAuthenticated, (req, res, next) => {
   passport.authenticate("local", {
     successRedirect: "/",
+    successRedirect: "/search-by-barcode",
     failureRedirect: "/login",
     failureFlash: true,
   })(req, res, next);

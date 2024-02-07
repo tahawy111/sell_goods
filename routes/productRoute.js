@@ -7,8 +7,7 @@ const CategoryModel = require("../models/CategoryModel");
 const RecoverBillModel = require("../models/RecoverBillModel");
 const RecoverBillListModel = require("../models/RecoverBillListModel");
 const mongoose = require("mongoose");
-const {imageUpload,cloudinaryConfig} = require("../config/imageUpload");
-
+const { imageUpload, cloudinaryConfig } = require("../config/imageUpload");
 
 const {
   ensureAuthenticated,
@@ -75,12 +74,11 @@ router.get("/", ensureAuthenticated, (req, res) => {
 });
 
 router.post("/add", ensureAuthenticated, async (req, res) => {
+  const productImage = await imageUpload(req.file, {
+    CLOUDINARY_CLOUD_NAME: cloudinaryConfig.cloudName,
+    CLOUDINARY_UPLOAD_PRESET: cloudinaryConfig.uploadPreset,
+  });
 
-  const productImage = await imageUpload(req.file,{
-    CLOUDINARY_CLOUD_NAME:cloudinaryConfig.cloudName,
-    CLOUDINARY_UPLOAD_PRESET:cloudinaryConfig.uploadPreset,
-  })
-  
   const product = new ProductModel({
     name: req.body.name,
     price: req.body.price,
@@ -92,7 +90,7 @@ router.post("/add", ensureAuthenticated, async (req, res) => {
     image: productImage.url,
   });
   product.save();
-  res.redirect("/");
+  res.redirect(`/details/${product._id}`);
 });
 
 router.get("/add", ensureAuthenticated, (req, res) => {
@@ -161,20 +159,12 @@ router.get("/edit/:id", ensureAuthenticated, (req, res) => {
     .catch((err) => console.log(err));
 });
 
-router.post("/update/:id", ensureAuthenticated, upload, (req, res) => {
-  let new_image;
-
+router.post("/update/:id", ensureAuthenticated, upload, async (req, res) => {
   // prepere the files: delete the old from storage place & add the new to from storage place
-  if (req.file) {
-    new_image = req.file.filename;
-    try {
-      fs.unlinkSync(`./public/uploads/images/${req.body.old_image}`);
-    } catch (err) {
-      console.log(err);
-    }
-  } else {
-    new_image = req.body.old_image;
-  }
+  const productImage = await imageUpload(req.file, {
+    CLOUDINARY_CLOUD_NAME: cloudinaryConfig.cloudName,
+    CLOUDINARY_UPLOAD_PRESET: cloudinaryConfig.uploadPreset,
+  });
 
   // here we added the new data
   ProductModel.findByIdAndUpdate(req.params.id, {
@@ -185,7 +175,7 @@ router.post("/update/:id", ensureAuthenticated, upload, (req, res) => {
     quantity: req.body.quantity,
     barcode: req.body.barcode,
     category: req.body.category,
-    image: new_image,
+    image: productImage.url,
   })
     .then((result) => {
       res.redirect(`/details/${req.params.id}`);
@@ -197,12 +187,8 @@ router.get("/delete/:id", ensureAuthenticated, (req, res) => {
   ProductModel.findByIdAndRemove(req.params.id)
     .then((result) => {
       // remove image from storage place
-      if (req.file) {
-        fs.unlinkSync(`./public/uploads/images/${result.image}`);
-        res.redirect("/");
-      } else {
-        res.redirect("/");
-      }
+
+      res.redirect("/");
     })
     .catch((err) => console.log(err));
 });
@@ -514,6 +500,140 @@ router.get("/create-recover-bill", ensureAuthenticated, (req, res) => {
     });
   });
 });
+
+router.get("/recover-bill/edit/:id", ensureAuthenticated, (req, res) => {
+  let totalProducts = null;
+
+  if (!req.user.cart) {
+    totalProducts = "";
+  } else {
+    totalProducts = req.user.cart.totalQuantity;
+  }
+
+  RecoverBillListModel.findById(req.params.id).then((result) => {
+    res.render("update-recover-bill", {
+      title: "تعديل فاتورة مرتجعات",
+      admin: req.user,
+      totalProducts,
+      data: result,
+    });
+  });
+});
+
+router.post("/recover/edit/:id", ensureAuthenticated, (req, res) => {
+  const { name } = req.body;
+  const price = +req.body.price;
+  const quantity = +req.body.quantity;
+  const totalPrice = price * quantity;
+  let total = totalPrice;
+  // const oid = mongoose.Types.ObjectId();
+
+  const newProduct = {
+    name,
+    price,
+    quantity,
+    totalPrice,
+  };
+
+  const recoverbill = new RecoverBillModel(newProduct);
+
+  RecoverBillListModel.findByIdAndUpdate(req.params.id, {
+    $push: { recoverBillData: recoverbill },
+  })
+    .then((result) => {
+      console.log(result);
+      res.redirect(`/recover-bill/edit/${req.params.id}`);
+    })
+    .catch((err) => console.log(err));
+
+  // newRecoverBill
+  //   .save()
+  //   .then((result) => {
+  //     console.log(result);
+  //     res.redirect("/create-recover-bill");
+  //   })
+  //   .catch((err) => console.log(err));
+});
+
+router.get(
+  "/edit-update-recover-bill/:id/:listId",
+  ensureAuthenticated,
+  (req, res) => {
+    let totalProducts = null;
+
+    if (!req.user.cart) {
+      totalProducts = "";
+    } else {
+      totalProducts = req.user.cart.totalQuantity;
+    }
+
+    RecoverBillListModel.findById(req.params.listId).then((result) => {
+      const recoverProduct = result.recoverBillData.find(
+        (p) => p._id.toString() === req.params.id
+      );
+      console.log(recoverProduct);
+      res.render("edit-update-recover-bill", {
+        title: "تعديل فاتورة مرتجعات",
+        admin: req.user,
+        totalProducts,
+        data: { recoverProduct, listId: req.params.listId },
+      });
+    });
+  }
+);
+
+router.get(
+  "/delete-update-recover-bill/:id/:listId",
+  ensureAuthenticated,
+  (req, res) => {
+    let totalProducts = null;
+
+    if (!req.user.cart) {
+      totalProducts = "";
+    } else {
+      totalProducts = req.user.cart.totalQuantity;
+    }
+
+    RecoverBillListModel.findById(req.params.listId).then((result) => {
+      result.recoverBillData = result.recoverBillData.filter(
+        (p) => p._id.toString() !== req.params.id
+      );
+      RecoverBillListModel.findByIdAndUpdate(req.params.listId, result).then(
+        () => {
+          res.redirect(`/recover-bill/edit/${req.params.listId}`);
+        }
+      );
+    });
+  }
+);
+
+router.post(
+  "/update-list-recover-bill/:id/:listId",
+  ensureAuthenticated,
+  (req, res) => {
+    const { name } = req.body;
+    const price = +req.body.price;
+    const quantity = +req.body.quantity;
+    const totalPrice = price * quantity;
+
+    RecoverBillListModel.findById(req.params.listId).then((result) => {
+      const indexOfRecoverProduct = result.recoverBillData.indexOf(
+        result.recoverBillData.find((p) => p._id.toString() === req.params.id)
+      );
+      // remove
+      result.recoverBillData[indexOfRecoverProduct].name = name;
+      result.recoverBillData[indexOfRecoverProduct].price = price;
+      result.recoverBillData[indexOfRecoverProduct].quantity = quantity;
+      result.recoverBillData[indexOfRecoverProduct].totalPrice = totalPrice;
+
+      RecoverBillListModel.findByIdAndUpdate(req.params.listId, result).then(
+        () => {
+          res.redirect(`/recover-bill/edit/${req.params.listId}`);
+        }
+      );
+    });
+  }
+);
 
 router.post("/recover/add", ensureAuthenticated, (req, res) => {
   const { name } = req.body;

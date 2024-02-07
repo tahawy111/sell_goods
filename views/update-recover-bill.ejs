@@ -1,0 +1,129 @@
+<%- include('./partials/head.ejs') %>
+
+<style>
+  .input {
+    width: 28%;
+    margin-right: 30px;
+  }
+</style>
+
+<div class="container-fluid">
+  <form
+    action="/recover/edit/<%= data._id %>"
+    method="post"
+    style="align-items: flex-end"
+    class="d-flex"
+  >
+    <span class="input">
+      <span class="fs-4">اسم المنتج</span>
+      <input
+        type="text"
+        class="form-control form-control-lg"
+        placeholder="ادخل اسم المنتج"
+        name="name"
+        required
+    /></span>
+    <span class="input">
+      <span class="fs-4">سعر المنتج</span>
+      <input
+        type="number"
+        class="form-control form-control-lg"
+        placeholder="ادخل سعر المنتج"
+        name="price"
+        required
+    /></span>
+    <span class="input">
+      <span class="fs-4">العدد</span>
+      <input
+        type="number"
+        class="form-control form-control-lg"
+        placeholder="ادخل عدد المنتجات"
+        name="quantity"
+    /></span>
+
+    <button
+      class="btn btn-primary btn-lg me-4"
+      style="height: fit-content"
+      type="submit"
+    >
+      اضافة
+    </button>
+  </form>
+  <div class="row my-4">
+    <div class="col-lg-12">
+      <div class="table-responsive">
+        <table class="table table-striped text-center my-3">
+          <thead>
+            <tr class="table-dark">
+              <th>#</th>
+              <th>اسم المنتج</th>
+              <th>سعر المنتج</th>
+              <th>العدد</th>
+              <th>السعر الاجمالي للمنتج</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody style="vertical-align: middle">
+            <% data.recoverBillData.forEach((ele,index) => { %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= ele.name %></td>
+                <td><%= ele.price %></td>
+                <td><%= ele.quantity %></td>
+                <td><%= ele.totalPrice %></td>
+                <td>
+                  <a
+                    href="/edit-update-recover-bill/<%= ele._id %>/<%= data._id %>"
+                    class="btn btn-warning"
+                    >تعديل</a
+                  >
+                  <a
+                    href="/delete-update-recover-bill/<%= ele._id %>/<%= data._id %>"
+                    class="btn btn-danger del"
+                    >حذف
+                    </a
+                  >
+                </td>
+              </tr>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+        <a style="position:absolute;left:2%;" class="btn btn-success create" href="/recover-bill/create">حفظ</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // to make a confirm to all btns
+  let del = document.querySelectorAll(".del");
+  // get array from buttons
+  const delBtns = Array.from(del);
+  delBtns.forEach((e) => {
+    e.addEventListener("click", (el) => {
+      if (confirm("هل تريد الحذف")) {
+      } else {
+        el.preventDefault();
+      }
+    });
+  });
+
+
+  let create = document.querySelector(".create");
+  create.addEventListener("click", (e) => {
+    if (confirm("هل انت متاكد من انشاء فاتورة المرتجعات مع العلم انك لن تستطيع التعديل علي الفاتورة ابدا") === true) {
+    } else {
+      e.preventDefault();
+    }
+  });
+</script>
+
+
+
+
+
+<%- include('./partials/footer.ejs') %>
