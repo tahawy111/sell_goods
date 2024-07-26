@@ -91,6 +91,7 @@
             <% }) %>
           </tbody>
         </table>
+        <a style="position:absolute;left:2%;" class="btn btn-success" href="/recover-bill/print/<%= data._id %>" target="_blank">طباعة</a>
       </div>
     </div>
   </div>
@@ -109,15 +110,6 @@
         el.preventDefault();
       }
     });
-  });
-
-
-  let create = document.querySelector(".create");
-  create.addEventListener("click", (e) => {
-    if (confirm("هل انت متاكد من انشاء فاتورة المرتجعات مع العلم انك لن تستطيع التعديل علي الفاتورة ابدا") === true) {
-    } else {
-      e.preventDefault();
-    }
   });
 </script>
 
