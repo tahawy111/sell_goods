@@ -718,7 +718,11 @@ router.post(
       const indexOfRecoverProduct = result.recoverBillData.indexOf(
         result.recoverBillData.find((p) => p._id.toString() === req.params.id)
       );
-      // remove
+
+      result.total = (result.total - (result.recoverBillData[indexOfRecoverProduct].price * result.recoverBillData[indexOfRecoverProduct].quantity)) + (price * quantity);
+
+      result.totalQuantity = (result.totalQuantity - result.recoverBillData[indexOfRecoverProduct].quantity) +  quantity;
+      
       result.recoverBillData[indexOfRecoverProduct].name = name;
       result.recoverBillData[indexOfRecoverProduct].price = price;
       result.recoverBillData[indexOfRecoverProduct].quantity = quantity;
