@@ -45,7 +45,7 @@ router.get('/cart/:id', ensureAuthenticated, (req, res, next) => {
             newCart
               .save()
               .then((doc) => {
-                res.redirect('/');
+                res.redirect('/cart');
               })
               .catch((err) => console.log(err));
           }
@@ -63,7 +63,7 @@ router.get('/cart/:id', ensureAuthenticated, (req, res, next) => {
                 cart.selectedProduct[indexOfProduct].quantity >=
                 cart.selectedProduct[indexOfProduct].qtyInStore
               ) {
-                res.redirect('/');
+                res.redirect('/cart');
               } else {
                 console.log(cart.selectedProduct[indexOfProduct].quantity);
                 console.log(cart.selectedProduct[indexOfProduct].qtyInStore);
@@ -80,7 +80,7 @@ router.get('/cart/:id', ensureAuthenticated, (req, res, next) => {
 
                   CartModel.updateOne({ _id: cartId }, { $set: cart })
                     .then((doc) => {
-                      res.redirect('/');
+                      res.redirect('/cart');
                     })
                     .catch((err) => console.log(err));
                 } else {
@@ -96,7 +96,7 @@ router.get('/cart/:id', ensureAuthenticated, (req, res, next) => {
 
                   CartModel.updateOne({ _id: cartId }, { $set: cart })
                     .then((doc) => {
-                      res.redirect('/');
+                      res.redirect('/cart');
                     })
                     .catch((err) => console.log(err));
                 }
@@ -120,7 +120,7 @@ router.get('/cart/:id', ensureAuthenticated, (req, res, next) => {
                 // update in mongodb
                 CartModel.updateOne({ _id: cartId }, { $set: cart })
                   .then((doc) => {
-                    res.redirect('/');
+                    res.redirect('/cart');
                   })
                   .catch((err) => console.log(err));
               } else {
@@ -136,7 +136,7 @@ router.get('/cart/:id', ensureAuthenticated, (req, res, next) => {
                 // update in mongodb
                 CartModel.updateOne({ _id: cartId }, { $set: cart })
                   .then((doc) => {
-                    res.redirect('/');
+                    res.redirect('/cart');
                   })
                   .catch((err) => console.log(err));
               }
@@ -196,7 +196,7 @@ router.post('/cart', ensureAuthenticated, (req, res, next) => {
                 newCart
                   .save()
                   .then((doc) => {
-                    res.redirect('/');
+                    res.redirect('/search-by-barcode');
                   })
                   .catch((err) => console.log(err));
               }
@@ -222,7 +222,7 @@ router.post('/cart', ensureAuthenticated, (req, res, next) => {
 
                   CartModel.updateOne({ _id: cartId }, { $set: cart })
                     .then((doc) => {
-                      res.redirect('/');
+                      res.redirect('/cart');
                     })
                     .catch((err) => console.log(err));
                 }
@@ -284,7 +284,7 @@ router.post('/cart2', ensureAuthenticated, (req, res, next) => {
                 newCart
                   .save()
                   .then((doc) => {
-                    res.redirect('/');
+                    res.redirect('/cart');
                   })
                   .catch((err) => console.log(err));
               }
@@ -310,7 +310,7 @@ router.post('/cart2', ensureAuthenticated, (req, res, next) => {
 
                   CartModel.updateOne({ _id: cartId }, { $set: cart })
                     .then((doc) => {
-                      res.redirect('/');
+                      res.redirect('/cart');
                     })
                     .catch((err) => console.log(err));
                 }
@@ -326,9 +326,12 @@ router.post('/cart2', ensureAuthenticated, (req, res, next) => {
 router.get('/cart2/:barcode', ensureAuthenticated, (req, res, next) => {
   const { barcode } = req.params;
   const cartId = req.user.id;
+  console.log(barcode);
+  
 
   ProductModel.findOne({ barcode: barcode })
     .then((result) => {
+      console.log(result)
       const name = result.name;
       const price = +result.price;
 
@@ -358,7 +361,7 @@ router.get('/cart2/:barcode', ensureAuthenticated, (req, res, next) => {
             newCart
               .save()
               .then((doc) => {
-                res.redirect('/');
+                res.redirect('/cart');
               })
               .catch((err) => console.log(err));
           }
@@ -379,7 +382,7 @@ router.get('/cart2/:barcode', ensureAuthenticated, (req, res, next) => {
                 cart.selectedProduct[indexOfProduct].quantity >=
                 cart.selectedProduct[indexOfProduct].qtyInStore
               ) {
-                res.redirect('/');
+                res.redirect('/cart');
               } else {
                 if (cart.dealer === true) {
                   cart.selectedProduct[indexOfProduct].quantity =
@@ -394,7 +397,7 @@ router.get('/cart2/:barcode', ensureAuthenticated, (req, res, next) => {
 
                   CartModel.updateOne({ _id: cartId }, { $set: cart })
                     .then((doc) => {
-                      res.redirect('/');
+                      res.redirect('/cart');
                     })
                     .catch((err) => console.log(err));
                 } else {
@@ -410,7 +413,7 @@ router.get('/cart2/:barcode', ensureAuthenticated, (req, res, next) => {
 
                   CartModel.updateOne({ _id: cartId }, { $set: cart })
                     .then((doc) => {
-                      res.redirect('/');
+                      res.redirect('/cart');
                     })
                     .catch((err) => console.log(err));
                 }
@@ -434,7 +437,7 @@ router.get('/cart2/:barcode', ensureAuthenticated, (req, res, next) => {
                 // update in mongodb
                 CartModel.updateOne({ _id: cartId }, { $set: cart })
                   .then((doc) => {
-                    res.redirect('/');
+                    res.redirect('/cart');
                   })
                   .catch((err) => console.log(err));
               } else {
@@ -450,7 +453,7 @@ router.get('/cart2/:barcode', ensureAuthenticated, (req, res, next) => {
                 // update in mongodb
                 CartModel.updateOne({ _id: cartId }, { $set: cart })
                   .then((doc) => {
-                    res.redirect('/');
+                    res.redirect('/cart');
                   })
                   .catch((err) => console.log(err));
               }
@@ -467,7 +470,7 @@ router.get('/cart', ensureAuthenticated, (req, res, next) => {
 
   if (!req.user.cart) {
     totalProducts = '';
-    res.redirect('/');
+    res.redirect('/search-by-barcode');
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }
@@ -530,7 +533,7 @@ router.get('/cart/deleteProduct/:index', ensureAuthenticated, (req, res) => {
 
   if (req.user.cart.selectedProduct.length <= 1) {
     CartModel.findByIdAndDelete(req.user.cart._id).then((result) => {
-      res.redirect('/');
+      res.redirect('/search-by-barcode');
     });
   } else {
     req.user.cart.totalQuantity =
@@ -553,7 +556,7 @@ router.get('/cart/deleteProduct/:index', ensureAuthenticated, (req, res) => {
 router.get('/cart/sell/deleteAll', ensureAuthenticated, (req, res) => {
   CartModel.findByIdAndDelete(req.user.cart._id)
     .then((result) => {
-      res.redirect('/');
+      res.redirect('/search-by-barcode');
     })
     .catch((err) => console.log(err));
 });
@@ -563,7 +566,7 @@ router.get('/cart/sell/newBill', ensureAuthenticated, (req, res) => {
 
   if (!req.user.cart) {
     totalProducts = '';
-    res.redirect('/');
+    res.redirect('/search-by-barcode');
   } else {
     totalProducts = req.user.cart.totalQuantity;
   }

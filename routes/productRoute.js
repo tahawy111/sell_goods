@@ -13,6 +13,7 @@ const {
   forwardAuthenticated,
   isAdmin,
 } = require("../config/auth");
+const { log } = require("console");
 
 // image upload
 const storage = multer.diskStorage({
@@ -545,7 +546,6 @@ router.post("/recover/add", ensureAuthenticated, (req, res) => {
   newRecoverBill
     .save()
     .then((result) => {
-      console.log(result);
       res.redirect("/create-recover-bill");
     })
     .catch((err) => console.log(err));
@@ -569,9 +569,12 @@ router.post("/recover/edit/:id", ensureAuthenticated, (req, res) => {
 
   RecoverBillListModel.findByIdAndUpdate(req.params.id, {
     $push: { recoverBillData: recoverbill },
+    $inc: {
+      total: totalPrice,
+      totalQuantity: quantity
+    },
   })
     .then((result) => {
-      console.log(result);
       res.redirect(`/recover-bill/edit/${req.params.id}`);
     })
     .catch((err) => console.log(err));
@@ -619,7 +622,6 @@ router.get(
       const recoverProduct = result.recoverBillData.find(
         (p) => p._id.toString() === req.params.id
       );
-      console.log(recoverProduct);
       res.render("edit-update-recover-bill", {
         title: "تعديل فاتورة مرتجعات",
         admin: req.user,
@@ -655,9 +657,13 @@ router.get(
     }
 
     RecoverBillListModel.findById(req.params.listId).then((result) => {
+      const deletedProduct = result.recoverBillData.find((p) => p._id.toString() === req.params.id)
       result.recoverBillData = result.recoverBillData.filter(
         (p) => p._id.toString() !== req.params.id
       );
+      result.total -= deletedProduct.totalPrice
+      result.totalQuantity -= deletedProduct.quantity
+      
       RecoverBillListModel.findByIdAndUpdate(req.params.listId, result).then(
         () => {
           res.redirect(`/recover-bill/edit/${req.params.listId}`);
@@ -721,8 +727,8 @@ router.post(
 
       result.total = (result.total - (result.recoverBillData[indexOfRecoverProduct].price * result.recoverBillData[indexOfRecoverProduct].quantity)) + (price * quantity);
 
-      result.totalQuantity = (result.totalQuantity - result.recoverBillData[indexOfRecoverProduct].quantity) +  quantity;
-      
+      result.totalQuantity = (result.totalQuantity - result.recoverBillData[indexOfRecoverProduct].quantity) + quantity;
+
       result.recoverBillData[indexOfRecoverProduct].name = name;
       result.recoverBillData[indexOfRecoverProduct].price = price;
       result.recoverBillData[indexOfRecoverProduct].quantity = quantity;
@@ -779,7 +785,7 @@ router.get("/recover-bill/create", ensureAuthenticated, (req, res) => {
 
     newRecoverBillList.save().then((result) => {
       RecoverBillModel.remove()
-        .then((result) => {})
+        .then((result) => { })
         .catch((err) => console.log(err));
       res.render("success-page", {
         title: "تمت اضافة فاتورة مرتجعات",

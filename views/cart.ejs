@@ -179,4 +179,53 @@ ammountValue.innerHTML = `المبلغ المتبقي: ${+paidAmountInput.value 
 
 </script>
 
+<% if (typeof userId === "undefined") { %>
+
+  <a class="d-none barcode-handle-sell" href=""></a>
+  
+  <% }else{ %>
+  
+  <form action="/cart2" method="post">
+    <input type="hidden" name="userId" value="<%= userId %>" />
+    <input type="hidden" name="barcode" />
+  </form>
+  
+  <% } %>
+  
+  <script>
+    const barcodeHandleSell = document.querySelector('.barcode-handle-sell');
+    const dealerBarcodeHandle = document.querySelector(`input[name="barcode"]`);
+    const barcodeForm = document.querySelector(`form[action='/cart2']`);
+    let barcode = '';
+    let interval;
+  
+    document.addEventListener('keydown', (evt) => {
+      if (interval) {
+        clearInterval(interval);
+      }
+  
+      if (evt.code == 'Enter') {
+        if (barcode) handleBarcode(barcode);
+        barcode = '';
+        return;
+      }
+  
+      if (evt.code != 'Shift') barcode += evt.key;
+  
+      interval = setInterval(() => {
+        barcode = '';
+      }, 20);
+  
+      function handleBarcode(scanned_barcode) {
+        if (barcodeHandleSell) {
+          barcodeHandleSell.href = `/cart2/${scanned_barcode}`;
+          barcodeHandleSell.click();
+        } else {
+          dealerBarcodeHandle.value = scanned_barcode;
+          barcodeForm.submit();
+        }
+      }
+    });
+  </script>
+
 <% }else{ %> لايوجد منتجات <% } %> <%- include('./partials/footer.ejs') %>
