@@ -172,6 +172,10 @@ paidAmountInput.addEventListener("keyup",(element) => {
 //   console.log({ammountValue,
 // paidAmountInput: paidAmountInput.value,
 // totalAmountInput});
+if(!paidAmountInput.value){
+  ammountValue.innerHTML = `المبلغ المتبقي: `
+  return
+}
 ammountValue.innerHTML = `المبلغ المتبقي: ${+paidAmountInput.value - +totalAmountInput}`
   
 })
