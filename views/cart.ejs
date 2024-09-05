@@ -115,18 +115,37 @@ if (admin.cart.userDealer) { %>
   </div>
 </div>
 
-<div class="card" style="width: 18rem">
-  <div class="card-body">
-    <h5 class="card-title">خصم السعر الاجمالي</h5>
-    <form action="/cart/general-discount" method="post">
-      <input
-        type="number"
-        class="form-control mb-2"
-        name="totalDiscount"
-        value="<%= admin.cart.totalPrice %>"
-      />
-      <button type="submit" class="btn btn-primary">خصم</button>
-    </form>
+<div class="d-flex justify-content-around">
+  <div class="card" style="width: 18rem">
+    <div class="card-body">
+      <h5 class="card-title">تعديل السعر الاجمالي</h5>
+      <form action="/cart/general-discount" method="post">
+        <input
+          type="number"
+          class="form-control mb-2"
+          name="totalDiscount"
+          value="<%= admin.cart.totalPrice %>"
+        />
+        <button type="submit" class="btn btn-primary">تطبيق</button>
+      </form>
+    </div>
+  </div>
+  
+  <div class="card" style="width: 18rem">
+    <div class="card-body">
+      <h5 class="card-title">حساب الباقي</h5>
+      <form method="post">
+        <label for="the-paid-amount" class="mb-1">المبلغ المدفوع من العميل</label>
+        <input
+          type="number"
+          class="form-control mb-2"
+          name="the-paid-amount"
+          value=""
+          placeholder="المبلغ المدفوع من العميل"
+        />
+      </form>
+      <h5 class="mt-2 amount-value"><h5>
+    </div>
   </div>
 </div>
 
@@ -140,6 +159,24 @@ if (admin.cart.userDealer) { %>
       e.preventDefault();
     }
   });
+
+
+  // calculate the amount
+  const ammountValue = document.querySelector(".amount-value")
+  const paidAmountInput = document.querySelector("input[name='the-paid-amount']")
+  const totalAmountInput = document.querySelector("input[name='totalDiscount']").value
+
+
+
+paidAmountInput.addEventListener("keyup",(element) => {
+//   console.log({ammountValue,
+// paidAmountInput: paidAmountInput.value,
+// totalAmountInput});
+ammountValue.innerHTML = `المبلغ المتبقي: ${+paidAmountInput.value - +totalAmountInput}`
+  
+})
+
+
 </script>
 
 <% }else{ %> لايوجد منتجات <% } %> <%- include('./partials/footer.ejs') %>
