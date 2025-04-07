@@ -4,20 +4,26 @@ const { spawn } = require("child_process");
 const path = require("path");
 const app = express();
 const cron = require("node-cron");
-// Passport Config
-require("./config/passport")(passport);
-const PORT = process.env.PORT || 3000;
 const mongoose = require("mongoose");
-app.set("view engine", "ejs");
 const flash = require("connect-flash");
 const session = require("express-session");
+const AdminModel = require("./models/AdminModel");
+
+// Passport Config
+require("./config/passport")(passport);
+
+const PORT = process.env.PORT || 3000;
+
+// View engine
+app.set("view engine", "ejs");
 
 // Static Folders
 app.use(express.static("public"));
 
-// BodyParser.
+// BodyParser
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
 // Express Session
 app.use(
   session({
@@ -34,7 +40,7 @@ app.use(passport.session());
 // Connect flash
 app.use(flash());
 
-// Global vars.
+// Global vars
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash("success_msg");
   res.locals.error_msg = req.flash("error_msg");
@@ -42,26 +48,49 @@ app.use((req, res, next) => {
   next();
 });
 
+// Routes
 require("./routes")(app);
 
-// mongodb+srv://amer:6hKN2fKifq1rpV1I@amer.9tksimx.mongodb.net/sell_goods
-// mongodb://localhost:27017/sell_goods
-// mongodb://127.0.0.1:27017/sell_goods
-
+// MongoDB Connection
 mongoose
   .connect("mongodb://127.0.0.1:27017/sell_goods")
-  // .connect("mongodb+srv://amer:6hKN2fKifq1rpV1I@amer.9tksimx.mongodb.net/sell_goods")
-  .then(() => {
-    console.log("DB Connected");
+  .then(async () => {
+    console.log("✅ DB Connected");
+
+    // Create admin if not exists
+    await createAdminIfNotExists();
+
+    // Start the server AFTER ensuring admin creation
+    app.listen(PORT, () =>
+      console.log(`🚀 App listening at http://localhost:${PORT}`)
+    );
   })
   .catch((err) => console.log(err));
 
-// handle data backup
-// mongodump --db=sell_goods --archive=./sell_goods.gzip --gzip
+// Auto-create default admin if not found
+async function createAdminIfNotExists() {
+  const existingAdmin = await AdminModel.findOne({ username: "admin" });
 
-// restore command
-// mongorestore --db=sell_goods --archive=./public/backup/sell_goods.gzip --gzip
+  if (!existingAdmin) {
+    const bcrypt = require("bcryptjs");
+    const hashedPassword = await bcrypt.hash("admin123", 10);
 
+    const newAdmin = new AdminModel({
+      name: "Default Admin",
+      username: "admin",
+      password: hashedPassword,
+      comment: "Auto-generated admin",
+      manageAdmins: true,
+    });
+
+    await newAdmin.save();
+    console.log("🛡️ Default admin created: admin / admin123");
+  } else {
+    console.log("ℹ️ Admin already exists.");
+  }
+}
+
+// MongoDB Backup Setup
 const DB_NAME = "sell_goods";
 const ARCHIVE_PATH = path.join(
   __dirname,
@@ -80,26 +109,16 @@ function backupMongodb() {
   ]);
 
   child.stdout.on("data", (data) => {
-    console.log("stdout:\n", data);
+    console.log("stdout:\n", data.toString());
   });
   child.stderr.on("data", (data) => {
-    console.log("stderr:\n", data);
+    console.error("stderr:\n", data.toString());
   });
-
-  child.on("error", (error) => {
-    console.log(`error:\n`, error);
-  });
-
-  child.on("exit", (code, signal) => {
-    if (code) console.log("Process exit with code:", code);
-    else if (signal) console.log("Process killed with signal:", signal);
-    else console.log("Backup is successfull ✅");
+  child.on("exit", (code) => {
+    if (code === 0) {
+      console.log("✅ Backup completed successfully.");
+    } else {
+      console.error(`❌ Backup process exited with code: ${code}`);
+    }
   });
 }
-
-// handle data backup
-
-// Server
-app.listen(PORT, () => {
-  console.log(`Example app listening at http://localhost:${PORT}`);
-});
